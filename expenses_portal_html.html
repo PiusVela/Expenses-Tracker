@@ -125,6 +125,7 @@
       border-radius: 10px;
       padding: 25px;
       margin-bottom: 30px;
+      display: none;
     }
 
     .setup-guide h3 {
@@ -472,9 +473,9 @@
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Load Firebase FIRST -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <!-- FIX: Use Firebase COMPATIBILITY version for v10 -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="container">
@@ -486,20 +487,20 @@
         </h1>
         <div class="status-indicator" id="statusIndicator">
           <div class="status-dot connecting" id="statusDot"></div>
-          <span id="statusText">Loading...</span>
+          <span id="statusText">Initializing...</span>
         </div>
       </div>
       <p>Track your daily expenses in Ugandan Shillings</p>
     </div>
 
     <div class="content">
-      <!-- Setup Guide -->
+      <!-- Setup Guide (Hidden by default) -->
       <div class="setup-guide" id="setupGuide">
         <h3><i class="fas fa-tools"></i> Setup Required</h3>
         <p>To use this app, follow these steps:</p>
         <ol style="margin: 15px 0 15px 20px;">
           <li>Go to <a href="https://console.firebase.google.com/project/expense-tracker-1f7e2/firestore" target="_blank" id="firestoreLink">Firebase Console → Firestore</a></li>
-          <li>Click <strong>"Create Database"</strong></li>
+          <li>Click <strong>"Create Database"</strong> (if not already created)</li>
           <li>Select <strong>"Start in test mode"</strong></li>
           <li>Choose location and click <strong>"Enable"</strong></li>
           <li>After enabling, refresh this page</li>
@@ -583,7 +584,7 @@
         <div id="expensesList">
           <div class="loading">
             <div class="spinner"></div>
-            <p>Initializing application...</p>
+            <p>Connecting to database...</p>
           </div>
         </div>
       </div>
@@ -604,7 +605,23 @@
     // Global variables
     let db = null;
     let isFirestoreReady = false;
-    let firebaseLoaded = false;
+
+    // Check if Firebase is loaded
+    function isFirebaseLoaded() {
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase SDK not loaded');
+        return false;
+      }
+      if (typeof firebase.initializeApp === 'undefined') {
+        console.error('Firebase app module not loaded');
+        return false;
+      }
+      if (typeof firebase.firestore === 'undefined') {
+        console.error('Firebase Firestore module not loaded');
+        return false;
+      }
+      return true;
+    }
 
     // Update status indicator
     function updateStatus(status, message) {
@@ -635,37 +652,33 @@
       }
     }
 
-    // Check if Firebase is loaded
-    function checkFirebaseLoaded() {
-      if (typeof firebase === 'undefined') {
-        updateStatus('offline', 'Firebase not loaded');
-        showMessage('❌ Firebase SDK failed to load. Please check your internet connection and refresh the page.', 'error');
-        return false;
-      }
-      
-      if (typeof firebase.initializeApp === 'undefined') {
-        updateStatus('offline', 'Firebase incomplete');
-        showMessage('❌ Firebase SDK partially loaded. Please refresh the page.', 'error');
-        return false;
-      }
-      
-      return true;
-    }
-
     // Initialize Firebase
     function initializeFirebase() {
-      updateStatus('connecting', 'Initializing Firebase...');
+      updateStatus('connecting', 'Checking Firebase...');
       
       // Check if Firebase is loaded
-      if (!checkFirebaseLoaded()) {
+      if (!isFirebaseLoaded()) {
+        updateStatus('offline', 'Firebase not loaded');
+        showMessage('❌ Firebase SDK failed to load. Please check internet connection and refresh.', 'error');
         return;
       }
       
       try {
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        // Check if Firebase is already initialized
+        let app;
+        if (firebase.apps.length === 0) {
+          // Initialize Firebase
+          app = firebase.initializeApp(firebaseConfig);
+          console.log('Firebase initialized successfully');
+        } else {
+          // Use existing app
+          app = firebase.app();
+          console.log('Using existing Firebase app');
+        }
+        
+        // Get Firestore instance
         db = firebase.firestore();
-        firebaseLoaded = true;
+        console.log('Firestore instance obtained');
         
         // Test connection
         testConnection();
@@ -674,10 +687,8 @@
         console.error('Firebase initialization error:', error);
         
         if (error.code === 'app/duplicate-app') {
-          // Firebase already initialized, get existing instance
-          const app = firebase.app();
+          // Firebase already initialized
           db = firebase.firestore();
-          firebaseLoaded = true;
           testConnection();
         } else {
           updateStatus('offline', 'Initialization failed');
@@ -688,43 +699,61 @@
 
     // Test Firestore connection
     async function testConnection() {
-      updateStatus('connecting', 'Connecting to database...');
+      updateStatus('connecting', 'Testing connection...');
       
-      if (!firebaseLoaded || !db) {
-        updateStatus('offline', 'Firebase not ready');
+      if (!db) {
+        updateStatus('offline', 'No database instance');
         return;
       }
       
       try {
-        // Try a simple query to test connection
-        const testQuery = await db.collection('_test_connection').limit(1).get();
+        // Try to write a test document
+        const testRef = db.collection('_connection_test').doc('test');
         
-        // If we get here, connection is successful
-        isFirestoreReady = true;
-        updateStatus('online', 'Connected ✓');
-        showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
-        document.getElementById('setupGuide').style.display = 'none';
-        setupApp();
+        // Write test data
+        await testRef.set({
+          test: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Read it back
+        const doc = await testRef.get();
+        
+        if (doc.exists) {
+          // Connection successful!
+          isFirestoreReady = true;
+          updateStatus('online', 'Connected ✓');
+          showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
+          document.getElementById('setupGuide').style.display = 'none';
+          setupApp();
+          
+          // Clean up test document
+          await testRef.delete();
+        } else {
+          throw new Error('Test document not found');
+        }
         
       } catch (error) {
         console.error('Connection test failed:', error);
+        isFirestoreReady = false;
         
         // Check specific error types
         if (error.code === 'failed-precondition') {
           updateStatus('offline', 'Firestore not enabled');
-          showMessage('⚠️ Firestore database not enabled. Please click the link above to enable it.', 'error');
+          showMessage('⚠️ Firestore database not enabled. Click the link above to enable it.', 'error');
           document.getElementById('setupGuide').style.display = 'block';
         } else if (error.code === 'permission-denied') {
           updateStatus('offline', 'Permission denied');
           showMessage('❌ Permission denied. Please check Firebase security rules.', 'error');
           document.getElementById('setupGuide').style.display = 'block';
+        } else if (error.code === 'unavailable') {
+          updateStatus('offline', 'Network error');
+          showMessage('❌ Network error. Please check your internet connection.', 'error');
         } else {
           updateStatus('offline', 'Connection failed');
           showMessage('❌ Could not connect: ' + error.message, 'error');
           document.getElementById('setupGuide').style.display = 'block';
         }
-        
-        isFirestoreReady = false;
       }
     }
 
@@ -975,21 +1004,24 @@
       await updateStats();
     }
 
-    // Initialize on page load
-    window.addEventListener('load', function() {
-      // Wait a bit to ensure Firebase SDK is loaded
-      setTimeout(() => {
-        if (checkFirebaseLoaded()) {
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up a check to see if Firebase loads
+      const checkFirebaseInterval = setInterval(() => {
+        if (isFirebaseLoaded()) {
+          clearInterval(checkFirebaseInterval);
           initializeFirebase();
-        } else {
-          // Try one more time after delay
-          setTimeout(() => {
-            if (checkFirebaseLoaded()) {
-              initializeFirebase();
-            }
-          }, 2000);
         }
       }, 100);
+      
+      // Give up after 10 seconds
+      setTimeout(() => {
+        clearInterval(checkFirebaseInterval);
+        if (!isFirebaseLoaded()) {
+          updateStatus('offline', 'Firebase timeout');
+          showMessage('❌ Firebase SDK took too long to load. Please refresh.', 'error');
+        }
+      }, 10000);
     });
 
     // Auto-refresh data every 60 seconds
