@@ -119,23 +119,6 @@
       padding: 40px;
     }
 
-    .setup-guide {
-      background: #fff3cd;
-      border: 2px solid #ffeaa7;
-      border-radius: 10px;
-      padding: 25px;
-      margin-bottom: 30px;
-      display: none;
-    }
-
-    .setup-guide h3 {
-      color: #856404;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -432,6 +415,25 @@
       opacity: 0.5;
     }
 
+    .index-warning {
+      background: #fff3cd;
+      border: 2px solid #ffeaa7;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      color: #856404;
+    }
+
+    .index-warning a {
+      color: #0056b3;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .index-warning a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
       .content {
         padding: 20px;
@@ -473,7 +475,7 @@
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- FIX: Use Firebase COMPATIBILITY version for v10 -->
+  <!-- Use Firebase COMPATIBILITY version -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
@@ -494,24 +496,18 @@
     </div>
 
     <div class="content">
-      <!-- Setup Guide (Hidden by default) -->
-      <div class="setup-guide" id="setupGuide">
-        <h3><i class="fas fa-tools"></i> Setup Required</h3>
-        <p>To use this app, follow these steps:</p>
-        <ol style="margin: 15px 0 15px 20px;">
-          <li>Go to <a href="https://console.firebase.google.com/project/expense-tracker-1f7e2/firestore" target="_blank" id="firestoreLink">Firebase Console → Firestore</a></li>
-          <li>Click <strong>"Create Database"</strong> (if not already created)</li>
-          <li>Select <strong>"Start in test mode"</strong></li>
-          <li>Choose location and click <strong>"Enable"</strong></li>
-          <li>After enabling, refresh this page</li>
-        </ol>
-        <button class="btn btn-primary" onclick="checkConnection()">
-          <i class="fas fa-sync-alt"></i> Check Connection
-        </button>
-      </div>
-
       <!-- Status Message -->
       <div id="statusMessage" class="message"></div>
+
+      <!-- Index Warning (Hidden by default) -->
+      <div class="index-warning" id="indexWarning" style="display: none;">
+        <h3><i class="fas fa-exclamation-triangle"></i> Index Required</h3>
+        <p>To enable advanced filtering, you need to create a Firestore index.</p>
+        <p>Click this link to create the index automatically: 
+          <a href="#" id="indexLink">Create Index</a>
+        </p>
+        <p><small>This is a one-time setup. The app will work without it, but some features may be limited.</small></p>
+      </div>
 
       <!-- Quick Stats -->
       <div class="stats-grid">
@@ -574,7 +570,7 @@
           </div>
         </div>
         <button class="btn btn-primary" id="addBtn" disabled>
-          <i class="fas fa-plug"></i> Connect to Database First
+          <i class="fas fa-plus"></i> Add Expense
         </button>
       </div>
 
@@ -584,7 +580,7 @@
         <div id="expensesList">
           <div class="loading">
             <div class="spinner"></div>
-            <p>Connecting to database...</p>
+            <p>Loading expenses...</p>
           </div>
         </div>
       </div>
@@ -605,19 +601,12 @@
     // Global variables
     let db = null;
     let isFirestoreReady = false;
+    let requiresIndex = false;
 
     // Check if Firebase is loaded
     function isFirebaseLoaded() {
       if (typeof firebase === 'undefined') {
         console.error('Firebase SDK not loaded');
-        return false;
-      }
-      if (typeof firebase.initializeApp === 'undefined') {
-        console.error('Firebase app module not loaded');
-        return false;
-      }
-      if (typeof firebase.firestore === 'undefined') {
-        console.error('Firebase Firestore module not loaded');
         return false;
       }
       return true;
@@ -652,6 +641,21 @@
       }
     }
 
+    // Show index warning
+    function showIndexWarning(indexUrl) {
+      const warningDiv = document.getElementById('indexWarning');
+      const indexLink = document.getElementById('indexLink');
+      
+      indexLink.href = indexUrl;
+      indexLink.onclick = function(e) {
+        e.preventDefault();
+        window.open(indexUrl, '_blank');
+        showMessage('✅ Index creation link opened. Please click "Create Index" in the Firebase Console.', 'info');
+      };
+      
+      warningDiv.style.display = 'block';
+    }
+
     // Initialize Firebase
     function initializeFirebase() {
       updateStatus('connecting', 'Checking Firebase...');
@@ -680,24 +684,17 @@
         db = firebase.firestore();
         console.log('Firestore instance obtained');
         
-        // Test connection
+        // Test connection with SIMPLE query (no composite indexes needed)
         testConnection();
         
       } catch (error) {
         console.error('Firebase initialization error:', error);
-        
-        if (error.code === 'app/duplicate-app') {
-          // Firebase already initialized
-          db = firebase.firestore();
-          testConnection();
-        } else {
-          updateStatus('offline', 'Initialization failed');
-          showMessage('❌ Firebase error: ' + error.message, 'error');
-        }
+        updateStatus('offline', 'Initialization failed');
+        showMessage('❌ Firebase error: ' + error.message, 'error');
       }
     }
 
-    // Test Firestore connection
+    // Test Firestore connection with SIMPLE query
     async function testConnection() {
       updateStatus('connecting', 'Testing connection...');
       
@@ -707,60 +704,51 @@
       }
       
       try {
-        // Try to write a test document
-        const testRef = db.collection('_connection_test').doc('test');
+        // SIMPLE test query that doesn't need indexes
+        const testRef = db.collection('expenses');
+        const testSnapshot = await testRef.limit(1).get();
         
-        // Write test data
-        await testRef.set({
-          test: true,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        // Connection successful!
+        isFirestoreReady = true;
+        updateStatus('online', 'Connected ✓');
+        showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
         
-        // Read it back
-        const doc = await testRef.get();
+        // Enable the form
+        setupApp();
         
-        if (doc.exists) {
-          // Connection successful!
-          isFirestoreReady = true;
-          updateStatus('online', 'Connected ✓');
-          showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
-          document.getElementById('setupGuide').style.display = 'none';
-          setupApp();
-          
-          // Clean up test document
-          await testRef.delete();
-        } else {
-          throw new Error('Test document not found');
-        }
+        // Load data
+        loadInitialData();
         
       } catch (error) {
         console.error('Connection test failed:', error);
-        isFirestoreReady = false;
         
-        // Check specific error types
+        // Check if it's an index error
         if (error.code === 'failed-precondition') {
-          updateStatus('offline', 'Firestore not enabled');
-          showMessage('⚠️ Firestore database not enabled. Click the link above to enable it.', 'error');
-          document.getElementById('setupGuide').style.display = 'block';
+          // This is likely an index error
+          requiresIndex = true;
+          updateStatus('online', 'Connected (needs index)');
+          showMessage('⚠️ Connected, but some queries need indexes. The app will work with basic features.', 'info');
+          
+          // Create index URL
+          const indexUrl = `https://console.firebase.google.com/v1/r/project/${firebaseConfig.projectId}/firestore/indexes?create_composite=ClZwcm9qZWN0cy9leHBlbnNlLXRyYWNrZXItMWY3ZTIvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2V4cGVuc2VzL2luZGV4ZXMv`;
+          showIndexWarning(indexUrl);
+          
+          // Still enable basic functionality
+          isFirestoreReady = true;
+          setupApp();
+          loadInitialDataSimple();
+          
         } else if (error.code === 'permission-denied') {
           updateStatus('offline', 'Permission denied');
           showMessage('❌ Permission denied. Please check Firebase security rules.', 'error');
-          document.getElementById('setupGuide').style.display = 'block';
         } else if (error.code === 'unavailable') {
           updateStatus('offline', 'Network error');
           showMessage('❌ Network error. Please check your internet connection.', 'error');
         } else {
           updateStatus('offline', 'Connection failed');
           showMessage('❌ Could not connect: ' + error.message, 'error');
-          document.getElementById('setupGuide').style.display = 'block';
         }
       }
-    }
-
-    // Check connection manually
-    function checkConnection() {
-      showMessage('🔍 Checking connection...', 'info');
-      testConnection();
     }
 
     // Setup the app after successful connection
@@ -779,9 +767,6 @@
       document.getElementById('description').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') addExpense();
       });
-      
-      // Load initial data
-      loadInitialData();
     }
 
     // Format currency
@@ -869,8 +854,13 @@
         showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
 
         // Reload data
-        loadExpenses();
-        updateStats();
+        if (requiresIndex) {
+          loadInitialDataSimple();
+          updateStatsSimple();
+        } else {
+          loadExpenses();
+          updateStats();
+        }
 
       } catch (error) {
         console.error('Error adding expense:', error);
@@ -882,7 +872,91 @@
       }
     }
 
-    // Load expenses
+    // Load expenses SIMPLE (no composite queries)
+    async function loadExpensesSimple() {
+      if (!isFirestoreReady) return;
+
+      try {
+        // Get ALL expenses and filter client-side (no composite index needed)
+        const snapshot = await db.collection('expenses')
+          .orderBy('timestamp', 'desc')
+          .limit(50)
+          .get();
+
+        let html = '';
+        let count = 0;
+        
+        if (snapshot.empty) {
+          html = `
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <h4>No expenses yet</h4>
+              <p>Add your first expense to get started!</p>
+            </div>
+          `;
+        } else {
+          const now = new Date();
+          const currentMonth = getMonthKey(now.toISOString().split('T')[0]);
+          
+          snapshot.forEach(doc => {
+            const expense = doc.data();
+            
+            // Filter client-side for current month
+            if (expense.monthKey === currentMonth) {
+              count++;
+              const date = new Date(expense.date);
+              const formattedDate = date.toLocaleDateString('en-UG', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+              });
+
+              html += `
+                <div class="expense-item">
+                  <div>
+                    <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
+                      <i class="fas fa-tag"></i>
+                      ${expense.category}
+                    </span>
+                    <strong>${formattedDate}</strong>
+                    <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                      ${expense.description || ''}
+                    </div>
+                  </div>
+                  <div style="font-weight: 700; font-size: 1.2rem; font-family: 'Courier New', monospace;">
+                    ${formatCurrency(expense.amount)}
+                  </div>
+                </div>
+              `;
+            }
+          });
+          
+          if (count === 0) {
+            html = `
+              <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h4>No expenses this month</h4>
+                <p>Add your first expense for this month!</p>
+              </div>
+            `;
+          }
+        }
+
+        document.getElementById('expensesList').innerHTML = html;
+
+      } catch (error) {
+        console.error('Error loading expenses:', error);
+        document.getElementById('expensesList').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4>Error loading expenses</h4>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Load expenses with composite query (requires index)
     async function loadExpenses() {
       if (!isFirestoreReady) return;
 
@@ -940,17 +1014,64 @@
 
       } catch (error) {
         console.error('Error loading expenses:', error);
-        document.getElementById('expensesList').innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h4>Error loading expenses</h4>
-            <p>${error.message}</p>
-          </div>
-        `;
+        
+        // If it's an index error, fall back to simple loading
+        if (error.code === 'failed-precondition') {
+          requiresIndex = true;
+          showMessage('⚠️ Using simplified loading (no index). Click the index link above to enable advanced features.', 'info');
+          loadExpensesSimple();
+        } else {
+          document.getElementById('expensesList').innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h4>Error loading expenses</h4>
+              <p>${error.message}</p>
+            </div>
+          `;
+        }
       }
     }
 
-    // Update stats
+    // Update stats SIMPLE (no composite queries)
+    async function updateStatsSimple() {
+      if (!isFirestoreReady) return;
+
+      try {
+        // Get ALL expenses and filter client-side
+        const snapshot = await db.collection('expenses').get();
+        
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        const currentWeek = getWeekKey(today);
+        const currentMonth = getMonthKey(today);
+        const currentYear = getYearKey(today);
+        
+        let todayTotal = 0;
+        let weekTotal = 0;
+        let monthTotal = 0;
+        let yearTotal = 0;
+        
+        snapshot.forEach(doc => {
+          const expense = doc.data();
+          
+          // Filter client-side
+          if (expense.dayKey === today) todayTotal += expense.amount;
+          if (expense.weekKey === currentWeek) weekTotal += expense.amount;
+          if (expense.monthKey === currentMonth) monthTotal += expense.amount;
+          if (expense.yearKey === currentYear) yearTotal += expense.amount;
+        });
+
+        document.getElementById('todayTotal').textContent = formatCurrency(todayTotal);
+        document.getElementById('weekTotal').textContent = formatCurrency(weekTotal);
+        document.getElementById('monthTotal').textContent = formatCurrency(monthTotal);
+        document.getElementById('yearTotal').textContent = formatCurrency(yearTotal);
+
+      } catch (error) {
+        console.error('Error updating stats:', error);
+      }
+    }
+
+    // Update stats with composite queries
     async function updateStats() {
       if (!isFirestoreReady) return;
 
@@ -995,6 +1116,12 @@
 
       } catch (error) {
         console.error('Error updating stats:', error);
+        
+        // If it's an index error, fall back to simple stats
+        if (error.code === 'failed-precondition') {
+          requiresIndex = true;
+          updateStatsSimple();
+        }
       }
     }
 
@@ -1002,6 +1129,12 @@
     async function loadInitialData() {
       await loadExpenses();
       await updateStats();
+    }
+
+    // Load initial data SIMPLE
+    async function loadInitialDataSimple() {
+      await loadExpensesSimple();
+      await updateStatsSimple();
     }
 
     // Initialize when page loads
@@ -1027,8 +1160,13 @@
     // Auto-refresh data every 60 seconds
     setInterval(() => {
       if (isFirestoreReady) {
-        loadExpenses();
-        updateStats();
+        if (requiresIndex) {
+          loadExpensesSimple();
+          updateStatsSimple();
+        } else {
+          loadExpenses();
+          updateStats();
+        }
       }
     }, 60000);
   </script>
