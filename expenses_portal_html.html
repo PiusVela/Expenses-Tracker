@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UGX Expenses Tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border: #dee2e6;
+      --online: #10b981;
+      --offline: #ef4444;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 30px 40px 20px 40px;
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.online {
+      background: var(--online);
+      box-shadow: 0 0 10px var(--online);
+    }
+
+    .status-dot.offline {
+      background: var(--offline);
+      box-shadow: 0 0 10px var(--offline);
+    }
+
+    .status-dot.connecting {
+      background: var(--warning);
+      box-shadow: 0 0 10px var(--warning);
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .setup-guide {
+      background: #fff3cd;
+      border: 2px solid #ffeaa7;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 30px;
+      display: none;
+    }
+
+    .setup-guide.show {
+      display: block;
+    }
+
+    .setup-guide h3 {
+      color: #856404;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border-left: 6px solid var(--primary);
+      transition: transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .stat-label {
+      color: var(--gray);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      font-family: 'Courier New', monospace;
+      margin: 5px 0;
+    }
+
+    .stat-trend {
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .trend-up {
+      color: var(--online);
+    }
+
+    .trend-down {
+      color: var(--offline);
+    }
+
+    .form-section {
+      background: var(--light);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 40px;
+      border: 2px solid var(--border);
+    }
+
+    .form-title {
+      color: var(--primary-dark);
+      margin-bottom: 25px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 160px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-primary:disabled::before {
+      display: none;
+    }
+
+    .message {
+      padding: 15px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.show {
+      display: flex;
+    }
+
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+
+    .message.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #17a2b8;
+    }
+
+    .expenses-list {
+      margin-top: 40px;
+    }
+
+    .expenses-list h3 {
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      background: white;
+    }
+
+    .expense-item:hover {
+      background: var(--light);
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .category-yaka { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+    .category-water { background: #e0f2f1; color: #00796b; border: 1px solid #b2dfdb; }
+    .category-groceries { background: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
+    .category-food { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+    .category-fuel { background: #fff8e1; color: #ff8f00; border: 1px solid #ffecb3; }
+    .category-transport { background: #e8f5e8; color: #2e7d32; border: 1px solid #c8e6c9; }
+    .category-internet { background: #fce4ec; color: #c2185b; border: 1px solid #f8bbd9; }
+    .category-airtime { background: #fff3e0; color: #f57c00; border: 1px solid #ffe0b2; }
+    .category-rent { background: #e8eaf6; color: #283593; border: 1px solid #c5cae9; }
+    .category-laundry { background: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
+    .category-clothing { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+    .category-school-fees { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
+    .category-medical { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+    .category-savings { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
+    .category-debt { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+    .category-giving { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+    .category-entertainment { background: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
+    .category-general { background: #f5f5f5; color: #424242; border: 1px solid #e0e0e0; }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--gray);
+      font-style: italic;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin: 40px 0;
+    }
+
+    .insight-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      border: 2px solid var(--border);
+    }
+
+    .insight-card h4 {
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--gray);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        padding: 20px;
+      }
+      
+      .header {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 1.8rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .status-indicator {
+        align-self: flex-start;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-top">
+        <h1>
+          <i class="fas fa-wallet"></i> 
+          <span>UGX Expenses Tracker</span>
+        </h1>
+        <div class="status-indicator" id="statusIndicator">
+          <div class="status-dot connecting" id="statusDot"></div>
+          <span id="statusText">Connecting...</span>
+        </div>
+      </div>
+      <p>Track your daily expenses in Ugandan Shillings</p>
+    </div>
+
+    <div class="content">
+      <!-- Setup Guide (Hidden by default) -->
+      <div class="setup-guide" id="setupGuide">
+        <h3><i class="fas fa-tools"></i> Setup Required</h3>
+        <p>To use this app, follow these steps:</p>
+        <ol style="margin: 15px 0 15px 20px;">
+          <li>Go to <a href="https://console.firebase.google.com/project/expense-tracker-1f7e2/firestore" target="_blank">Firebase Console → Firestore</a></li>
+          <li>Click <strong>"Create Database"</strong></li>
+          <li>Select <strong>"Start in test mode"</strong></li>
+          <li>Choose location and click <strong>"Enable"</strong></li>
+          <li>After enabling, refresh this page</li>
+        </ol>
+        <button class="btn btn-primary" onclick="checkConnection()">
+          <i class="fas fa-sync-alt"></i> Check Connection
+        </button>
+      </div>
+
+      <!-- Status Message -->
+      <div id="statusMessage" class="message"></div>
+
+      <!-- Quick Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label"><i class="fas fa-calendar-day"></i> Today</div>
+          <div class="stat-value" id="todayTotal">UGX 0</div>
+          <div class="stat-trend" id="todayTrend"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i class="fas fa-calendar-week"></i> This Week</div>
+          <div class="stat-value" id="weekTotal">UGX 0</div>
+          <div class="stat-trend" id="weekTrend"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i class="fas fa-calendar-alt"></i> This Month</div>
+          <div class="stat-value" id="monthTotal">UGX 0</div>
+          <div class="stat-trend" id="monthTrend"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label"><i class="fas fa-calendar"></i> This Year</div>
+          <div class="stat-value" id="yearTotal">UGX 0</div>
+          <div class="stat-trend" id="yearTrend"></div>
+        </div>
+      </div>
+
+      <!-- Add Expense Form -->
+      <div class="form-section">
+        <h3 class="form-title"><i class="fas fa-plus-circle"></i> Add New Expense</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-money-bill-wave"></i> Amount (UGX)</label>
+            <input type="number" id="amount" placeholder="e.g. 50000" min="0" step="100" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-tags"></i> Category</label>
+            <select id="category" required>
+              <option value="Yaka">⚡ Yaka (Electricity)</option>
+              <option value="Water">💧 Water Bill</option>
+              <option value="Groceries" selected>🛒 Groceries</option>
+              <option value="Food">🍲 Food & Dining</option>
+              <option value="Fuel">⛽ Fuel</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Internet">🌐 Internet</option>
+              <option value="Airtime">📱 Airtime</option>
+              <option value="Rent">🏠 Rent</option>
+              <option value="Laundry">👕 Laundry</option>
+              <option value="Clothing">👔 Clothing</option>
+              <option value="School Fees">📚 School Fees</option>
+              <option value="Medical">🏥 Medical</option>
+              <option value="Savings">💰 Savings</option>
+              <option value="Debt">💳 Debt Payment</option>
+              <option value="Giving">🤲 Giving</option>
+              <option value="Entertainment">🎬 Entertainment</option>
+              <option value="General">📦 General</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-sticky-note"></i> Description (Optional)</label>
+            <input type="text" id="description" placeholder="What was this expense for?">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="addBtn">
+          <i class="fas fa-plus"></i> Add Expense
+        </button>
+      </div>
+
+      <!-- Recent Expenses -->
+      <div class="expenses-list">
+        <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
+        <div id="expensesList">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Connecting to database...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+  <script>
+    // Your new Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCNPXQvIPRVsJ5QTT5uBqAl9Jq8VuSW_yc",
+      authDomain: "expense-tracker-1f7e2.firebaseapp.com",
+      projectId: "expense-tracker-1f7e2",
+      storageBucket: "expense-tracker-1f7e2.firebasestorage.app",
+      messagingSenderId: "102435814972",
+      appId: "1:102435814972:web:82dbaf733a411e549bcd39"
+    };
+
+    // Global variables
+    let db = null;
+    let isFirestoreReady = false;
+    let connectionCheckInterval = null;
+
+    // Update status indicator
+    function updateStatus(status, message) {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      
+      dot.className = 'status-dot ' + status;
+      text.textContent = message;
+      
+      // Update status indicator background based on status
+      const indicator = document.getElementById('statusIndicator');
+      switch(status) {
+        case 'online':
+          indicator.style.background = 'rgba(16, 185, 129, 0.2)';
+          break;
+        case 'offline':
+          indicator.style.background = 'rgba(239, 68, 68, 0.2)';
+          break;
+        case 'connecting':
+          indicator.style.background = 'rgba(248, 150, 30, 0.2)';
+          break;
+      }
+    }
+
+    // Show message
+    function showMessage(message, type = 'info') {
+      const messageDiv = document.getElementById('statusMessage');
+      const icon = type === 'success' ? 'fa-check-circle' : 
+                   type === 'error' ? 'fa-exclamation-circle' : 
+                   'fa-info-circle';
+      
+      messageDiv.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+      `;
+      messageDiv.className = `message ${type} show`;
+      
+      // Auto-hide success messages after 5 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          messageDiv.className = 'message';
+        }, 5000);
+      }
+    }
+
+    // Hide message
+    function hideMessage() {
+      document.getElementById('statusMessage').className = 'message';
+    }
+
+    // Initialize Firebase
+    function initializeFirebase() {
+      updateStatus('connecting', 'Connecting to Firebase...');
+      
+      try {
+        // Initialize Firebase if not already initialized
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        
+        db = firebase.firestore();
+        
+        // Enable offline persistence (optional)
+        db.enablePersistence().catch((err) => {
+          console.warn('Persistence failed:', err);
+        });
+        
+        // Test connection
+        testConnection();
+        
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+        updateStatus('offline', 'Connection failed');
+        showMessage('❌ Firebase initialization error: ' + error.message, 'error');
+      }
+    }
+
+    // Test Firestore connection
+    async function testConnection() {
+      updateStatus('connecting', 'Testing connection...');
+      
+      try {
+        // Try to write and read a test document
+        const testDocRef = db.collection('_test').doc('connection');
+        
+        // Write test data
+        await testDocRef.set({
+          test: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Read it back
+        const doc = await testDocRef.get();
+        
+        if (doc.exists) {
+          isFirestoreReady = true;
+          updateStatus('online', 'Connected ✓');
+          showMessage('✅ Successfully connected to Firebase!', 'success');
+          document.getElementById('setupGuide').classList.remove('show');
+          setupApp();
+        } else {
+          throw new Error('Test document not found');
+        }
+        
+      } catch (error) {
+        console.error('Connection test failed:', error);
+        isFirestoreReady = false;
+        
+        // Check specific error types
+        if (error.code === 'failed-precondition') {
+          updateStatus('offline', 'Firestore not enabled');
+          showMessage('⚠️ Firestore database not enabled. Please enable it in Firebase Console.', 'error');
+          document.getElementById('setupGuide').classList.add('show');
+        } else if (error.code === 'permission-denied') {
+          updateStatus('offline', 'Permission denied');
+          showMessage('❌ Permission denied. Please check security rules.', 'error');
+          document.getElementById('setupGuide').classList.add('show');
+        } else {
+          updateStatus('offline', 'Connection failed');
+          showMessage('❌ Connection failed: ' + error.message, 'error');
+        }
+      }
+    }
+
+    // Check connection manually
+    function checkConnection() {
+      showMessage('🔍 Checking connection...', 'info');
+      testConnection();
+    }
+
+    // Setup the app after successful connection
+    function setupApp() {
+      // Set today's date as default
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('date').value = today;
+      
+      // Setup event listeners
+      document.getElementById('addBtn').addEventListener('click', addExpense);
+      document.getElementById('description').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') addExpense();
+      });
+      
+      // Load initial data
+      loadInitialData();
+      
+      // Start periodic connection check
+      startConnectionMonitor();
+    }
+
+    // Start monitoring connection
+    function startConnectionMonitor() {
+      if (connectionCheckInterval) {
+        clearInterval(connectionCheckInterval);
+      }
+      
+      connectionCheckInterval = setInterval(() => {
+        if (isFirestoreReady) {
+          db.collection('_test').doc('heartbeat').set({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          }).catch(err => {
+            if (err.code === 'unavailable' || err.code === 'failed-precondition') {
+              updateStatus('offline', 'Connection lost');
+              isFirestoreReady = false;
+            }
+          });
+        }
+      }, 30000); // Check every 30 seconds
+    }
+
+    // Format currency
+    function formatCurrency(amount) {
+      return 'UGX ' + parseInt(amount).toLocaleString('en-UG');
+    }
+
+    // Get month key
+    function getMonthKey(dateStr) {
+      const d = new Date(dateStr);
+      return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}`;
+    }
+
+    // Get week key
+    function getWeekKey(dateStr) {
+      const d = new Date(dateStr);
+      const startOfYear = new Date(d.getFullYear(), 0, 1);
+      const days = Math.floor((d - startOfYear) / (24 * 60 * 60 * 1000));
+      return `${d.getFullYear()}-W${Math.ceil((days + 1) / 7)}`;
+    }
+
+    // Get day key
+    function getDayKey(dateStr) {
+      return dateStr;
+    }
+
+    // Get year key
+    function getYearKey(dateStr) {
+      return new Date(dateStr).getFullYear().toString();
+    }
+
+    // Add expense
+    async function addExpense() {
+      if (!isFirestoreReady) {
+        showMessage('⚠️ Please connect to Firebase first', 'error');
+        return;
+      }
+
+      const amount = document.getElementById('amount').value.trim();
+      const category = document.getElementById('category').value;
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value.trim();
+
+      // Validation
+      if (!amount || !date) {
+        showMessage('❌ Amount and date are required', 'error');
+        return;
+      }
+
+      if (parseFloat(amount) <= 0 || isNaN(parseFloat(amount))) {
+        showMessage('❌ Please enter a valid amount', 'error');
+        return;
+      }
+
+      const addBtn = document.getElementById('addBtn');
+      const originalText = addBtn.innerHTML;
+      
+      try {
+        // Disable button
+        addBtn.disabled = true;
+        addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        // Prepare expense data
+        const expenseData = {
+          amount: parseFloat(amount),
+          category: category,
+          date: date,
+          description: description || '',
+          monthKey: getMonthKey(date),
+          weekKey: getWeekKey(date),
+          dayKey: getDayKey(date),
+          yearKey: getYearKey(date),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: new Date().toISOString()
+        };
+
+        // Add to Firestore
+        await db.collection('expenses').add(expenseData);
+
+        // Clear form
+        document.getElementById('amount').value = '';
+        document.getElementById('description').value = '';
+
+        // Show success message
+        showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
+
+        // Reload data
+        loadExpenses();
+        updateStats();
+
+      } catch (error) {
+        console.error('Error adding expense:', error);
+        showMessage('❌ Error: ' + error.message, 'error');
+      } finally {
+        // Re-enable button
+        addBtn.disabled = false;
+        addBtn.innerHTML = originalText;
+      }
+    }
+
+    // Load expenses
+    async function loadExpenses() {
+      if (!isFirestoreReady) return;
+
+      try {
+        const now = new Date();
+        const currentMonth = getMonthKey(now.toISOString().split('T')[0]);
+        
+        const snapshot = await db.collection('expenses')
+          .where('monthKey', '==', currentMonth)
+          .orderBy('timestamp', 'desc')
+          .limit(20)
+          .get();
+
+        let html = '';
+        
+        if (snapshot.empty) {
+          html = `
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <h4>No expenses yet</h4>
+              <p>Add your first expense to get started!</p>
+            </div>
+          `;
+        } else {
+          snapshot.forEach(doc => {
+            const expense = doc.data();
+            const date = new Date(expense.date);
+            const formattedDate = date.toLocaleDateString('en-UG', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric'
+            });
+
+            html += `
+              <div class="expense-item">
+                <div>
+                  <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
+                    <i class="fas fa-tag"></i>
+                    ${expense.category}
+                  </span>
+                  <strong>${formattedDate}</strong>
+                  <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                    ${expense.description || ''}
+                  </div>
+                </div>
+                <div style="font-weight: 700; font-size: 1.2rem; font-family: 'Courier New', monospace;">
+                  ${formatCurrency(expense.amount)}
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        document.getElementById('expensesList').innerHTML = html;
+
+      } catch (error) {
+        console.error('Error loading expenses:', error);
+        document.getElementById('expensesList').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4>Error loading expenses</h4>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Update stats
+    async function updateStats() {
+      if (!isFirestoreReady) return;
+
+      try {
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        const currentWeek = getWeekKey(today);
+        const currentMonth = getMonthKey(today);
+        const currentYear = getYearKey(today);
+
+        // Get today's total
+        const todaySnapshot = await db.collection('expenses')
+          .where('dayKey', '==', today)
+          .get();
+        let todayTotal = 0;
+        todaySnapshot.forEach(doc => todayTotal += doc.data().amount);
+        document.getElementById('todayTotal').textContent = formatCurrency(todayTotal);
+
+        // Get week total
+        const weekSnapshot = await db.collection('expenses')
+          .where('weekKey', '==', currentWeek)
+          .get();
+        let weekTotal = 0;
+        weekSnapshot.forEach(doc => weekTotal += doc.data().amount);
+        document.getElementById('weekTotal').textContent = formatCurrency(weekTotal);
+
+        // Get month total
+        const monthSnapshot = await db.collection('expenses')
+          .where('monthKey', '==', currentMonth)
+          .get();
+        let monthTotal = 0;
+        monthSnapshot.forEach(doc => monthTotal += doc.data().amount);
+        document.getElementById('monthTotal').textContent = formatCurrency(monthTotal);
+
+        // Get year total
+        const yearSnapshot = await db.collection('expenses')
+          .where('yearKey', '==', currentYear)
+          .get();
+        let yearTotal = 0;
+        yearSnapshot.forEach(doc => yearTotal += doc.data().amount);
+        document.getElementById('yearTotal').textContent = formatCurrency(yearTotal);
+
+      } catch (error) {
+        console.error('Error updating stats:', error);
+      }
+    }
+
+    // Load initial data
+    async function loadInitialData() {
+      await loadExpenses();
+      await updateStats();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeFirebase();
+    });
+
+    // Auto-refresh data every 60 seconds
+    setInterval(() => {
+      if (isFirestoreReady) {
+        loadExpenses();
+        updateStats();
+      }
+    }, 60000);
+  </script>
+</body>
+</html>
