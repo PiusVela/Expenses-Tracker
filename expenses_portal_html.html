@@ -49,7 +49,6 @@
       box-shadow: 0 20px 60px var(--shadow);
       overflow: hidden;
       position: relative;
-      padding-bottom: 60px; /* Space for footer */
     }
 
     .container::before {
@@ -91,8 +90,6 @@
       margin-bottom: 10px;
       position: relative;
       z-index: 2;
-      flex-wrap: wrap;
-      gap: 15px;
     }
 
     .header h1 {
@@ -108,39 +105,6 @@
       padding: 12px;
       border-radius: 16px;
       backdrop-filter: blur(10px);
-    }
-
-    /* ===== YEAR FILTER ===== */
-    .year-filter {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 8px 16px;
-      border-radius: 24px;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .year-filter label {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .year-filter select {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-weight: 600;
-      color: var(--primary-dark);
-      cursor: pointer;
-      min-width: 100px;
-    }
-
-    .year-filter select:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
     }
 
     .status-indicator {
@@ -224,7 +188,6 @@
       font-size: 1.4rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 10px;
     }
 
@@ -245,11 +208,25 @@
       border: 1px solid var(--border);
       cursor: pointer;
       user-select: none;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .stat-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 15px 40px var(--shadow);
+    }
+
+    .stat-card.tapped {
+      animation: tapReveal 0.5s ease;
+    }
+
+    @keyframes tapReveal {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.98); }
+      100% { transform: scale(1); }
     }
 
     .stat-card::before {
@@ -271,14 +248,25 @@
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      justify-content: space-between;
+    }
+
+    .stat-label i {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover .stat-label i {
+      transform: scale(1.1);
     }
 
     .stat-value {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 800;
       color: var(--dark);
       font-family: 'SF Mono', 'Courier New', monospace;
@@ -290,32 +278,71 @@
       transition: all 0.3s ease;
     }
 
+    .stat-value.hidden {
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+      background: var(--gray);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+      cursor: pointer;
+    }
+
     .stat-value.hidden::after {
-      content: '•••••••';
+      content: '👁️ Tap to reveal';
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shimmer 2s infinite;
+      font-weight: 600;
     }
 
-    @keyframes shimmer {
-      0% { opacity: 0.7; }
-      50% { opacity: 1; }
-      100% { opacity: 0.7; }
+    .stat-tooltip {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
     }
 
-    .stat-value.hidden .actual-value {
-      display: none;
+    .stat-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--dark);
+    }
+
+    .stat-card:hover .stat-tooltip {
+      opacity: 1;
     }
 
     .stat-change {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--gray);
+      margin-top: 5px;
       display: flex;
       align-items: center;
       gap: 5px;
@@ -348,7 +375,6 @@
       border-radius: 20px;
       padding: 20px;
       box-shadow: 0 10px 30px var(--shadow);
-      position: relative;
     }
 
     .chart-container h4 {
@@ -471,6 +497,48 @@
       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
 
+    /* ===== BALANCE REVEAL BUTTONS ===== */
+    .balance-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-balance {
+      background: var(--light);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .btn-balance:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-balance.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .reveal-all-btn {
+      margin-top: 15px;
+      width: 100%;
+      background: linear-gradient(135deg, #667eea22, #764ba222);
+      color: var(--primary);
+      border: 2px dashed var(--primary);
+      padding: 12px;
+      font-weight: 600;
+    }
+
+    .reveal-all-btn:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-style: solid;
+    }
+
     /* ===== REPORT SECTION ===== */
     .report-section {
       background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
@@ -491,7 +559,6 @@
       background: var(--light);
       color: var(--primary);
       border: 2px solid var(--primary);
-      padding: 8px 16px;
     }
 
     .btn-report:hover,
@@ -501,31 +568,9 @@
       transform: translateY(-2px);
     }
 
-    /* Custom Range Styling */
-    .report-period {
-      display: none;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin: 20px 0;
-      align-items: end;
-    }
-
-    .report-period.show {
-      display: grid;
-    }
-
-    .report-period .form-group {
-      margin-bottom: 0;
-    }
-
-    /* Report Results */
+    /* ===== REPORT RESULTS ===== */
     .report-results {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid var(--border);
-      min-height: 100px;
+      margin-top: 25px;
     }
 
     .report-summary {
@@ -535,24 +580,73 @@
       margin-bottom: 25px;
     }
 
-    .report-item {
-      background: var(--light);
+    .report-summary-item {
+      background: #f8fafc;
       padding: 15px;
-      border-radius: 12px;
-      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
     }
 
-    .report-item h5 {
+    .report-summary-item .label {
+      font-size: 0.8rem;
       color: var(--gray);
-      font-size: 0.9rem;
       margin-bottom: 5px;
     }
 
-    .report-item .value {
+    .report-summary-item .value {
       font-size: 1.5rem;
       font-weight: 700;
       color: var(--primary-dark);
-      font-family: 'SF Mono', 'Courier New', monospace;
+      font-family: 'Courier New', monospace;
+    }
+
+    .category-breakdown {
+      margin-top: 20px;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 8px;
+      background: #f8fafc;
+      border-radius: 6px;
+    }
+
+    .category-name {
+      flex: 0 0 150px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .category-bar {
+      flex: 1;
+      height: 20px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0 15px;
+    }
+
+    .category-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 4px;
+    }
+
+    .category-amount {
+      flex: 0 0 100px;
+      text-align: right;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .category-percentage {
+      flex: 0 0 50px;
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--gray);
     }
 
     /* ===== EXPENSE LIST ===== */
@@ -640,33 +734,6 @@
     .category-payments { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     .category-purchases { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
 
-    /* ===== FOOTER ===== */
-    .footer {
-      text-align: center;
-      padding: 25px;
-      color: var(--gray);
-      font-size: 0.9rem;
-      border-top: 1px solid var(--border);
-      margin-top: 30px;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .footer .copyright {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-weight: 600;
-    }
-
-    .footer .copyright i {
-      color: var(--primary);
-    }
-
     /* ===== LOADING & EMPTY STATES ===== */
     .loading {
       text-align: center;
@@ -739,13 +806,6 @@
       }
     }
 
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      justify-content: flex-end;
-    }
-
     /* ===== MESSAGES ===== */
     .message {
       padding: 15px 20px;
@@ -805,16 +865,6 @@
         font-size: 1.8rem;
       }
       
-      .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .year-filter {
-        align-self: stretch;
-        justify-content: space-between;
-      }
-      
       .dashboard {
         padding: 20px;
       }
@@ -833,10 +883,6 @@
       
       .report-controls {
         flex-direction: column;
-      }
-      
-      .report-period {
-        grid-template-columns: 1fr;
       }
       
       .btn {
@@ -879,59 +925,74 @@
           <i class="fas fa-wallet"></i>
           <span>UGX Expenses Tracker</span>
         </h1>
-        <div class="year-filter">
-          <label for="yearSelect"><i class="fas fa-calendar-alt"></i> Year:</label>
-          <select id="yearSelect">
-            <!-- Options will be populated by JavaScript -->
-          </select>
-        </div>
         <div class="status-indicator" id="statusIndicator">
           <div class="status-dot connecting" id="statusDot"></div>
           <span id="statusText">Initializing...</span>
         </div>
       </div>
-      <p>Track, analyze, and visualize your expenses in Ugandan Shillings</p>
+      <p>Tap on balance cards to reveal amounts • Track, analyze, and visualize your expenses</p>
     </div>
 
     <!-- Dashboard Section -->
     <div class="dashboard">
       <div class="stats-section">
-        <h3>
-          <span><i class="fas fa-chart-line"></i> Quick Stats</span>
-          <span style="font-size: 0.9rem; color: var(--gray); font-weight: normal;">
-            <i class="fas fa-hand-pointer"></i> Tap balances to reveal
-          </span>
-        </h3>
-        <div class="stats-grid">
-          <div class="stat-card" data-stat="today">
-            <div class="stat-label"><i class="fas fa-calendar-day"></i> Today</div>
-            <div class="stat-value hidden" id="todayTotal">
-              <span class="actual-value">UGX 0</span>
-            </div>
-            <div class="stat-change" id="todayChange">--</div>
-          </div>
-          <div class="stat-card" data-stat="week">
-            <div class="stat-label"><i class="fas fa-calendar-week"></i> This Week</div>
-            <div class="stat-value hidden" id="weekTotal">
-              <span class="actual-value">UGX 0</span>
-            </div>
-            <div class="stat-change" id="weekChange">--</div>
-          </div>
-          <div class="stat-card" data-stat="month">
-            <div class="stat-label"><i class="fas fa-calendar-alt"></i> This Month</div>
-            <div class="stat-value hidden" id="monthTotal">
-              <span class="actual-value">UGX 0</span>
-            </div>
-            <div class="stat-change" id="monthChange">--</div>
-          </div>
-          <div class="stat-card" data-stat="year">
-            <div class="stat-label"><i class="fas fa-calendar"></i> This Year</div>
-            <div class="stat-value hidden" id="yearTotal">
-              <span class="actual-value">UGX 0</span>
-            </div>
-            <div class="stat-change" id="yearChange">--</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+          <div class="balance-controls">
+            <button class="btn btn-balance" onclick="revealAllBalances()">
+              <i class="fas fa-eye"></i> Reveal All
+            </button>
+            <button class="btn btn-balance" onclick="hideAllBalances()">
+              <i class="fas fa-eye-slash"></i> Hide All
+            </button>
           </div>
         </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card" id="todayCard" onclick="toggleBalance('today')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-day"></i> Today</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="todayTotal">UGX 0</div>
+            <div class="stat-change" id="todayChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="weekCard" onclick="toggleBalance('week')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-week"></i> This Week</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="weekTotal">UGX 0</div>
+            <div class="stat-change" id="weekChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="monthCard" onclick="toggleBalance('month')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-alt"></i> This Month</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="monthTotal">UGX 0</div>
+            <div class="stat-change" id="monthChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="yearCard" onclick="toggleBalance('year')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar"></i> This Year</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="yearTotal">UGX 0</div>
+            <div class="stat-change" id="yearChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+        </div>
+
+        <button class="btn reveal-all-btn" onclick="revealAllBalances()">
+          <i class="fas fa-unlock"></i> Tap here to reveal all balances at once
+        </button>
 
         <!-- Charts -->
         <div class="charts-section">
@@ -940,7 +1001,7 @@
             <canvas id="pieChart"></canvas>
           </div>
           <div class="chart-container">
-            <h4><i class="fas fa-chart-bar"></i> Monthly Trend</h4>
+            <h4><i class="fas fa-chart-bar"></i> Weekly Trend</h4>
             <canvas id="barChart"></canvas>
           </div>
         </div>
@@ -1021,12 +1082,12 @@
         </button>
       </div>
 
-      <div class="report-period" id="customRange">
-        <div class="form-group">
+      <div class="report-period" id="customRange" style="display: none;">
+        <div>
           <label>From Date</label>
           <input type="date" id="fromDate" value="">
         </div>
-        <div class="form-group">
+        <div>
           <label>To Date</label>
           <input type="date" id="toDate" value="">
         </div>
@@ -1064,14 +1125,6 @@
           <div class="spinner"></div>
           <p>Loading expenses...</p>
         </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      <div class="copyright">
-        <i class="fas fa-copyright"></i>
-        <span>Pius Angulo 2025 - UGX Expenses Tracker</span>
       </div>
     </div>
   </div>
@@ -1114,15 +1167,21 @@
     let pieChart = null;
     let barChart = null;
     let previousStats = {};
-    let selectedYear = new Date().getFullYear();
-    let allYears = [];
+    let revealedBalances = {
+      today: false,
+      week: false,
+      month: false,
+      year: false
+    };
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
       initFirebase();
       setupEventListeners();
       setDefaultDates();
-      populateYearDropdown();
+      
+      // Load revealed state from localStorage
+      loadRevealedState();
     });
 
     // Initialize Firebase
@@ -1150,40 +1209,16 @@
         await db.collection('expenses').limit(1).get();
         isFirestoreReady = true;
         updateStatus('online', 'Connected ✓');
-        showMessage('✅ Successfully connected to Firebase!', 'success');
+        showMessage('✅ Successfully connected to Firebase! Tap on balance cards to reveal amounts', 'success');
         
         setupApp();
         loadDashboard();
+        // Generate initial report
+        setTimeout(() => generateReport('today'), 1000);
       } catch (error) {
         updateStatus('offline', 'Connection failed');
         showError('Could not connect: ' + error.message);
       }
-    }
-
-    // Populate year dropdown
-    function populateYearDropdown() {
-      const yearSelect = document.getElementById('yearSelect');
-      const currentYear = new Date().getFullYear();
-      
-      // Clear existing options
-      yearSelect.innerHTML = '';
-      
-      // Add years from 2024 to 2090
-      for (let year = 2024; year <= 2090; year++) {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        if (year === currentYear) {
-          option.selected = true;
-        }
-        yearSelect.appendChild(option);
-      }
-      
-      // Add change event listener
-      yearSelect.addEventListener('change', (e) => {
-        selectedYear = parseInt(e.target.value);
-        loadDashboard();
-      });
     }
 
     // Setup event listeners
@@ -1201,32 +1236,13 @@
           addExpense();
         }
       });
-      
-      // Balance reveal on click
-      document.querySelectorAll('.stat-card').forEach(card => {
-        card.addEventListener('click', function() {
-          const statValue = this.querySelector('.stat-value');
-          if (statValue.classList.contains('hidden')) {
-            statValue.classList.remove('hidden');
-            // Hide again after 5 seconds
-            setTimeout(() => {
-              if (statValue && !statValue.closest('.stat-card:hover')) {
-                statValue.classList.add('hidden');
-              }
-            }, 5000);
-          }
-        });
-      });
-      
-      // Hide balances when mouse leaves card
-      document.querySelectorAll('.stat-card').forEach(card => {
-        card.addEventListener('mouseleave', function() {
-          const statValue = this.querySelector('.stat-value');
-          setTimeout(() => {
-            if (statValue && !document.querySelector('.stat-card:hover')) {
-              statValue.classList.add('hidden');
-            }
-          }, 1000);
+
+      // Setup report button active states
+      const reportButtons = document.querySelectorAll('.report-controls .btn');
+      reportButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          reportButtons.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
         });
       });
     }
@@ -1240,6 +1256,81 @@
       fromDate.setDate(fromDate.getDate() - 30);
       document.getElementById('fromDate').value = fromDate.toISOString().split('T')[0];
       document.getElementById('toDate').value = today;
+    }
+
+    // Load revealed state from localStorage
+    function loadRevealedState() {
+      const savedState = localStorage.getItem('revealedBalances');
+      if (savedState) {
+        revealedBalances = JSON.parse(savedState);
+        // Update UI based on saved state
+        Object.keys(revealedBalances).forEach(period => {
+          const element = document.getElementById(`${period}Total`);
+          if (element) {
+            if (revealedBalances[period]) {
+              element.classList.remove('hidden');
+            } else {
+              element.classList.add('hidden');
+            }
+          }
+        });
+      }
+    }
+
+    // Save revealed state to localStorage
+    function saveRevealedState() {
+      localStorage.setItem('revealedBalances', JSON.stringify(revealedBalances));
+    }
+
+    // Toggle balance visibility
+    function toggleBalance(period) {
+      const element = document.getElementById(`${period}Total`);
+      const card = document.getElementById(`${period}Card`);
+      
+      if (!element || !card) return;
+      
+      // Add tap animation
+      card.classList.add('tapped');
+      setTimeout(() => card.classList.remove('tapped'), 500);
+      
+      // Toggle visibility
+      if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+        revealedBalances[period] = true;
+        showMessage(`📊 ${period.charAt(0).toUpperCase() + period.slice(1)} balance revealed!`, 'info');
+      } else {
+        element.classList.add('hidden');
+        revealedBalances[period] = false;
+        showMessage(`👁️ ${period.charAt(0).toUpperCase() + period.slice(1)} balance hidden`, 'info');
+      }
+      
+      saveRevealedState();
+    }
+
+    // Reveal all balances
+    function revealAllBalances() {
+      ['today', 'week', 'month', 'year'].forEach(period => {
+        const element = document.getElementById(`${period}Total`);
+        if (element) {
+          element.classList.remove('hidden');
+          revealedBalances[period] = true;
+        }
+      });
+      saveRevealedState();
+      showMessage('🔓 All balances revealed!', 'success');
+    }
+
+    // Hide all balances
+    function hideAllBalances() {
+      ['today', 'week', 'month', 'year'].forEach(period => {
+        const element = document.getElementById(`${period}Total`);
+        if (element) {
+          element.classList.add('hidden');
+          revealedBalances[period] = false;
+        }
+      });
+      saveRevealedState();
+      showMessage('👁️ All balances hidden', 'info');
     }
 
     // Update status indicator
@@ -1272,6 +1363,62 @@
     // Format currency
     function formatCurrency(amount) {
       return 'UGX ' + parseInt(amount).toLocaleString('en-UG');
+    }
+
+    // Get date range for report type
+    function getDateRange(type) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      let startDate, endDate, periodLabel;
+      
+      switch(type) {
+        case 'today':
+          startDate = new Date(today);
+          endDate = new Date(today);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'Today (' + today.toLocaleDateString('en-UG') + ')';
+          break;
+          
+        case 'yesterday':
+          startDate = new Date(today);
+          startDate.setDate(startDate.getDate() - 1);
+          endDate = new Date(startDate);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'Yesterday (' + startDate.toLocaleDateString('en-UG') + ')';
+          break;
+          
+        case 'week':
+          startDate = new Date(today);
+          // Start from Monday (0=Sunday, 1=Monday)
+          const day = startDate.getDay();
+          const diff = startDate.getDate() - day + (day === 0 ? -6 : 1);
+          startDate.setDate(diff);
+          endDate = new Date(startDate);
+          endDate.setDate(endDate.getDate() + 6);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'This Week (' + startDate.toLocaleDateString('en-UG') + ' to ' + endDate.toLocaleDateString('en-UG') + ')';
+          break;
+          
+        case 'month':
+          startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+          endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'This Month (' + startDate.toLocaleDateString('en-UG', { month: 'long', year: 'numeric' }) + ')';
+          break;
+          
+        case 'year':
+          startDate = new Date(today.getFullYear(), 0, 1);
+          endDate = new Date(today.getFullYear(), 11, 31);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'This Year (' + today.getFullYear() + ')';
+          break;
+          
+        default:
+          return null;
+      }
+      
+      return { startDate, endDate, periodLabel };
     }
 
     // Setup app after connection
@@ -1315,8 +1462,7 @@
           date,
           description: description || '',
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          createdAt: new Date().toISOString(),
-          year: parseInt(date.split('-')[0]) // Store year for filtering
+          createdAt: new Date().toISOString()
         };
 
         await db.collection('expenses').add(expenseData);
@@ -1339,14 +1485,391 @@
       }
     }
 
+    // Generate report
+    async function generateReport(type) {
+      if (!isFirestoreReady) {
+        showError('Please connect to Firebase first');
+        return;
+      }
+
+      currentReportType = type;
+      document.getElementById('customRange').style.display = 'none';
+      
+      try {
+        const dateRange = getDateRange(type);
+        if (!dateRange) {
+          showError('Invalid report type');
+          return;
+        }
+        
+        await fetchAndDisplayReport(dateRange.startDate, dateRange.endDate, dateRange.periodLabel, type);
+
+      } catch (error) {
+        console.error('Error generating report:', error);
+        document.getElementById('reportResults').innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4>Error generating report</h4>
+            <p>${error.message}</p>
+          </div>
+        `;
+        document.getElementById('reportActions').style.display = 'none';
+      }
+    }
+
+    // Fetch and display report
+    async function fetchAndDisplayReport(startDate, endDate, periodLabel, type) {
+      const reportResults = document.getElementById('reportResults');
+      reportResults.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Generating report...</p>
+        </div>
+      `;
+
+      try {
+        // Get ALL expenses
+        const snapshot = await db.collection('expenses').get();
+
+        // Filter expenses by date range
+        let totalAmount = 0;
+        let expenseCount = 0;
+        const categories = {};
+        const expenses = [];
+
+        snapshot.forEach(doc => {
+          const expense = doc.data();
+          const expenseDate = new Date(expense.date);
+          expenseDate.setHours(0, 0, 0, 0);
+          
+          // Check if expense is within date range
+          if (expenseDate >= startDate && expenseDate <= endDate) {
+            totalAmount += expense.amount;
+            expenseCount++;
+            
+            // Group by category
+            categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
+            
+            // Store expense for list
+            expenses.push({
+              id: doc.id,
+              ...expense
+            });
+          }
+        });
+
+        // Sort categories by amount
+        const sortedCategories = Object.entries(categories)
+          .sort((a, b) => b[1] - a[1]);
+
+        // Sort expenses by date (newest first)
+        expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Store report data for PDF export
+        currentReportData = {
+          periodLabel,
+          startDate,
+          endDate,
+          totalAmount,
+          expenseCount,
+          categories: sortedCategories,
+          expenses,
+          type
+        };
+
+        // Generate HTML for report
+        let html = `
+          <h4 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1.2rem;">
+            <i class="fas fa-chart-bar"></i> ${periodLabel}
+          </h4>
+          <div class="report-summary">
+            <div class="report-summary-item">
+              <div class="label">Total Expenses</div>
+              <div class="value">${formatCurrency(totalAmount)}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Number of Expenses</div>
+              <div class="value">${expenseCount}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Average per Expense</div>
+              <div class="value">${formatCurrency(expenseCount > 0 ? Math.round(totalAmount / expenseCount) : 0)}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Date Range</div>
+              <div class="value" style="font-size: 1rem;">${startDate.toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })} - ${endDate.toLocaleDateString('en-UG', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            </div>
+          </div>
+        `;
+
+        if (sortedCategories.length > 0) {
+          html += `
+            <div class="category-breakdown">
+              <h5 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-tags"></i> Category Breakdown
+              </h5>
+          `;
+          
+          sortedCategories.forEach(([category, amount]) => {
+            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
+            html += `
+              <div class="category-item">
+                <div class="category-name">
+                  <span class="category-badge category-${category.toLowerCase().replace(' ', '-')}" style="margin-right: 8px;">
+                    ${category}
+                  </span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="category-amount">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+
+        if (expenses.length > 0) {
+          html += `
+            <div style="margin-top: 25px;">
+              <h5 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-receipt"></i> Expense Details (${expenses.length} items)
+              </h5>
+          `;
+          
+          expenses.forEach(expense => {
+            const date = new Date(expense.date);
+            const formattedDate = date.toLocaleDateString('en-UG', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric'
+            });
+            
+            html += `
+              <div class="expense-item">
+                <div class="expense-details">
+                  <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
+                    <i class="fas fa-tag"></i>
+                    ${expense.category}
+                  </span>
+                  <strong>${formattedDate}</strong>
+                  <div style="font-size: 0.8rem; color: var(--gray); margin-top: 3px;">
+                    ${expense.description || ''}
+                  </div>
+                </div>
+                <div class="expense-amount">
+                  ${formatCurrency(expense.amount)}
+                </div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+
+        if (expenseCount === 0) {
+          html += `
+            <div class="empty-state" style="margin-top: 30px;">
+              <i class="fas fa-chart-line"></i>
+              <h4>No expenses found</h4>
+              <p>No expenses recorded for this period.</p>
+            </div>
+          `;
+        }
+
+        reportResults.innerHTML = html;
+        
+        // Show PDF download button if there are expenses
+        if (expenseCount > 0) {
+          document.getElementById('reportActions').style.display = 'flex';
+        } else {
+          document.getElementById('reportActions').style.display = 'none';
+        }
+
+        showMessage(`📊 Report generated for ${periodLabel}`, 'success');
+
+      } catch (error) {
+        console.error('Error fetching report:', error);
+        reportResults.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4>Error generating report</h4>
+            <p>${error.message}</p>
+          </div>
+        `;
+        document.getElementById('reportActions').style.display = 'none';
+        showError('Failed to generate report: ' + error.message);
+      }
+    }
+
+    // Show custom range inputs
+    function showCustomRange() {
+      document.getElementById('customRange').style.display = 'flex';
+      const reportButtons = document.querySelectorAll('.report-controls .btn');
+      reportButtons.forEach(b => b.classList.remove('active'));
+    }
+
+    // Generate custom report
+    async function generateCustomReport() {
+      const fromDate = document.getElementById('fromDate').value;
+      const toDate = document.getElementById('toDate').value;
+      
+      if (!fromDate || !toDate) {
+        showMessage('❌ Please select both from and to dates', 'error');
+        return;
+      }
+      
+      if (new Date(fromDate) > new Date(toDate)) {
+        showMessage('❌ From date cannot be after to date', 'error');
+        return;
+      }
+      
+      currentReportType = 'custom';
+      const startDate = new Date(fromDate);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(toDate);
+      endDate.setHours(23, 59, 59, 999);
+      
+      const periodLabel = 'Custom Range (' + startDate.toLocaleDateString('en-UG') + ' to ' + endDate.toLocaleDateString('en-UG') + ')';
+      
+      await fetchAndDisplayReport(startDate, endDate, periodLabel, 'custom');
+    }
+
+    // Download PDF report
+    function downloadPDF() {
+      if (!currentReportData || currentReportData.expenseCount === 0) {
+        showMessage('❌ No report data available to download', 'error');
+        return;
+      }
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Report title
+        doc.setFontSize(18);
+        doc.setTextColor(67, 97, 238);
+        doc.text('UGX Expenses Tracker - Report', 105, 20, { align: 'center' });
+        
+        // Report period
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(currentReportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45;
+        
+        // Summary section
+        doc.setFontSize(14);
+        doc.setTextColor(67, 97, 238);
+        doc.text('Summary', 20, yPos);
+        yPos += 10;
+        
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Total Expenses: ${formatCurrency(currentReportData.totalAmount)}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Number of Expenses: ${currentReportData.expenseCount}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Average per Expense: ${formatCurrency(currentReportData.expenseCount > 0 ? Math.round(currentReportData.totalAmount / currentReportData.expenseCount) : 0)}`, 25, yPos);
+        yPos += 7;
+        doc.text(`Date Range: ${currentReportData.startDate.toLocaleDateString('en-UG')} to ${currentReportData.endDate.toLocaleDateString('en-UG')}`, 25, yPos);
+        yPos += 15;
+        
+        // Category breakdown
+        if (currentReportData.categories.length > 0) {
+          doc.setFontSize(14);
+          doc.setTextColor(67, 97, 238);
+          doc.text('Category Breakdown', 20, yPos);
+          yPos += 10;
+          
+          doc.setFontSize(11);
+          doc.setTextColor(0, 0, 0);
+          
+          currentReportData.categories.forEach(([category, amount]) => {
+            const percentage = currentReportData.totalAmount > 0 ? Math.round((amount / currentReportData.totalAmount) * 100) : 0;
+            doc.text(`${category}: ${formatCurrency(amount)} (${percentage}%)`, 25, yPos);
+            yPos += 7;
+            
+            // Add new page if we're near the bottom
+            if (yPos > 270) {
+              doc.addPage();
+              yPos = 20;
+            }
+          });
+          
+          yPos += 10;
+        }
+        
+        // Expense details
+        if (currentReportData.expenses.length > 0) {
+          doc.setFontSize(14);
+          doc.setTextColor(67, 97, 238);
+          doc.text('Expense Details', 20, yPos);
+          yPos += 10;
+          
+          // Prepare table data
+          const tableData = currentReportData.expenses.map(expense => {
+            const date = new Date(expense.date);
+            const formattedDate = date.toLocaleDateString('en-UG', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            });
+            
+            return [
+              formattedDate,
+              expense.category,
+              expense.description || '-',
+              formatCurrency(expense.amount)
+            ];
+          });
+          
+          // Add table
+          doc.autoTable({
+            startY: yPos,
+            head: [['Date', 'Category', 'Description', 'Amount']],
+            body: tableData,
+            theme: 'grid',
+            headStyles: { fillColor: [67, 97, 238] },
+            margin: { left: 20, right: 20 },
+            styles: { fontSize: 10 },
+            columnStyles: {
+              0: { cellWidth: 30 },
+              1: { cellWidth: 40 },
+              2: { cellWidth: 70 },
+              3: { cellWidth: 30 }
+            }
+          });
+        }
+        
+        // Footer
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.setTextColor(128, 128, 128);
+          doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
+          doc.text(`Generated on ${new Date().toLocaleDateString('en-UG')}`, 105, 290, { align: 'center' });
+        }
+        
+        // Save the PDF
+        const fileName = `expenses_report_${currentReportData.type}_${new Date().toISOString().split('T')[0]}.pdf`;
+        doc.save(fileName);
+        
+        showMessage('✅ PDF report downloaded successfully!', 'success');
+        
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        showMessage('❌ Error generating PDF: ' + error.message, 'error');
+      }
+    }
+
     // Load dashboard data
     async function loadDashboard() {
       try {
-        // Query expenses for selected year
-        const snapshot = await db.collection('expenses')
-          .where('year', '==', selectedYear)
-          .get();
-          
+        const snapshot = await db.collection('expenses').get();
         const now = new Date();
         const today = now.toISOString().split('T')[0];
         
@@ -1360,22 +1883,19 @@
 
         // Categorize expenses
         const categories = {};
-        const monthlyData = Array(12).fill(0);
+        const weeklyData = Array(7).fill(0);
         
         snapshot.forEach(doc => {
           const expense = doc.data();
           const expenseDate = new Date(expense.date);
           
-          // Filter by selected year
-          if (expenseDate.getFullYear() !== selectedYear) return;
-          
           // Today
           if (expense.date === today) stats.today += expense.amount;
           
-          // This week
-          const weekStart = new Date(now);
-          weekStart.setDate(now.getDate() - now.getDay());
-          if (expenseDate >= weekStart) {
+          // This week (last 7 days)
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          if (expenseDate > weekAgo) {
             stats.week += expense.amount;
           }
           
@@ -1384,20 +1904,22 @@
             stats.month += expense.amount;
           }
           
-          // This year (selected year)
-          stats.year += expense.amount;
+          // This year
+          if (expenseDate.getFullYear() === now.getFullYear()) {
+            stats.year += expense.amount;
+          }
           
           // Category totals
           categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
           
-          // Monthly data for chart
-          const month = expenseDate.getMonth();
-          monthlyData[month] += expense.amount;
+          // Weekly data for chart
+          const dayOfWeek = expenseDate.getDay();
+          weeklyData[dayOfWeek] += expense.amount;
         });
 
         // Update UI
         updateStatsUI(stats);
-        updateCharts(categories, monthlyData);
+        updateCharts(categories, weeklyData);
         loadExpensesList(snapshot);
 
       } catch (error) {
@@ -1407,63 +1929,59 @@
 
     // Update stats UI
     function updateStatsUI(stats) {
+      // Update values (keep hidden state)
+      document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
+      document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
+      document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
+      document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
+
       // Calculate percentage changes
       const calculateChange = (current, previous) => {
-        if (!previous || previous === 0) return {text: '--', isPositive: true};
+        if (!previous || previous === 0) return '--';
         const change = ((current - previous) / previous * 100).toFixed(1);
-        return {
-          text: Math.abs(change) + '% ' + (change > 0 ? '📈' : '📉'),
-          isPositive: change > 0
-        };
+        return change > 0 ? `+${change}% 📈` : `${change}% 📉`;
       };
 
-      // Update values
-      const updateStatElement = (id, value) => {
-        const element = document.getElementById(id);
-        if (element) {
-          const actualValueSpan = element.querySelector('.actual-value');
-          if (actualValueSpan) {
-            actualValueSpan.textContent = formatCurrency(value);
+      // Update changes
+      const todayChange = document.getElementById('todayChange');
+      const weekChange = document.getElementById('weekChange');
+      const monthChange = document.getElementById('monthChange');
+      const yearChange = document.getElementById('yearChange');
+
+      todayChange.textContent = calculateChange(stats.today, previousStats.today);
+      weekChange.textContent = calculateChange(stats.week, previousStats.week);
+      monthChange.textContent = calculateChange(stats.month, previousStats.month);
+      yearChange.textContent = calculateChange(stats.year, previousStats.year);
+
+      // Add color classes
+      const updateChangeClass = (element, current, previous) => {
+        element.classList.remove('positive', 'negative');
+        if (previous && previous > 0) {
+          if (current > previous) {
+            element.classList.add('positive');
+          } else if (current < previous) {
+            element.classList.add('negative');
           }
         }
       };
 
-      updateStatElement('todayTotal', stats.today);
-      updateStatElement('weekTotal', stats.week);
-      updateStatElement('monthTotal', stats.month);
-      updateStatElement('yearTotal', stats.year);
-
-      // Update changes
-      const todayChange = calculateChange(stats.today, previousStats.today);
-      const weekChange = calculateChange(stats.week, previousStats.week);
-      const monthChange = calculateChange(stats.month, previousStats.month);
-      const yearChange = calculateChange(stats.year, previousStats.year);
-
-      document.getElementById('todayChange').textContent = todayChange.text;
-      document.getElementById('todayChange').className = `stat-change ${todayChange.isPositive ? 'positive' : 'negative'}`;
-      
-      document.getElementById('weekChange').textContent = weekChange.text;
-      document.getElementById('weekChange').className = `stat-change ${weekChange.isPositive ? 'positive' : 'negative'}`;
-      
-      document.getElementById('monthChange').textContent = monthChange.text;
-      document.getElementById('monthChange').className = `stat-change ${monthChange.isPositive ? 'positive' : 'negative'}`;
-      
-      document.getElementById('yearChange').textContent = yearChange.text;
-      document.getElementById('yearChange').className = `stat-change ${yearChange.isPositive ? 'positive' : 'negative'}`;
+      updateChangeClass(todayChange, stats.today, previousStats.today);
+      updateChangeClass(weekChange, stats.week, previousStats.week);
+      updateChangeClass(monthChange, stats.month, previousStats.month);
+      updateChangeClass(yearChange, stats.year, previousStats.year);
 
       // Store for next comparison
       previousStats = stats;
     }
 
     // Update charts
-    function updateCharts(categories, monthlyData) {
+    function updateCharts(categories, weeklyData) {
       // Pie Chart
       const pieCtx = document.getElementById('pieChart').getContext('2d');
       const categoryColors = [
         '#667eea', '#f093fb', '#f5576c', '#4ecdc4',
         '#ffd166', '#06d6a0', '#a78bfa', '#f97316',
-        '#84cc16', '#ef4444', '#8b5cf6', '#10b981',
-        '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b'
+        '#84cc16', '#ef4444', '#8b5cf6', '#10b981'
       ];
 
       if (pieChart) pieChart.destroy();
@@ -1482,17 +2000,13 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'right',
               labels: {
                 padding: 20,
                 usePointStyle: true,
-                pointStyle: 'circle',
-                font: {
-                  size: 11
-                }
+                pointStyle: 'circle'
               }
             },
             tooltip: {
@@ -1506,7 +2020,7 @@
               }
             }
           },
-          cutout: '65%',
+          cutout: '70%',
           animation: {
             animateRotate: true,
             animateScale: true
@@ -1514,19 +2028,19 @@
         }
       });
 
-      // Bar Chart - Monthly Trend
+      // Bar Chart
       const barCtx = document.getElementById('barChart').getContext('2d');
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       
       if (barChart) barChart.destroy();
       
       barChart = new Chart(barCtx, {
         type: 'bar',
         data: {
-          labels: months,
+          labels: days,
           datasets: [{
-            label: `Expenses ${selectedYear} (UGX)`,
-            data: monthlyData,
+            label: 'Expenses (UGX)',
+            data: weeklyData,
             backgroundColor: 'rgba(102, 126, 234, 0.7)',
             borderColor: '#667eea',
             borderWidth: 2,
@@ -1536,7 +2050,6 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
             legend: {
               display: false
@@ -1546,11 +2059,7 @@
             y: {
               beginAtZero: true,
               ticks: {
-                callback: (value) => {
-                  if (value >= 1000000) return (value/1000000).toFixed(1) + 'M';
-                  if (value >= 1000) return (value/1000).toFixed(0) + 'K';
-                  return value;
-                }
+                callback: (value) => formatCurrency(value).replace('UGX ', '')
               }
             }
           },
@@ -1570,7 +2079,7 @@
         container.innerHTML = `
           <div class="empty-state">
             <i class="fas fa-inbox"></i>
-            <h4>No expenses for ${selectedYear}</h4>
+            <h4>No expenses yet</h4>
             <p>Add your first expense to get started!</p>
           </div>
         `;
@@ -1593,16 +2102,13 @@
         const formattedDate = date.toLocaleDateString('en-UG', {
           weekday: 'short',
           month: 'short',
-          day: 'numeric',
-          year: 'numeric'
+          day: 'numeric'
         });
 
-        const categoryClass = expense.category.toLowerCase().replace(' ', '-').replace(/[^a-z\-]/g, '');
-        
         html += `
           <div class="expense-item">
             <div>
-              <span class="category-badge category-${categoryClass}">
+              <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
                 <i class="fas fa-tag"></i>
                 ${expense.category}
               </span>
@@ -1621,443 +2127,6 @@
       container.innerHTML = html;
     }
 
-    // Report functions
-    async function generateReport(type) {
-      if (!isFirestoreReady) {
-        showError('Please connect to Firebase first');
-        return;
-      }
-      
-      currentReportType = type;
-      const reportResults = document.getElementById('reportResults');
-      reportResults.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating report...</p></div>';
-      
-      // Update active button
-      document.querySelectorAll('.btn-report').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      try {
-        let query = db.collection('expenses').where('year', '==', selectedYear);
-        const now = new Date();
-        
-        // Define date ranges
-        let startDate, endDate;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        switch(type) {
-          case 'today':
-            startDate = new Date(today);
-            endDate = new Date(today);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case 'yesterday':
-            startDate = new Date(today);
-            startDate.setDate(today.getDate() - 1);
-            endDate = new Date(startDate);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case 'week':
-            startDate = new Date(today);
-            startDate.setDate(today.getDate() - today.getDay());
-            endDate = new Date(today);
-            endDate.setDate(today.getDate() + (6 - today.getDay()));
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case 'month':
-            startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-          case 'year':
-            startDate = new Date(selectedYear, 0, 1);
-            endDate = new Date(selectedYear, 11, 31);
-            endDate.setHours(23, 59, 59, 999);
-            break;
-        }
-        
-        // Query expenses for the period
-        const snapshot = await query
-          .where('date', '>=', startDate.toISOString().split('T')[0])
-          .where('date', '<=', endDate.toISOString().split('T')[0])
-          .get();
-        
-        if (snapshot.empty) {
-          reportResults.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-chart-bar"></i>
-              <h4>No expenses found for this period</h4>
-              <p>Try selecting a different time range</p>
-            </div>
-          `;
-          document.getElementById('reportActions').style.display = 'none';
-          return;
-        }
-        
-        // Process report data
-        let total = 0;
-        const categories = {};
-        const expenses = [];
-        
-        snapshot.forEach(doc => {
-          const expense = doc.data();
-          total += expense.amount;
-          categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
-          expenses.push({
-            id: doc.id,
-            ...expense,
-            formattedDate: new Date(expense.date).toLocaleDateString('en-UG')
-          });
-        });
-        
-        // Sort expenses by date
-        expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        // Store report data for PDF export
-        currentReportData = {
-          type: type,
-          period: { startDate, endDate },
-          total: total,
-          count: expenses.length,
-          categories: categories,
-          expenses: expenses
-        };
-        
-        // Generate report HTML
-        let reportHTML = `
-          <div class="report-summary">
-            <div class="report-item">
-              <h5>Total Expenses</h5>
-              <div class="value">${formatCurrency(total)}</div>
-            </div>
-            <div class="report-item">
-              <h5>Number of Expenses</h5>
-              <div class="value">${expenses.length}</div>
-            </div>
-            <div class="report-item">
-              <h5>Average per Expense</h5>
-              <div class="value">${formatCurrency(total / expenses.length)}</div>
-            </div>
-            <div class="report-item">
-              <h5>Time Period</h5>
-              <div class="value">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
-            </div>
-          </div>
-          <h4 style="margin: 20px 0 10px 0; color: var(--primary);">Expense Breakdown</h4>
-        `;
-        
-        // Add category breakdown
-        if (Object.keys(categories).length > 0) {
-          reportHTML += '<div style="margin-bottom: 20px;">';
-          Object.entries(categories).forEach(([category, amount]) => {
-            const percentage = ((amount / total) * 100).toFixed(1);
-            const categoryClass = category.toLowerCase().replace(' ', '-').replace(/[^a-z\-]/g, '');
-            reportHTML += `
-              <div style="margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span class="category-badge category-${categoryClass}" style="margin-right: 10px;">
-                    <i class="fas fa-tag"></i> ${category}
-                  </span>
-                  <span style="font-weight: 600;">${formatCurrency(amount)} (${percentage}%)</span>
-                </div>
-                <div style="height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;">
-                  <div style="height: 100%; width: ${percentage}%; background: var(--primary); border-radius: 4px;"></div>
-                </div>
-              </div>
-            `;
-          });
-          reportHTML += '</div>';
-        }
-        
-        // Add recent expenses list
-        reportHTML += '<h4 style="margin: 20px 0 10px 0; color: var(--primary);">Recent Expenses</h4>';
-        reportHTML += '<div style="max-height: 300px; overflow-y: auto;">';
-        expenses.slice(0, 10).forEach(expense => {
-          const categoryClass = expense.category.toLowerCase().replace(' ', '-').replace(/[^a-z\-]/g, '');
-          reportHTML += `
-            <div class="expense-item" style="margin-bottom: 10px;">
-              <div>
-                <span class="category-badge category-${categoryClass}">
-                  <i class="fas fa-tag"></i>
-                  ${expense.category}
-                </span>
-                <strong>${expense.formattedDate}</strong>
-                <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
-                  ${expense.description || 'No description'}
-                </div>
-              </div>
-              <div class="expense-amount">
-                ${formatCurrency(expense.amount)}
-              </div>
-            </div>
-          `;
-        });
-        reportHTML += '</div>';
-        
-        reportResults.innerHTML = reportHTML;
-        document.getElementById('reportActions').style.display = 'block';
-        
-      } catch (error) {
-        showError('Failed to generate report: ' + error.message);
-        reportResults.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-exclamation-circle"></i>
-            <h4>Error generating report</h4>
-            <p>${error.message}</p>
-          </div>
-        `;
-        document.getElementById('reportActions').style.display = 'none';
-      }
-    }
-
-    // Show custom range inputs
-    function showCustomRange() {
-      document.querySelectorAll('.btn-report').forEach(btn => btn.classList.remove('active'));
-      document.getElementById('customRange').classList.add('show');
-    }
-
-    // Generate custom report
-    function generateCustomReport() {
-      const fromDate = document.getElementById('fromDate').value;
-      const toDate = document.getElementById('toDate').value;
-      
-      if (!fromDate || !toDate) {
-        showError('Please select both from and to dates');
-        return;
-      }
-      
-      if (new Date(fromDate) > new Date(toDate)) {
-        showError('From date cannot be after to date');
-        return;
-      }
-      
-      // Set custom range and generate report
-      currentReportType = 'custom';
-      generateCustomRangeReport(fromDate, toDate);
-    }
-
-    // Generate custom range report
-    async function generateCustomRangeReport(fromDate, toDate) {
-      if (!isFirestoreReady) return;
-      
-      const reportResults = document.getElementById('reportResults');
-      reportResults.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating custom report...</p></div>';
-      
-      try {
-        const snapshot = await db.collection('expenses')
-          .where('year', '==', selectedYear)
-          .where('date', '>=', fromDate)
-          .where('date', '<=', toDate)
-          .get();
-        
-        if (snapshot.empty) {
-          reportResults.innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-chart-bar"></i>
-              <h4>No expenses found for this period</h4>
-              <p>Try selecting a different date range</p>
-            </div>
-          `;
-          document.getElementById('reportActions').style.display = 'none';
-          return;
-        }
-        
-        // Process report data (similar to generateReport function)
-        let total = 0;
-        const categories = {};
-        const expenses = [];
-        
-        snapshot.forEach(doc => {
-          const expense = doc.data();
-          total += expense.amount;
-          categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
-          expenses.push({
-            id: doc.id,
-            ...expense,
-            formattedDate: new Date(expense.date).toLocaleDateString('en-UG')
-          });
-        });
-        
-        expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        currentReportData = {
-          type: 'custom',
-          period: { fromDate, toDate },
-          total: total,
-          count: expenses.length,
-          categories: categories,
-          expenses: expenses
-        };
-        
-        // Generate report HTML
-        let reportHTML = `
-          <div class="report-summary">
-            <div class="report-item">
-              <h5>Total Expenses</h5>
-              <div class="value">${formatCurrency(total)}</div>
-            </div>
-            <div class="report-item">
-              <h5>Number of Expenses</h5>
-              <div class="value">${expenses.length}</div>
-            </div>
-            <div class="report-item">
-              <h5>Average per Expense</h5>
-              <div class="value">${formatCurrency(total / expenses.length)}</div>
-            </div>
-            <div class="report-item">
-              <h5>Date Range</h5>
-              <div class="value">${fromDate} to ${toDate}</div>
-            </div>
-          </div>
-          <h4 style="margin: 20px 0 10px 0; color: var(--primary);">Expense Breakdown</h4>
-        `;
-        
-        // Add category breakdown
-        if (Object.keys(categories).length > 0) {
-          reportHTML += '<div style="margin-bottom: 20px;">';
-          Object.entries(categories).forEach(([category, amount]) => {
-            const percentage = ((amount / total) * 100).toFixed(1);
-            const categoryClass = category.toLowerCase().replace(' ', '-').replace(/[^a-z\-]/g, '');
-            reportHTML += `
-              <div style="margin-bottom: 10px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                  <span class="category-badge category-${categoryClass}" style="margin-right: 10px;">
-                    <i class="fas fa-tag"></i> ${category}
-                  </span>
-                  <span style="font-weight: 600;">${formatCurrency(amount)} (${percentage}%)</span>
-                </div>
-                <div style="height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;">
-                  <div style="height: 100%; width: ${percentage}%; background: var(--primary); border-radius: 4px;"></div>
-                </div>
-              </div>
-            `;
-          });
-          reportHTML += '</div>';
-        }
-        
-        reportResults.innerHTML = reportHTML;
-        document.getElementById('reportActions').style.display = 'block';
-        
-      } catch (error) {
-        showError('Failed to generate custom report: ' + error.message);
-        reportResults.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-exclamation-circle"></i>
-            <h4>Error generating report</h4>
-            <p>${error.message}</p>
-          </div>
-        `;
-        document.getElementById('reportActions').style.display = 'none';
-      }
-    }
-
-    // Download PDF report
-    function downloadPDF() {
-      if (!currentReportData) {
-        showError('No report data to download');
-        return;
-      }
-      
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        // Add title
-        doc.setFontSize(20);
-        doc.setTextColor(40, 40, 40);
-        doc.text('UGX Expenses Tracker Report', 105, 20, { align: 'center' });
-        
-        // Add report period
-        doc.setFontSize(12);
-        doc.setTextColor(100, 100, 100);
-        let periodText = '';
-        if (currentReportData.type === 'custom') {
-          periodText = `${currentReportData.period.fromDate} to ${currentReportData.period.toDate}`;
-        } else {
-          periodText = currentReportData.type.charAt(0).toUpperCase() + currentReportData.type.slice(1);
-        }
-        doc.text(`Report Period: ${periodText}`, 105, 30, { align: 'center' });
-        doc.text(`Year: ${selectedYear}`, 105, 36, { align: 'center' });
-        
-        // Add summary
-        doc.setFontSize(14);
-        doc.setTextColor(60, 60, 60);
-        doc.text('Summary', 20, 50);
-        
-        doc.autoTable({
-          startY: 55,
-          head: [['Metric', 'Value']],
-          body: [
-            ['Total Expenses', formatCurrency(currentReportData.total)],
-            ['Number of Expenses', currentReportData.count],
-            ['Average per Expense', formatCurrency(currentReportData.total / currentReportData.count)],
-            ['Report Type', currentReportData.type]
-          ],
-          theme: 'grid',
-          headStyles: { fillColor: [102, 126, 234] }
-        });
-        
-        // Add category breakdown
-        let finalY = doc.lastAutoTable.finalY + 15;
-        doc.setFontSize(14);
-        doc.text('Category Breakdown', 20, finalY);
-        
-        const categoryData = Object.entries(currentReportData.categories).map(([category, amount]) => {
-          const percentage = ((amount / currentReportData.total) * 100).toFixed(1);
-          return [category, formatCurrency(amount), `${percentage}%`];
-        });
-        
-        doc.autoTable({
-          startY: finalY + 5,
-          head: [['Category', 'Amount', 'Percentage']],
-          body: categoryData,
-          theme: 'grid',
-          headStyles: { fillColor: [102, 126, 234] }
-        });
-        
-        // Add recent expenses
-        finalY = doc.lastAutoTable.finalY + 15;
-        doc.setFontSize(14);
-        doc.text('Recent Expenses', 20, finalY);
-        
-        const expenseData = currentReportData.expenses.slice(0, 15).map(expense => {
-          return [
-            expense.formattedDate,
-            expense.category,
-            expense.description || 'No description',
-            formatCurrency(expense.amount)
-          ];
-        });
-        
-        doc.autoTable({
-          startY: finalY + 5,
-          head: [['Date', 'Category', 'Description', 'Amount']],
-          body: expenseData,
-          theme: 'grid',
-          headStyles: { fillColor: [102, 126, 234] },
-          columnStyles: {
-            3: { halign: 'right' }
-          }
-        });
-        
-        // Add footer with copyright
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-          doc.setPage(i);
-          doc.setFontSize(10);
-          doc.setTextColor(150, 150, 150);
-          doc.text(`© Pius Angulo 2025 - Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
-        }
-        
-        // Save PDF
-        doc.save(`Expenses_Report_${selectedYear}_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ PDF report downloaded successfully!', 'success');
-        
-      } catch (error) {
-        showError('Failed to generate PDF: ' + error.message);
-      }
-    }
-
     // Modal functions
     function hideDeleteModal() {
       document.getElementById('deleteModal').style.display = 'none';
@@ -2074,6 +2143,7 @@
         showMessage('✅ Expense deleted successfully', 'success');
         hideDeleteModal();
         loadDashboard();
+        if (currentReportType) generateReport(currentReportType);
       } catch (error) {
         showError('Failed to delete expense: ' + error.message);
         hideDeleteModal();
