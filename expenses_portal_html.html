@@ -39,6 +39,8 @@
       min-height: 100vh;
       padding: 20px;
       color: var(--dark);
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
@@ -49,6 +51,7 @@
       box-shadow: 0 20px 60px var(--shadow);
       overflow: hidden;
       position: relative;
+      flex: 1;
     }
 
     .container::before {
@@ -60,6 +63,54 @@
       height: 6px;
       background: var(--gradient-1);
       z-index: 1;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      text-align: center;
+      padding: 20px 30px;
+      margin-top: 30px;
+      color: var(--gray);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      background: var(--light);
+      border-radius: 0 0 24px 24px;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .copyright {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .copyright i {
+      font-size: 1.1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 15px;
+      margin-left: 20px;
+    }
+
+    .footer-links a {
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
     }
 
     /* ===== HEADER ===== */
@@ -900,6 +951,16 @@
         text-align: left;
         width: 100%;
       }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .footer-links {
+        margin-left: 0;
+        justify-content: center;
+      }
     }
   </style>
   
@@ -1127,6 +1188,27 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer with Copyright -->
+    <div class="footer">
+      <div class="footer-content">
+        <div class="copyright">
+          <i class="fas fa-copyright"></i>
+          <span>Copyright @2025 Pius Angulo</span>
+        </div>
+        <div class="footer-links">
+          <a href="javascript:void(0)" onclick="showAbout()">
+            <i class="fas fa-info-circle"></i> About
+          </a>
+          <a href="javascript:void(0)" onclick="showPrivacy()">
+            <i class="fas fa-shield-alt"></i> Privacy
+          </a>
+          <a href="javascript:void(0)" onclick="showContact()">
+            <i class="fas fa-envelope"></i> Contact
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Delete Confirmation Modal -->
@@ -1141,6 +1223,30 @@
         </button>
         <button class="btn" style="background: var(--danger); color: white;" id="confirmDelete">
           <i class="fas fa-trash"></i> Delete Expense
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal-overlay" id="aboutModal">
+    <div class="modal">
+      <h3><i class="fas fa-info-circle"></i> About UGX Expenses Tracker</h3>
+      <p>A modern expense tracking application designed specifically for Ugandan Shillings (UGX).</p>
+      <div style="margin-top: 15px;">
+        <p><strong>Features:</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>Track expenses in UGX</li>
+          <li>Tap-to-reveal balance privacy</li>
+          <li>Beautiful charts and visualizations</li>
+          <li>PDF report generation</li>
+          <li>Real-time Firebase sync</li>
+          <li>Mobile responsive design</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('aboutModal').style.display = 'none'">
+          <i class="fas fa-times"></i> Close
         </button>
       </div>
     </div>
@@ -1256,6 +1362,19 @@
       fromDate.setDate(fromDate.getDate() - 30);
       document.getElementById('fromDate').value = fromDate.toISOString().split('T')[0];
       document.getElementById('toDate').value = today;
+    }
+
+    // Footer modal functions
+    function showAbout() {
+      document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function showPrivacy() {
+      alert('Privacy Policy: Your expense data is stored securely in Firebase and is only accessible to you.');
+    }
+
+    function showContact() {
+      alert('Contact: For support or inquiries, please contact Pius Angulo.');
     }
 
     // Load revealed state from localStorage
@@ -1844,7 +1963,7 @@
           });
         }
         
-        // Footer
+        // Footer with copyright
         const pageCount = doc.internal.getNumberOfPages();
         for (let i = 1; i <= pageCount; i++) {
           doc.setPage(i);
@@ -1853,6 +1972,12 @@
           doc.text(`Page ${i} of ${pageCount}`, 105, 285, { align: 'center' });
           doc.text(`Generated on ${new Date().toLocaleDateString('en-UG')}`, 105, 290, { align: 'center' });
         }
+        
+        // Add copyright to first page
+        doc.setPage(1);
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text('© 2025 Pius Angulo - UGX Expenses Tracker', 105, 295, { align: 'center' });
         
         // Save the PDF
         const fileName = `expenses_report_${currentReportData.type}_${new Date().toISOString().split('T')[0]}.pdf`;
