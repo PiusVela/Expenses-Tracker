@@ -20,10 +20,12 @@
       --warning: #f8961e;
       --light: #f8f9fa;
       --dark: #212529;
-      --gray: #6c757d;
+      --gray: #6c7280;
       --border: #dee2e6;
       --online: #10b981;
       --offline: #ef4444;
+      --edit: #3b82f6;
+      --delete: #ef4444;
     }
 
     body {
@@ -224,40 +226,22 @@
     }
 
     .btn {
-      padding: 16px 32px;
+      padding: 12px 24px;
       border: none;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      min-width: 160px;
+      gap: 8px;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .btn-primary:hover::before {
-      left: 100%;
     }
 
     .btn-primary:hover {
@@ -265,15 +249,76 @@
       box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
     }
 
-    .btn-primary:disabled {
-      opacity: 0.6;
+    .btn-secondary {
+      background: var(--light);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-edit {
+      background: var(--edit);
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .btn-delete {
+      background: var(--delete);
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    .btn-save {
+      background: var(--success);
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn-save:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .btn-cancel {
+      background: var(--gray);
+      color: white;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    .btn-cancel:hover {
+      background: #4b5563;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled, .btn-edit:disabled, .btn-delete:disabled {
+      opacity: 0.5;
       cursor: not-allowed;
       transform: none !important;
       box-shadow: none !important;
     }
 
-    .btn-primary:disabled::before {
-      display: none;
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-left: 10px;
     }
 
     .message {
@@ -343,10 +388,20 @@
       background: white;
     }
 
+    .expense-item.editing {
+      background: #f0f9ff;
+      border: 2px solid var(--edit);
+      transform: scale(1.01);
+    }
+
     .expense-item:hover {
       background: var(--light);
       transform: translateX(5px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .expense-details {
+      flex: 1;
     }
 
     .category-badge {
@@ -378,6 +433,38 @@
     .category-giving { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
     .category-entertainment { background: #f3e5f5; color: #7b1fa2; border: 1px solid #e1bee7; }
     .category-general { background: #f5f5f5; color: #424242; border: 1px solid #e0e0e0; }
+
+    .expense-amount {
+      font-weight: 700;
+      font-size: 1.2rem;
+      font-family: 'Courier New', monospace;
+      margin-left: 20px;
+      min-width: 120px;
+      text-align: right;
+    }
+
+    .edit-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .edit-form input, .edit-form select {
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
 
     .loading {
       text-align: center;
@@ -415,23 +502,42 @@
       opacity: 0.5;
     }
 
-    .index-warning {
-      background: #fff3cd;
-      border: 2px solid #ffeaa7;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 20px 0;
-      color: #856404;
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
-    .index-warning a {
-      color: #0056b3;
-      text-decoration: none;
-      font-weight: 600;
+    .modal {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
 
-    .index-warning a:hover {
-      text-decoration: underline;
+    .modal h3 {
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
     }
 
     @media (max-width: 768px) {
@@ -468,14 +574,32 @@
         grid-template-columns: 1fr;
       }
       
-      .btn {
+      .expense-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .action-buttons {
+        margin-left: 0;
+        margin-top: 10px;
         width: 100%;
+        justify-content: flex-end;
+      }
+      
+      .expense-amount {
+        text-align: left;
+        margin-left: 0;
+      }
+      
+      .edit-form {
+        grid-template-columns: 1fr;
       }
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Use Firebase COMPATIBILITY version -->
+  <!-- Firebase COMPATIBILITY version -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
@@ -492,22 +616,12 @@
           <span id="statusText">Initializing...</span>
         </div>
       </div>
-      <p>Track your daily expenses in Ugandan Shillings</p>
+      <p>Track and edit your daily expenses in Ugandan Shillings</p>
     </div>
 
     <div class="content">
       <!-- Status Message -->
       <div id="statusMessage" class="message"></div>
-
-      <!-- Index Warning (Hidden by default) -->
-      <div class="index-warning" id="indexWarning" style="display: none;">
-        <h3><i class="fas fa-exclamation-triangle"></i> Index Required</h3>
-        <p>To enable advanced filtering, you need to create a Firestore index.</p>
-        <p>Click this link to create the index automatically: 
-          <a href="#" id="indexLink">Create Index</a>
-        </p>
-        <p><small>This is a one-time setup. The app will work without it, but some features may be limited.</small></p>
-      </div>
 
       <!-- Quick Stats -->
       <div class="stats-grid">
@@ -576,13 +690,35 @@
 
       <!-- Recent Expenses -->
       <div class="expenses-list">
-        <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
+          <button class="btn btn-secondary" id="refreshBtn" style="display: none;">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
         <div id="expensesList">
           <div class="loading">
             <div class="spinner"></div>
             <p>Loading expenses...</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+      <p>Are you sure you want to delete this expense?</p>
+      <p id="deleteExpenseDetails" style="font-weight: 600; margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px;"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelDelete">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-delete" id="confirmDelete">
+          <i class="fas fa-trash"></i> Delete Expense
+        </button>
       </div>
     </div>
   </div>
@@ -601,24 +737,22 @@
     // Global variables
     let db = null;
     let isFirestoreReady = false;
-    let requiresIndex = false;
+    let expenseToDelete = null;
+    let currentlyEditing = null;
 
     // Check if Firebase is loaded
     function isFirebaseLoaded() {
-      if (typeof firebase === 'undefined') {
-        console.error('Firebase SDK not loaded');
-        return false;
-      }
-      return true;
+      return typeof firebase !== 'undefined' && typeof firebase.initializeApp !== 'undefined';
     }
 
     // Update status indicator
     function updateStatus(status, message) {
       const dot = document.getElementById('statusDot');
       const text = document.getElementById('statusText');
-      
-      dot.className = 'status-dot ' + status;
-      text.textContent = message;
+      if (dot && text) {
+        dot.className = 'status-dot ' + status;
+        text.textContent = message;
+      }
     }
 
     // Show message
@@ -639,134 +773,6 @@
           messageDiv.className = 'message';
         }, 5000);
       }
-    }
-
-    // Show index warning
-    function showIndexWarning(indexUrl) {
-      const warningDiv = document.getElementById('indexWarning');
-      const indexLink = document.getElementById('indexLink');
-      
-      indexLink.href = indexUrl;
-      indexLink.onclick = function(e) {
-        e.preventDefault();
-        window.open(indexUrl, '_blank');
-        showMessage('✅ Index creation link opened. Please click "Create Index" in the Firebase Console.', 'info');
-      };
-      
-      warningDiv.style.display = 'block';
-    }
-
-    // Initialize Firebase
-    function initializeFirebase() {
-      updateStatus('connecting', 'Checking Firebase...');
-      
-      // Check if Firebase is loaded
-      if (!isFirebaseLoaded()) {
-        updateStatus('offline', 'Firebase not loaded');
-        showMessage('❌ Firebase SDK failed to load. Please check internet connection and refresh.', 'error');
-        return;
-      }
-      
-      try {
-        // Check if Firebase is already initialized
-        let app;
-        if (firebase.apps.length === 0) {
-          // Initialize Firebase
-          app = firebase.initializeApp(firebaseConfig);
-          console.log('Firebase initialized successfully');
-        } else {
-          // Use existing app
-          app = firebase.app();
-          console.log('Using existing Firebase app');
-        }
-        
-        // Get Firestore instance
-        db = firebase.firestore();
-        console.log('Firestore instance obtained');
-        
-        // Test connection with SIMPLE query (no composite indexes needed)
-        testConnection();
-        
-      } catch (error) {
-        console.error('Firebase initialization error:', error);
-        updateStatus('offline', 'Initialization failed');
-        showMessage('❌ Firebase error: ' + error.message, 'error');
-      }
-    }
-
-    // Test Firestore connection with SIMPLE query
-    async function testConnection() {
-      updateStatus('connecting', 'Testing connection...');
-      
-      if (!db) {
-        updateStatus('offline', 'No database instance');
-        return;
-      }
-      
-      try {
-        // SIMPLE test query that doesn't need indexes
-        const testRef = db.collection('expenses');
-        const testSnapshot = await testRef.limit(1).get();
-        
-        // Connection successful!
-        isFirestoreReady = true;
-        updateStatus('online', 'Connected ✓');
-        showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
-        
-        // Enable the form
-        setupApp();
-        
-        // Load data
-        loadInitialData();
-        
-      } catch (error) {
-        console.error('Connection test failed:', error);
-        
-        // Check if it's an index error
-        if (error.code === 'failed-precondition') {
-          // This is likely an index error
-          requiresIndex = true;
-          updateStatus('online', 'Connected (needs index)');
-          showMessage('⚠️ Connected, but some queries need indexes. The app will work with basic features.', 'info');
-          
-          // Create index URL
-          const indexUrl = `https://console.firebase.google.com/v1/r/project/${firebaseConfig.projectId}/firestore/indexes?create_composite=ClZwcm9qZWN0cy9leHBlbnNlLXRyYWNrZXItMWY3ZTIvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL2V4cGVuc2VzL2luZGV4ZXMv`;
-          showIndexWarning(indexUrl);
-          
-          // Still enable basic functionality
-          isFirestoreReady = true;
-          setupApp();
-          loadInitialDataSimple();
-          
-        } else if (error.code === 'permission-denied') {
-          updateStatus('offline', 'Permission denied');
-          showMessage('❌ Permission denied. Please check Firebase security rules.', 'error');
-        } else if (error.code === 'unavailable') {
-          updateStatus('offline', 'Network error');
-          showMessage('❌ Network error. Please check your internet connection.', 'error');
-        } else {
-          updateStatus('offline', 'Connection failed');
-          showMessage('❌ Could not connect: ' + error.message, 'error');
-        }
-      }
-    }
-
-    // Setup the app after successful connection
-    function setupApp() {
-      // Update button
-      const addBtn = document.getElementById('addBtn');
-      addBtn.disabled = false;
-      addBtn.innerHTML = '<i class="fas fa-plus"></i> Add Expense';
-      
-      // Set today's date as default
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('date').value = today;
-      
-      // Setup event listeners
-      addBtn.addEventListener('click', addExpense);
-      document.getElementById('description').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') addExpense();
-      });
     }
 
     // Format currency
@@ -798,6 +804,91 @@
       return new Date(dateStr).getFullYear().toString();
     }
 
+    // Initialize Firebase
+    function initializeFirebase() {
+      updateStatus('connecting', 'Checking Firebase...');
+      
+      if (!isFirebaseLoaded()) {
+        updateStatus('offline', 'Firebase not loaded');
+        showMessage('❌ Firebase SDK failed to load. Please check internet connection and refresh.', 'error');
+        return;
+      }
+      
+      try {
+        let app;
+        if (firebase.apps.length === 0) {
+          app = firebase.initializeApp(firebaseConfig);
+          console.log('Firebase initialized successfully');
+        } else {
+          app = firebase.app();
+          console.log('Using existing Firebase app');
+        }
+        
+        db = firebase.firestore();
+        console.log('Firestore instance obtained');
+        
+        testConnection();
+        
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+        updateStatus('offline', 'Initialization failed');
+        showMessage('❌ Firebase error: ' + error.message, 'error');
+      }
+    }
+
+    // Test Firestore connection
+    async function testConnection() {
+      updateStatus('connecting', 'Testing connection...');
+      
+      if (!db) {
+        updateStatus('offline', 'No database instance');
+        return;
+      }
+      
+      try {
+        const testRef = db.collection('expenses');
+        const testSnapshot = await testRef.limit(1).get();
+        
+        isFirestoreReady = true;
+        updateStatus('online', 'Connected ✓');
+        showMessage('✅ Successfully connected to Firebase Firestore!', 'success');
+        
+        setupApp();
+        loadInitialData();
+        
+      } catch (error) {
+        console.error('Connection test failed:', error);
+        updateStatus('offline', 'Connection failed');
+        showMessage('❌ Could not connect: ' + error.message, 'error');
+      }
+    }
+
+    // Setup the app after successful connection
+    function setupApp() {
+      const addBtn = document.getElementById('addBtn');
+      addBtn.disabled = false;
+      addBtn.innerHTML = '<i class="fas fa-plus"></i> Add Expense';
+      
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('date').value = today;
+      
+      addBtn.addEventListener('click', addExpense);
+      document.getElementById('description').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') addExpense();
+      });
+      
+      const refreshBtn = document.getElementById('refreshBtn');
+      refreshBtn.style.display = 'block';
+      refreshBtn.addEventListener('click', loadInitialData);
+      
+      // Setup modal handlers
+      document.getElementById('cancelDelete').addEventListener('click', () => {
+        document.getElementById('deleteModal').style.display = 'none';
+      });
+      
+      document.getElementById('confirmDelete').addEventListener('click', deleteExpense);
+    }
+
     // Add expense
     async function addExpense() {
       if (!isFirestoreReady) {
@@ -810,7 +901,6 @@
       const date = document.getElementById('date').value;
       const description = document.getElementById('description').value.trim();
 
-      // Validation
       if (!amount || !date) {
         showMessage('❌ Amount and date are required', 'error');
         return;
@@ -825,11 +915,9 @@
       const originalText = addBtn.innerHTML;
       
       try {
-        // Disable button
         addBtn.disabled = true;
         addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
-        // Prepare expense data
         const expenseData = {
           amount: parseFloat(amount),
           category: category,
@@ -843,50 +931,237 @@
           createdAt: new Date().toISOString()
         };
 
-        // Add to Firestore
         await db.collection('expenses').add(expenseData);
 
-        // Clear form
         document.getElementById('amount').value = '';
         document.getElementById('description').value = '';
 
-        // Show success message
         showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
 
-        // Reload data
-        if (requiresIndex) {
-          loadInitialDataSimple();
-          updateStatsSimple();
-        } else {
-          loadExpenses();
-          updateStats();
-        }
+        loadInitialData();
 
       } catch (error) {
         console.error('Error adding expense:', error);
         showMessage('❌ Error: ' + error.message, 'error');
       } finally {
-        // Re-enable button
         addBtn.disabled = false;
         addBtn.innerHTML = originalText;
       }
     }
 
-    // Load expenses SIMPLE (no composite queries)
-    async function loadExpensesSimple() {
+    // Start editing an expense
+    function startEditExpense(docId, expense) {
+      if (currentlyEditing === docId) return;
+      
+      // Cancel any ongoing edit
+      if (currentlyEditing) {
+        cancelEditExpense(currentlyEditing);
+      }
+      
+      currentlyEditing = docId;
+      const expenseItem = document.getElementById(`expense-${docId}`);
+      if (!expenseItem) return;
+      
+      expenseItem.classList.add('editing');
+      
+      const editForm = `
+        <div class="edit-form">
+          <div>
+            <label>Amount (UGX)</label>
+            <input type="number" id="edit-amount-${docId}" value="${expense.amount}" min="0" step="100" required>
+          </div>
+          <div>
+            <label>Category</label>
+            <select id="edit-category-${docId}" required>
+              <option value="Yaka" ${expense.category === 'Yaka' ? 'selected' : ''}>⚡ Yaka</option>
+              <option value="Water" ${expense.category === 'Water' ? 'selected' : ''}>💧 Water</option>
+              <option value="Groceries" ${expense.category === 'Groceries' ? 'selected' : ''}>🛒 Groceries</option>
+              <option value="Food" ${expense.category === 'Food' ? 'selected' : ''}>🍲 Food</option>
+              <option value="Fuel" ${expense.category === 'Fuel' ? 'selected' : ''}>⛽ Fuel</option>
+              <option value="Transport" ${expense.category === 'Transport' ? 'selected' : ''}>🚗 Transport</option>
+              <option value="Internet" ${expense.category === 'Internet' ? 'selected' : ''}>🌐 Internet</option>
+              <option value="Airtime" ${expense.category === 'Airtime' ? 'selected' : ''}>📱 Airtime</option>
+              <option value="Rent" ${expense.category === 'Rent' ? 'selected' : ''}>🏠 Rent</option>
+              <option value="Laundry" ${expense.category === 'Laundry' ? 'selected' : ''}>👕 Laundry</option>
+              <option value="Clothing" ${expense.category === 'Clothing' ? 'selected' : ''}>👔 Clothing</option>
+              <option value="School Fees" ${expense.category === 'School Fees' ? 'selected' : ''}>📚 School Fees</option>
+              <option value="Medical" ${expense.category === 'Medical' ? 'selected' : ''}>🏥 Medical</option>
+              <option value="Savings" ${expense.category === 'Savings' ? 'selected' : ''}>💰 Savings</option>
+              <option value="Debt" ${expense.category === 'Debt' ? 'selected' : ''}>💳 Debt</option>
+              <option value="Giving" ${expense.category === 'Giving' ? 'selected' : ''}>🤲 Giving</option>
+              <option value="Entertainment" ${expense.category === 'Entertainment' ? 'selected' : ''}>🎬 Entertainment</option>
+              <option value="General" ${expense.category === 'General' ? 'selected' : ''}>📦 General</option>
+            </select>
+          </div>
+          <div>
+            <label>Date</label>
+            <input type="date" id="edit-date-${docId}" value="${expense.date}" required>
+          </div>
+          <div>
+            <label>Description</label>
+            <input type="text" id="edit-description-${docId}" value="${expense.description || ''}" placeholder="Optional">
+          </div>
+          <div class="edit-actions">
+            <button class="btn btn-save" onclick="saveEditExpense('${docId}')">
+              <i class="fas fa-save"></i> Save
+            </button>
+            <button class="btn btn-cancel" onclick="cancelEditExpense('${docId}')">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+          </div>
+        </div>
+      `;
+      
+      const expenseDetails = expenseItem.querySelector('.expense-details');
+      if (expenseDetails) {
+        expenseDetails.insertAdjacentHTML('beforeend', editForm);
+      }
+    }
+
+    // Save edited expense
+    async function saveEditExpense(docId) {
+      if (!isFirestoreReady) {
+        showMessage('⚠️ Please connect to Firebase first', 'error');
+        return;
+      }
+
+      const amount = document.getElementById(`edit-amount-${docId}`).value.trim();
+      const category = document.getElementById(`edit-category-${docId}`).value;
+      const date = document.getElementById(`edit-date-${docId}`).value;
+      const description = document.getElementById(`edit-description-${docId}`).value.trim();
+
+      if (!amount || !date) {
+        showMessage('❌ Amount and date are required', 'error');
+        return;
+      }
+
+      if (parseFloat(amount) <= 0 || isNaN(parseFloat(amount))) {
+        showMessage('❌ Please enter a valid amount', 'error');
+        return;
+      }
+
+      try {
+        const expenseData = {
+          amount: parseFloat(amount),
+          category: category,
+          date: date,
+          description: description || '',
+          monthKey: getMonthKey(date),
+          weekKey: getWeekKey(date),
+          dayKey: getDayKey(date),
+          yearKey: getYearKey(date),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAtTimestamp: new Date().toISOString()
+        };
+
+        await db.collection('expenses').doc(docId).update(expenseData);
+
+        showMessage(`✅ Updated expense to ${formatCurrency(amount)} for ${category}`, 'success');
+        
+        currentlyEditing = null;
+        loadInitialData();
+
+      } catch (error) {
+        console.error('Error updating expense:', error);
+        showMessage('❌ Error updating expense: ' + error.message, 'error');
+      }
+    }
+
+    // Cancel editing
+    function cancelEditExpense(docId) {
+      const expenseItem = document.getElementById(`expense-${docId}`);
+      if (expenseItem) {
+        expenseItem.classList.remove('editing');
+        const editForm = expenseItem.querySelector('.edit-form');
+        if (editForm) {
+          editForm.remove();
+        }
+      }
+      currentlyEditing = null;
+    }
+
+    // Show delete confirmation modal
+    function showDeleteConfirmation(docId, expense) {
+      expenseToDelete = docId;
+      const detailsDiv = document.getElementById('deleteExpenseDetails');
+      const date = new Date(expense.date);
+      const formattedDate = date.toLocaleDateString('en-UG', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      });
+      
+      detailsDiv.innerHTML = `
+        <div>${formattedDate} • ${expense.category}</div>
+        <div>${expense.description || 'No description'}</div>
+        <div style="color: var(--danger); margin-top: 5px;">${formatCurrency(expense.amount)}</div>
+      `;
+      
+      document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    // Delete expense
+    async function deleteExpense() {
+      if (!expenseToDelete || !isFirestoreReady) {
+        document.getElementById('deleteModal').style.display = 'none';
+        return;
+      }
+
+      try {
+        await db.collection('expenses').doc(expenseToDelete).delete();
+        showMessage('✅ Expense deleted successfully', 'success');
+        
+        document.getElementById('deleteModal').style.display = 'none';
+        expenseToDelete = null;
+        loadInitialData();
+        
+      } catch (error) {
+        console.error('Error deleting expense:', error);
+        showMessage('❌ Error deleting expense: ' + error.message, 'error');
+        document.getElementById('deleteModal').style.display = 'none';
+      }
+    }
+
+    // Load expenses
+    async function loadExpenses() {
       if (!isFirestoreReady) return;
 
       try {
-        // Get ALL expenses and filter client-side (no composite index needed)
-        const snapshot = await db.collection('expenses')
-          .orderBy('timestamp', 'desc')
-          .limit(50)
-          .get();
+        const now = new Date();
+        const currentMonth = getMonthKey(now.toISOString().split('T')[0]);
+        
+        // Try composite query first, fall back to simple query
+        let snapshot;
+        try {
+          snapshot = await db.collection('expenses')
+            .where('monthKey', '==', currentMonth)
+            .orderBy('timestamp', 'desc')
+            .limit(50)
+            .get();
+        } catch (indexError) {
+          // Fallback: Get all and filter client-side
+          const allSnapshot = await db.collection('expenses')
+            .orderBy('timestamp', 'desc')
+            .limit(100)
+            .get();
+          
+          // Filter client-side
+          snapshot = {
+            forEach: (callback) => {
+              allSnapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.monthKey === currentMonth) {
+                  callback({ data: () => data, id: doc.id });
+                }
+              });
+            },
+            empty: allSnapshot.empty
+          };
+        }
 
         let html = '';
-        let count = 0;
         
-        if (snapshot.empty) {
+        if (!snapshot || (typeof snapshot.empty === 'function' ? snapshot.empty() : snapshot.empty)) {
           html = `
             <div class="empty-state">
               <i class="fas fa-inbox"></i>
@@ -895,51 +1170,42 @@
             </div>
           `;
         } else {
-          const now = new Date();
-          const currentMonth = getMonthKey(now.toISOString().split('T')[0]);
-          
           snapshot.forEach(doc => {
-            const expense = doc.data();
-            
-            // Filter client-side for current month
-            if (expense.monthKey === currentMonth) {
-              count++;
-              const date = new Date(expense.date);
-              const formattedDate = date.toLocaleDateString('en-UG', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric'
-              });
+            const expense = typeof doc.data === 'function' ? doc.data() : doc.data;
+            const docId = doc.id;
+            const date = new Date(expense.date);
+            const formattedDate = date.toLocaleDateString('en-UG', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric'
+            });
 
-              html += `
-                <div class="expense-item">
-                  <div>
-                    <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
-                      <i class="fas fa-tag"></i>
-                      ${expense.category}
-                    </span>
-                    <strong>${formattedDate}</strong>
-                    <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
-                      ${expense.description || ''}
-                    </div>
-                  </div>
-                  <div style="font-weight: 700; font-size: 1.2rem; font-family: 'Courier New', monospace;">
-                    ${formatCurrency(expense.amount)}
+            html += `
+              <div class="expense-item" id="expense-${docId}">
+                <div class="expense-details">
+                  <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
+                    <i class="fas fa-tag"></i>
+                    ${expense.category}
+                  </span>
+                  <strong>${formattedDate}</strong>
+                  <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                    ${expense.description || ''}
                   </div>
                 </div>
-              `;
-            }
-          });
-          
-          if (count === 0) {
-            html = `
-              <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <h4>No expenses this month</h4>
-                <p>Add your first expense for this month!</p>
+                <div class="expense-amount">
+                  ${formatCurrency(expense.amount)}
+                </div>
+                <div class="action-buttons">
+                  <button class="btn btn-edit" onclick="startEditExpense('${docId}', ${JSON.stringify(expense).replace(/"/g, '&quot;')})" ${currentlyEditing ? 'disabled' : ''}>
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="btn btn-delete" onclick="showDeleteConfirmation('${docId}', ${JSON.stringify(expense).replace(/"/g, '&quot;')})">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
               </div>
             `;
-          }
+          });
         }
 
         document.getElementById('expensesList').innerHTML = html;
@@ -956,88 +1222,11 @@
       }
     }
 
-    // Load expenses with composite query (requires index)
-    async function loadExpenses() {
+    // Update stats
+    async function updateStats() {
       if (!isFirestoreReady) return;
 
       try {
-        const now = new Date();
-        const currentMonth = getMonthKey(now.toISOString().split('T')[0]);
-        
-        const snapshot = await db.collection('expenses')
-          .where('monthKey', '==', currentMonth)
-          .orderBy('timestamp', 'desc')
-          .limit(20)
-          .get();
-
-        let html = '';
-        
-        if (snapshot.empty) {
-          html = `
-            <div class="empty-state">
-              <i class="fas fa-inbox"></i>
-              <h4>No expenses yet</h4>
-              <p>Add your first expense to get started!</p>
-            </div>
-          `;
-        } else {
-          snapshot.forEach(doc => {
-            const expense = doc.data();
-            const date = new Date(expense.date);
-            const formattedDate = date.toLocaleDateString('en-UG', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric'
-            });
-
-            html += `
-              <div class="expense-item">
-                <div>
-                  <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
-                    <i class="fas fa-tag"></i>
-                    ${expense.category}
-                  </span>
-                  <strong>${formattedDate}</strong>
-                  <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
-                    ${expense.description || ''}
-                  </div>
-                </div>
-                <div style="font-weight: 700; font-size: 1.2rem; font-family: 'Courier New', monospace;">
-                  ${formatCurrency(expense.amount)}
-                </div>
-              </div>
-            `;
-          });
-        }
-
-        document.getElementById('expensesList').innerHTML = html;
-
-      } catch (error) {
-        console.error('Error loading expenses:', error);
-        
-        // If it's an index error, fall back to simple loading
-        if (error.code === 'failed-precondition') {
-          requiresIndex = true;
-          showMessage('⚠️ Using simplified loading (no index). Click the index link above to enable advanced features.', 'info');
-          loadExpensesSimple();
-        } else {
-          document.getElementById('expensesList').innerHTML = `
-            <div class="empty-state">
-              <i class="fas fa-exclamation-triangle"></i>
-              <h4>Error loading expenses</h4>
-              <p>${error.message}</p>
-            </div>
-          `;
-        }
-      }
-    }
-
-    // Update stats SIMPLE (no composite queries)
-    async function updateStatsSimple() {
-      if (!isFirestoreReady) return;
-
-      try {
-        // Get ALL expenses and filter client-side
         const snapshot = await db.collection('expenses').get();
         
         const now = new Date();
@@ -1054,7 +1243,6 @@
         snapshot.forEach(doc => {
           const expense = doc.data();
           
-          // Filter client-side
           if (expense.dayKey === today) todayTotal += expense.amount;
           if (expense.weekKey === currentWeek) weekTotal += expense.amount;
           if (expense.monthKey === currentMonth) monthTotal += expense.amount;
@@ -1071,75 +1259,14 @@
       }
     }
 
-    // Update stats with composite queries
-    async function updateStats() {
-      if (!isFirestoreReady) return;
-
-      try {
-        const now = new Date();
-        const today = now.toISOString().split('T')[0];
-        const currentWeek = getWeekKey(today);
-        const currentMonth = getMonthKey(today);
-        const currentYear = getYearKey(today);
-
-        // Get today's total
-        const todaySnapshot = await db.collection('expenses')
-          .where('dayKey', '==', today)
-          .get();
-        let todayTotal = 0;
-        todaySnapshot.forEach(doc => todayTotal += doc.data().amount);
-        document.getElementById('todayTotal').textContent = formatCurrency(todayTotal);
-
-        // Get week total
-        const weekSnapshot = await db.collection('expenses')
-          .where('weekKey', '==', currentWeek)
-          .get();
-        let weekTotal = 0;
-        weekSnapshot.forEach(doc => weekTotal += doc.data().amount);
-        document.getElementById('weekTotal').textContent = formatCurrency(weekTotal);
-
-        // Get month total
-        const monthSnapshot = await db.collection('expenses')
-          .where('monthKey', '==', currentMonth)
-          .get();
-        let monthTotal = 0;
-        monthSnapshot.forEach(doc => monthTotal += doc.data().amount);
-        document.getElementById('monthTotal').textContent = formatCurrency(monthTotal);
-
-        // Get year total
-        const yearSnapshot = await db.collection('expenses')
-          .where('yearKey', '==', currentYear)
-          .get();
-        let yearTotal = 0;
-        yearSnapshot.forEach(doc => yearTotal += doc.data().amount);
-        document.getElementById('yearTotal').textContent = formatCurrency(yearTotal);
-
-      } catch (error) {
-        console.error('Error updating stats:', error);
-        
-        // If it's an index error, fall back to simple stats
-        if (error.code === 'failed-precondition') {
-          requiresIndex = true;
-          updateStatsSimple();
-        }
-      }
-    }
-
     // Load initial data
     async function loadInitialData() {
       await loadExpenses();
       await updateStats();
     }
 
-    // Load initial data SIMPLE
-    async function loadInitialDataSimple() {
-      await loadExpensesSimple();
-      await updateStatsSimple();
-    }
-
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Set up a check to see if Firebase loads
       const checkFirebaseInterval = setInterval(() => {
         if (isFirebaseLoaded()) {
           clearInterval(checkFirebaseInterval);
@@ -1147,7 +1274,6 @@
         }
       }, 100);
       
-      // Give up after 10 seconds
       setTimeout(() => {
         clearInterval(checkFirebaseInterval);
         if (!isFirebaseLoaded()) {
@@ -1159,14 +1285,9 @@
 
     // Auto-refresh data every 60 seconds
     setInterval(() => {
-      if (isFirestoreReady) {
-        if (requiresIndex) {
-          loadExpensesSimple();
-          updateStatsSimple();
-        } else {
-          loadExpenses();
-          updateStats();
-        }
+      if (isFirestoreReady && !currentlyEditing) {
+        loadExpenses();
+        updateStats();
       }
     }, 60000);
   </script>
