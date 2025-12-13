@@ -206,11 +206,27 @@
       overflow: hidden;
       transition: all 0.3s ease;
       border: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .stat-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 15px 40px var(--shadow);
+    }
+
+    .stat-card.tapped {
+      animation: tapReveal 0.5s ease;
+    }
+
+    @keyframes tapReveal {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.98); }
+      100% { transform: scale(1); }
     }
 
     .stat-card::before {
@@ -232,14 +248,25 @@
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      justify-content: space-between;
+    }
+
+    .stat-label i {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover .stat-label i {
+      transform: scale(1.1);
     }
 
     .stat-value {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 800;
       color: var(--dark);
       font-family: 'SF Mono', 'Courier New', monospace;
@@ -247,6 +274,86 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin: 5px 0;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .stat-value.hidden {
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+      background: var(--gray);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .stat-value.hidden::after {
+      content: '👁️ Tap to reveal';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+    }
+
+    .stat-tooltip {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    .stat-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--dark);
+    }
+
+    .stat-card:hover .stat-tooltip {
+      opacity: 1;
+    }
+
+    .stat-change {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .stat-change.positive {
+      color: #10b981;
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
     }
 
     /* ===== CHARTS ===== */
@@ -294,41 +401,6 @@
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
       border-radius: 12px;
       margin-top: 10px;
-    }
-
-    .category-pie {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      background: conic-gradient(
-        #667eea 0% 15%,
-        #f093fb 15% 30%,
-        #f5576c 30% 45%,
-        #4ecdc4 45% 60%,
-        #ffd166 60% 75%,
-        #06d6a0 75% 90%,
-        #a78bfa 90% 100%
-      );
-      margin: 0 auto;
-      position: relative;
-      animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .category-pie::before {
-      content: '';
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      background: var(--card-bg);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
     }
 
     /* ===== FORM SECTION ===== */
@@ -440,6 +512,48 @@
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    /* ===== BALANCE REVEAL BUTTONS ===== */
+    .balance-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-balance {
+      background: var(--light);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .btn-balance:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-balance.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .reveal-all-btn {
+      margin-top: 15px;
+      width: 100%;
+      background: linear-gradient(135deg, #667eea22, #764ba222);
+      color: var(--primary);
+      border: 2px dashed var(--primary);
+      padding: 12px;
+      font-weight: 600;
+    }
+
+    .reveal-all-btn:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-style: solid;
     }
 
     /* ===== REPORT SECTION ===== */
@@ -752,35 +866,69 @@
           <span id="statusText">Initializing...</span>
         </div>
       </div>
-      <p>Track, analyze, and visualize your expenses in Ugandan Shillings</p>
+      <p>Tap on balance cards to reveal amounts • Track, analyze, and visualize your expenses</p>
     </div>
 
     <!-- Dashboard Section -->
     <div class="dashboard">
       <div class="stats-section">
-        <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label"><i class="fas fa-calendar-day"></i> Today</div>
-            <div class="stat-value" id="todayTotal">UGX 0</div>
-            <div class="stat-change" id="todayChange">--</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="fas fa-calendar-week"></i> This Week</div>
-            <div class="stat-value" id="weekTotal">UGX 0</div>
-            <div class="stat-change" id="weekChange">--</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="fas fa-calendar-alt"></i> This Month</div>
-            <div class="stat-value" id="monthTotal">UGX 0</div>
-            <div class="stat-change" id="monthChange">--</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label"><i class="fas fa-calendar"></i> This Year</div>
-            <div class="stat-value" id="yearTotal">UGX 0</div>
-            <div class="stat-change" id="yearChange">--</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+          <div class="balance-controls">
+            <button class="btn btn-balance" onclick="revealAllBalances()">
+              <i class="fas fa-eye"></i> Reveal All
+            </button>
+            <button class="btn btn-balance" onclick="hideAllBalances()">
+              <i class="fas fa-eye-slash"></i> Hide All
+            </button>
           </div>
         </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card" id="todayCard" onclick="toggleBalance('today')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-day"></i> Today</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="todayTotal">UGX 0</div>
+            <div class="stat-change" id="todayChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="weekCard" onclick="toggleBalance('week')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-week"></i> This Week</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="weekTotal">UGX 0</div>
+            <div class="stat-change" id="weekChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="monthCard" onclick="toggleBalance('month')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar-alt"></i> This Month</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="monthTotal">UGX 0</div>
+            <div class="stat-change" id="monthChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+          
+          <div class="stat-card" id="yearCard" onclick="toggleBalance('year')">
+            <div class="stat-label">
+              <span><i class="fas fa-calendar"></i> This Year</span>
+              <i class="fas fa-hand-pointer"></i>
+            </div>
+            <div class="stat-value hidden" id="yearTotal">UGX 0</div>
+            <div class="stat-change" id="yearChange">--</div>
+            <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+        </div>
+
+        <button class="btn reveal-all-btn" onclick="revealAllBalances()">
+          <i class="fas fa-unlock"></i> Tap here to reveal all balances at once
+        </button>
 
         <!-- Charts -->
         <div class="charts-section">
@@ -955,12 +1103,21 @@
     let pieChart = null;
     let barChart = null;
     let previousStats = {};
+    let revealedBalances = {
+      today: false,
+      week: false,
+      month: false,
+      year: false
+    };
 
     // DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
       initFirebase();
       setupEventListeners();
       setDefaultDates();
+      
+      // Load revealed state from localStorage
+      loadRevealedState();
     });
 
     // Initialize Firebase
@@ -988,7 +1145,7 @@
         await db.collection('expenses').limit(1).get();
         isFirestoreReady = true;
         updateStatus('online', 'Connected ✓');
-        showMessage('✅ Successfully connected to Firebase!', 'success');
+        showMessage('✅ Successfully connected to Firebase! Tap on balance cards to reveal amounts', 'success');
         
         setupApp();
         loadDashboard();
@@ -1024,6 +1181,81 @@
       fromDate.setDate(fromDate.getDate() - 30);
       document.getElementById('fromDate').value = fromDate.toISOString().split('T')[0];
       document.getElementById('toDate').value = today;
+    }
+
+    // Load revealed state from localStorage
+    function loadRevealedState() {
+      const savedState = localStorage.getItem('revealedBalances');
+      if (savedState) {
+        revealedBalances = JSON.parse(savedState);
+        // Update UI based on saved state
+        Object.keys(revealedBalances).forEach(period => {
+          const element = document.getElementById(`${period}Total`);
+          if (element) {
+            if (revealedBalances[period]) {
+              element.classList.remove('hidden');
+            } else {
+              element.classList.add('hidden');
+            }
+          }
+        });
+      }
+    }
+
+    // Save revealed state to localStorage
+    function saveRevealedState() {
+      localStorage.setItem('revealedBalances', JSON.stringify(revealedBalances));
+    }
+
+    // Toggle balance visibility
+    function toggleBalance(period) {
+      const element = document.getElementById(`${period}Total`);
+      const card = document.getElementById(`${period}Card`);
+      
+      if (!element || !card) return;
+      
+      // Add tap animation
+      card.classList.add('tapped');
+      setTimeout(() => card.classList.remove('tapped'), 500);
+      
+      // Toggle visibility
+      if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+        revealedBalances[period] = true;
+        showMessage(`📊 ${period.charAt(0).toUpperCase() + period.slice(1)} balance revealed!`, 'info');
+      } else {
+        element.classList.add('hidden');
+        revealedBalances[period] = false;
+        showMessage(`👁️ ${period.charAt(0).toUpperCase() + period.slice(1)} balance hidden`, 'info');
+      }
+      
+      saveRevealedState();
+    }
+
+    // Reveal all balances
+    function revealAllBalances() {
+      ['today', 'week', 'month', 'year'].forEach(period => {
+        const element = document.getElementById(`${period}Total`);
+        if (element) {
+          element.classList.remove('hidden');
+          revealedBalances[period] = true;
+        }
+      });
+      saveRevealedState();
+      showMessage('🔓 All balances revealed!', 'success');
+    }
+
+    // Hide all balances
+    function hideAllBalances() {
+      ['today', 'week', 'month', 'year'].forEach(period => {
+        const element = document.getElementById(`${period}Total`);
+        if (element) {
+          element.classList.add('hidden');
+          revealedBalances[period] = false;
+        }
+      });
+      saveRevealedState();
+      showMessage('👁️ All balances hidden', 'info');
     }
 
     // Update status indicator
@@ -1148,8 +1380,10 @@
           // Today
           if (expense.date === today) stats.today += expense.amount;
           
-          // This week
-          if (expenseDate > new Date(now.setDate(now.getDate() - now.getDay()))) {
+          // This week (last 7 days)
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          if (expenseDate > weekAgo) {
             stats.week += expense.amount;
           }
           
@@ -1183,6 +1417,12 @@
 
     // Update stats UI
     function updateStatsUI(stats) {
+      // Update values (keep hidden state)
+      document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
+      document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
+      document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
+      document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
+
       // Calculate percentage changes
       const calculateChange = (current, previous) => {
         if (!previous || previous === 0) return '--';
@@ -1190,17 +1430,33 @@
         return change > 0 ? `+${change}% 📈` : `${change}% 📉`;
       };
 
-      // Update values
-      document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
-      document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
-      document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
-      document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
-
       // Update changes
-      document.getElementById('todayChange').textContent = calculateChange(stats.today, previousStats.today);
-      document.getElementById('weekChange').textContent = calculateChange(stats.week, previousStats.week);
-      document.getElementById('monthChange').textContent = calculateChange(stats.month, previousStats.month);
-      document.getElementById('yearChange').textContent = calculateChange(stats.year, previousStats.year);
+      const todayChange = document.getElementById('todayChange');
+      const weekChange = document.getElementById('weekChange');
+      const monthChange = document.getElementById('monthChange');
+      const yearChange = document.getElementById('yearChange');
+
+      todayChange.textContent = calculateChange(stats.today, previousStats.today);
+      weekChange.textContent = calculateChange(stats.week, previousStats.week);
+      monthChange.textContent = calculateChange(stats.month, previousStats.month);
+      yearChange.textContent = calculateChange(stats.year, previousStats.year);
+
+      // Add color classes
+      const updateChangeClass = (element, current, previous) => {
+        element.classList.remove('positive', 'negative');
+        if (previous && previous > 0) {
+          if (current > previous) {
+            element.classList.add('positive');
+          } else if (current < previous) {
+            element.classList.add('negative');
+          }
+        }
+      };
+
+      updateChangeClass(todayChange, stats.today, previousStats.today);
+      updateChangeClass(weekChange, stats.week, previousStats.week);
+      updateChangeClass(monthChange, stats.month, previousStats.month);
+      updateChangeClass(yearChange, stats.year, previousStats.year);
 
       // Store for next comparison
       previousStats = stats;
@@ -1359,9 +1615,12 @@
       container.innerHTML = html;
     }
 
-    // Report functions (kept similar but optimized)
+    // Report functions
     async function generateReport(type) {
-      if (!isFirestoreReady) return;
+      if (!isFirestoreReady) {
+        showError('Please connect to Firebase first');
+        return;
+      }
       
       currentReportType = type;
       document.getElementById('customRange').style.display = 'none';
@@ -1370,8 +1629,21 @@
       document.querySelectorAll('.btn-report').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
       
+      showMessage('📊 Generating report...', 'info');
+      
       // Implementation similar to original but optimized
-      // ... (rest of report functions)
+      // ... (rest of report functions would go here)
+    }
+
+    function showCustomRange() {
+      document.getElementById('customRange').style.display = 'flex';
+      const reportButtons = document.querySelectorAll('.report-controls .btn');
+      reportButtons.forEach(b => b.classList.remove('active'));
+    }
+
+    async function generateCustomReport() {
+      // Custom report implementation
+      // ... (would be similar to original)
     }
 
     // Modal functions
