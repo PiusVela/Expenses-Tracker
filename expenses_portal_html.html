@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UGX Expenses Tracker</title>
+  <title>Angulo's Expense & Income Tracker</title>
   <style>
     /* ===== LOGIN PAGE STYLES ===== */
     .login-overlay {
@@ -548,7 +548,7 @@
   <div class="login-overlay" id="loginPage">
     <div class="login-container">
       <div class="login-header">
-        <h2><i class="fas fa-wallet"></i> UGX Expenses Tracker</h2>
+        <h2><i class="fas fa-wallet"></i> Angulo's Expense & Income Tracker</h2>
         <p>Secure login required to access your financial dashboard</p>
       </div>
       
@@ -584,7 +584,7 @@
   <div class="container" id="mainApp">
     <div class="header">
       <div class="header-top">
-        <h1><i class="fas fa-wallet"></i><span>UGX Expenses Tracker</span></h1>
+        <h1><i class="fas fa-wallet"></i><span>Angulo's Expense & Income Tracker</span></h1>
         <div class="status-indicator" id="statusIndicator">
           <div class="status-dot connecting" id="statusDot"></div>
           <span id="statusText">Initializing...</span>
@@ -853,8 +853,8 @@
 
   <div class="modal-overlay" id="aboutModal">
     <div class="modal">
-      <h3><i class="fas fa-info-circle"></i> About UGX Expenses Tracker</h3>
-      <p>A modern expense tracking application designed specifically for Ugandan Shillings (UGX).</p>
+      <h3><i class="fas fa-info-circle"></i> About Angulo's Expense & Income Tracker</h3>
+      <p>A modern expense and income tracking application designed specifically for Ugandan Shillings (UGX).</p>
       <div style="margin-top: 15px;">
         <p><strong>Features:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
@@ -1420,7 +1420,7 @@
         const detailHeaders = isExpense ? ['Date', 'Category', 'Description', 'Amount'] : ['Date', 'Source', 'Notes', 'Amount'];
         const tableColor = isExpense ? [220, 53, 69] : [40, 167, 69];
 
-        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`UGX Tracker - ${title}`, 105, 20, { align: 'center' });
+        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
         doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
         let yPos = 45; 
         
