@@ -5,6 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Angulo's Expense & Income Tracker</title>
   <style>
+    /* ===== DARK/LIGHT MODE CSS VARIABLES ===== */
+    :root {
+      /* Light Mode (Default) */
+      --primary: #667eea;
+      --primary-dark: #764ba2;
+      --secondary: #f093fb;
+      --accent: #f5576c;
+      --success: #4ecdc4;
+      --danger: #ff6b6b;
+      --warning: #ffd166;
+      --info: #06d6a0;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gray: #6c757d;
+      --border: #e9ecef;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --gradient-income: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --gradient-balance: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --text-color: #343a40;
+      --text-secondary: #6c757d;
+      --modal-bg: #ffffff;
+      --input-bg: #ffffff;
+      --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --form-bg: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      --income-form-bg: linear-gradient(135deg, #e9fdf5 0%, #d4f8e8 100%);
+    }
+
+    body.dark-mode {
+      /* Dark Mode */
+      --primary: #818cf8;
+      --primary-dark: #6366f1;
+      --secondary: #c084fc;
+      --accent: #f87171;
+      --success: #34d399;
+      --danger: #f87171;
+      --warning: #fbbf24;
+      --info: #22d3ee;
+      --light: #1f2937;
+      --dark: #f9fafb;
+      --gray: #9ca3af;
+      --border: #374151;
+      --card-bg: #1f2937;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --gradient-1: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+      --gradient-2: linear-gradient(135deg, #c084fc 0%, #f87171 100%);
+      --gradient-3: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);
+      --gradient-4: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
+      --gradient-income: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
+      --gradient-balance: linear-gradient(135deg, #22d3ee 0%, #60a5fa 100%);
+      --body-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+      --text-color: #f9fafb;
+      --text-secondary: #9ca3af;
+      --modal-bg: #1f2937;
+      --input-bg: #374151;
+      --header-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+      --form-bg: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+      --income-form-bg: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    }
+
     /* ===== LOGIN PAGE STYLES ===== */
     .login-overlay {
       position: fixed;
@@ -12,22 +77,24 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-1);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 9999;
       padding: 20px;
+      transition: background 0.3s ease;
     }
     
     .login-container {
-      background: white;
+      background: var(--modal-bg);
       border-radius: 24px;
       padding: 40px;
       max-width: 450px;
       width: 100%;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       text-align: center;
+      transition: background 0.3s ease;
     }
     
     .login-header {
@@ -42,11 +109,13 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
+      transition: color 0.3s ease;
     }
     
     .login-header p {
       color: var(--gray);
       font-size: 1rem;
+      transition: color 0.3s ease;
     }
     
     .login-form {
@@ -65,6 +134,7 @@
       font-weight: 600;
       color: var(--dark);
       text-align: left;
+      transition: color 0.3s ease;
     }
     
     .login-input-group input {
@@ -74,6 +144,8 @@
       border-radius: 12px;
       font-size: 16px;
       transition: all 0.3s;
+      background: var(--input-bg);
+      color: var(--text-color);
     }
     
     .login-input-group input:focus {
@@ -124,46 +196,92 @@
       margin-top: 25px;
       color: var(--gray);
       font-size: 0.9rem;
+      transition: color 0.3s ease;
     }
     
     .login-footer strong {
       color: var(--primary);
     }
 
-    /* ===== OPTIMIZED CSS ===== */
-    :root {
-      --primary: #667eea;
-      --primary-dark: #764ba2;
-      --secondary: #f093fb;
-      --accent: #f5576c;
-      --success: #4ecdc4;
-      --danger: #ff6b6b;
-      --warning: #ffd166;
-      --info: #06d6a0;
-      --light: #f8f9fa;
-      --dark: #343a40;
-      --gray: #6c757d;
-      --border: #e9ecef;
-      --card-bg: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.08);
-      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-      --gradient-income: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-      --gradient-balance: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
+    .theme-toggle span {
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .theme-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.3);
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .theme-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .theme-slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .theme-slider:before {
+      transform: translateX(26px);
+    }
+
+    /* ===== OPTIMIZED CSS ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: var(--body-bg);
       min-height: 100vh;
       padding: 20px;
-      color: var(--dark);
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .container {
@@ -176,6 +294,7 @@
       position: relative;
       flex: 1;
       display: none; /* Hidden until login */
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .container::before {
@@ -187,7 +306,7 @@
 
     /* ===== HEADER & FOOTER ===== */
     .header {
-      background: var(--gradient-1);
+      background: var(--header-gradient);
       color: white;
       padding: 30px 40px 20px;
       position: relative;
@@ -198,7 +317,14 @@
       background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
       background-size: 20px 20px; opacity: 0.2;
     }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; position: relative; z-index: 2; }
+    .header-top { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 10px; 
+      position: relative; 
+      z-index: 2; 
+    }
     .header h1 { font-size: 2.2rem; display: flex; align-items: center; gap: 15px; font-weight: 700; }
     .header h1 i { background: rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 16px; backdrop-filter: blur(10px); }
     .header p { font-size: 1rem; opacity: 0.9; position: relative; z-index: 2; }
@@ -209,6 +335,22 @@
       font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+    
+    .theme-toggle-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 20px;
+    }
+    
+    .theme-toggle-header .theme-slider {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .theme-toggle-header .theme-slider:before {
+      background-color: white;
+    }
+
     .status-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; }
     .status-dot.online { background: #10b981; box-shadow: 0 0 10px #10b981; }
     .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
@@ -220,6 +362,7 @@
       text-align: center; padding: 20px 30px; margin-top: 30px;
       color: var(--gray); font-size: 0.9rem; border-top: 1px solid var(--border);
       background: var(--light); border-radius: 0 0 24px 24px;
+      transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
     .footer-content { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
     .copyright { display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 600; }
@@ -235,6 +378,7 @@
       padding: 30px;
       background: var(--light);
       align-items: start;
+      transition: background 0.3s ease;
     }
     /* New wrapper for stacking forms */
     .forms-wrapper {
@@ -253,6 +397,7 @@
       border-radius: 20px;
       padding: 25px;
       box-shadow: 0 10px 30px var(--shadow);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
     .stats-section h3 { color: var(--primary); margin-bottom: 20px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
 
@@ -301,17 +446,17 @@
     .stat-change.positive { color: #10b981; } .stat-change.negative { color: var(--danger); }
 
     .charts-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-    .chart-container { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px var(--shadow); }
+    .chart-container { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px var(--shadow); transition: background 0.3s ease; }
     .chart-container h4 { color: var(--primary); margin-bottom: 15px; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
 
     /* ===== FORMS SECTION (Collapse) ===== */
     .form-section {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      background: var(--form-bg);
       border-radius: 20px; padding: 25px; border: 1px solid var(--border);
       transition: all 0.3s ease;
     }
     .income-form-section {
-      background: linear-gradient(135deg, #e9fdf5 0%, #d4f8e8 100%);
+      background: var(--income-form-bg);
       border: 1px solid var(--success);
     }
     
@@ -348,7 +493,8 @@
     .income-form-section .form-group i { color: var(--success); }
     .form-group input, .form-group select {
       width: 100%; padding: 12px 12px 12px 40px; border: 2px solid var(--border);
-      border-radius: 12px; font-size: 15px; transition: all 0.3s; background: var(--card-bg);
+      border-radius: 12px; font-size: 15px; transition: all 0.3s; background: var(--input-bg);
+      color: var(--text-color);
     }
     .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
     .income-form-section .form-group input:focus { border-color: var(--success); box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2); }
@@ -372,11 +518,11 @@
 
     /* ===== REPORTS & LISTS (Updated) ===== */
     .content { padding: 30px; }
-    .report-section { background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border-radius: 20px; padding: 25px; margin: 30px 0; border: 1px solid var(--border); }
+    .report-section { background: var(--card-bg); border-radius: 20px; padding: 25px; margin: 30px 0; border: 1px solid var(--border); transition: background 0.3s ease; }
     .report-section h3 { margin-bottom: 20px; } 
 
     /* New List Header styles for collapse functionality */
-    .expenses-list, .income-list { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-top: 30px; box-shadow: 0 10px 30px var(--shadow); }
+    .expenses-list, .income-list { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-top: 30px; box-shadow: 0 10px 30px var(--shadow); transition: background 0.3s ease; }
     
     .list-header {
       display: flex; 
@@ -430,6 +576,10 @@
         border-radius: 10px;
         border: 1px solid #e0e7ff;
     }
+    body.dark-mode .report-period {
+      background: #374151;
+      border-color: #4b5563;
+    }
     .report-period label { font-size: 0.85rem; font-weight: 600; color: var(--gray); }
     .report-period input[type="date"] {
         padding: 8px;
@@ -437,20 +587,24 @@
         border: 1px solid var(--border);
         width: 100%;
         font-size: 15px;
+        background: var(--input-bg);
+        color: var(--text-color);
     }
     
     .report-results { margin-top: 25px; }
     .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .report-summary-item { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+    .report-summary-item { background: var(--light); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
     .report-summary-item .label { font-size: 0.8rem; color: var(--gray); margin-bottom: 5px; }
     .report-summary-item .value { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); font-family: 'Courier New', monospace; }
     
     .category-breakdown { margin-top: 20px; }
-    .category-item { display: flex; align-items: center; margin-bottom: 10px; padding: 8px; background: #f8fafc; border-radius: 6px; }
+    .category-item { display: flex; align-items: center; margin-bottom: 10px; padding: 8px; background: var(--light); border-radius: 6px; }
     .category-name { flex: 0 0 150px; font-size: 0.85rem; font-weight: 600; }
     .category-bar { flex: 1; height: 20px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 0 15px; }
+    body.dark-mode .category-bar { background: #4b5563; }
     .category-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; }
     .category-fill-income { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+    body.dark-mode .category-fill-income { background: linear-gradient(90deg, #34d399, #22d3ee); }
     .category-amount { flex: 0 0 100px; text-align: right; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 600; }
     .category-percentage { flex: 0 0 50px; text-align: right; font-size: 0.8rem; color: var(--gray); }
 
@@ -461,8 +615,12 @@
     .income-amount { background: var(--gradient-income); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .item-actions { display: flex; gap: 8px; }
     .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
-    .action-btn.edit { background: #e0e7ff; color: var(--primary); } .action-btn.edit:hover { background: var(--primary); color: white; }
-    .action-btn.delete { background: #fee2e2; color: var(--danger); } .action-btn.delete:hover { background: var(--danger); color: white; }
+    .action-btn.edit { background: #e0e7ff; color: var(--primary); } 
+    body.dark-mode .action-btn.edit { background: #374151; }
+    .action-btn.edit:hover { background: var(--primary); color: white; }
+    .action-btn.delete { background: #fee2e2; color: var(--danger); } 
+    body.dark-mode .action-btn.delete { background: #374151; }
+    .action-btn.delete:hover { background: var(--danger); color: white; }
 
     /* Category Badges */
     .category-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; transition: all 0.3s; }
@@ -501,15 +659,18 @@
     .message.success { background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; border-left: 4px solid #28a745; }
     .message.error { background: linear-gradient(135deg, #f8d7da, #f5c6cb); color: #721c24; border-left: 4px solid #dc3545; }
     .message.info { background: linear-gradient(135deg, #d1ecf1, #bee5eb); color: #0c5460; border-left: 4px solid #17a2b8; }
+    body.dark-mode .message.success { background: linear-gradient(135deg, #064e3b, #065f46); color: #d1fae5; border-left: 4px solid #10b981; }
+    body.dark-mode .message.error { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fecaca; border-left: 4px solid #ef4444; }
+    body.dark-mode .message.info { background: linear-gradient(135deg, #164e63, #155e75); color: #cffafe; border-left: 4px solid #06b6d4; }
+    
     .loading { text-align: center; padding: 40px; color: var(--gray); display: flex; flex-direction: column; align-items: center; gap: 15px; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .empty-state { text-align: center; padding: 40px; color: var(--gray); }
-    .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
 
     /* Modal */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
-    .modal { background: var(--card-bg); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: modalSlide 0.3s ease; }
+    .modal { background: var(--modal-bg); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: modalSlide 0.3s ease; color: var(--text-color); }
     @keyframes modalSlide { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
@@ -530,6 +691,9 @@
       .btn-actions-container { flex-direction: column; }
       .report-period { grid-template-columns: 1fr; }
       .report-period > div:last-child { align-self: auto; margin-top: 10px; }
+      .theme-toggle-header {
+        margin-left: 10px;
+      }
     }
   </style>
   
@@ -547,6 +711,14 @@
   <!-- Login Page -->
   <div class="login-overlay" id="loginPage">
     <div class="login-container">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="themeLabel">Light Mode</span>
+        <label class="theme-switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="theme-slider"></span>
+        </label>
+      </div>
+      
       <div class="login-header">
         <h2><i class="fas fa-wallet"></i> Angulo's Expense & Income Tracker</h2>
         <p>Secure login required to access your financial dashboard</p>
@@ -585,9 +757,17 @@
     <div class="header">
       <div class="header-top">
         <h1><i class="fas fa-wallet"></i><span>Angulo's Expense & Income Tracker</span></h1>
-        <div class="status-indicator" id="statusIndicator">
-          <div class="status-dot connecting" id="statusDot"></div>
-          <span id="statusText">Initializing...</span>
+        <div style="display: flex; align-items: center;">
+          <div class="status-indicator" id="statusIndicator">
+            <div class="status-dot connecting" id="statusDot"></div>
+            <span id="statusText">Initializing...</span>
+          </div>
+          <div class="theme-toggle-header">
+            <label class="theme-switch">
+              <input type="checkbox" id="themeToggleHeader">
+              <span class="theme-slider"></span>
+            </label>
+          </div>
         </div>
       </div>
       <p>Tap on balance cards to reveal amounts • Track, analyze, and visualize your finances</p>
@@ -865,6 +1045,7 @@
           <li>Full Financial Reports (Income & Expense)</li>
           <li>PDF report generation</li>
           <li>Real-time Firebase sync</li>
+          <li>Dark/Light Mode toggle</li>
         </ul>
       </div>
       <div class="modal-actions">
@@ -896,10 +1077,63 @@
     let pieChart = null, barChart = null, previousStats = {};
     let revealedBalances = { today: false, week: false, month: false, year: false, totalIncome: false, totalExpense: false, availableBalance: false };
 
+    // Theme Management
+    let currentTheme = 'light';
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        enableDarkMode();
+      } else {
+        enableLightMode();
+      }
+      updateThemeToggle();
+    }
+
+    function enableDarkMode() {
+      document.body.classList.add('dark-mode');
+      currentTheme = 'dark';
+      localStorage.setItem('theme', 'dark');
+      updateThemeLabel();
+    }
+
+    function enableLightMode() {
+      document.body.classList.remove('dark-mode');
+      currentTheme = 'light';
+      localStorage.setItem('theme', 'light');
+      updateThemeLabel();
+    }
+
+    function toggleTheme() {
+      if (currentTheme === 'light') {
+        enableDarkMode();
+      } else {
+        enableLightMode();
+      }
+      updateThemeToggle();
+    }
+
+    function updateThemeToggle() {
+      const isDarkMode = currentTheme === 'dark';
+      const loginToggle = document.getElementById('themeToggle');
+      const headerToggle = document.getElementById('themeToggleHeader');
+      
+      if (loginToggle) loginToggle.checked = isDarkMode;
+      if (headerToggle) headerToggle.checked = isDarkMode;
+    }
+
+    function updateThemeLabel() {
+      const themeLabel = document.getElementById('themeLabel');
+      if (themeLabel) {
+        themeLabel.textContent = currentTheme === 'dark' ? 'Dark Mode' : 'Light Mode';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initFirebase();
       setupEventListeners();
       checkLoginState();
+      initTheme();
     });
 
     function initFirebase() {
@@ -1024,6 +1258,10 @@
       document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleLogin();
       });
+      
+      // Theme toggle event listeners
+      document.getElementById('themeToggle')?.addEventListener('change', toggleTheme);
+      document.getElementById('themeToggleHeader')?.addEventListener('change', toggleTheme);
       
       document.getElementById('addBtn')?.addEventListener('click', handleExpenseSubmit);
       document.getElementById('addIncomeBtn')?.addEventListener('click', handleIncomeSubmit);
