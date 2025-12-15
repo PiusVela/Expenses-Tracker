@@ -12,6 +12,8 @@
       --secondary: #f093fb;
       --accent: #f5576c;
       --success: #4ecdc4;
+      --income: #10b981;
+      --income-light: #d1fae5;
       --danger: #ff6b6b;
       --warning: #ffd166;
       --info: #06d6a0;
@@ -25,6 +27,8 @@
       --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
       --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      --gradient-income: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --gradient-balance: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     }
 
     * {
@@ -293,6 +297,8 @@
     .stat-card:nth-child(2)::before { background: var(--gradient-2); }
     .stat-card:nth-child(3)::before { background: var(--gradient-3); }
     .stat-card:nth-child(4)::before { background: var(--gradient-4); }
+    .stat-card.income-card::before { background: var(--gradient-income); }
+    .stat-card.balance-card::before { background: var(--gradient-balance); }
 
     .stat-label {
       color: var(--gray);
@@ -329,6 +335,18 @@
       transition: all 0.3s ease;
     }
 
+    .stat-value.income {
+      background: linear-gradient(135deg, var(--income), #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-value.balance {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
     .stat-value.hidden {
       filter: blur(8px);
       -webkit-filter: blur(8px);
@@ -356,6 +374,16 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 600;
+    }
+
+    .stat-value.hidden.income::after {
+      background: linear-gradient(135deg, var(--income), #059669);
+      -webkit-background-clip: text;
+    }
+
+    .stat-value.hidden.balance::after {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      -webkit-background-clip: text;
     }
 
     .stat-tooltip {
@@ -405,6 +433,66 @@
 
     .stat-change.negative {
       color: var(--danger);
+    }
+
+    /* ===== INCOME SECTION ===== */
+    .income-section {
+      background: linear-gradient(135deg, var(--income-light) 0%, #ecfdf5 100%);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .income-section h3 {
+      color: #065f46;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .income-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-income {
+      background: var(--income-light);
+      color: var(--income);
+      border: 2px solid var(--income);
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .btn-income:hover {
+      background: var(--income);
+      color: white;
+    }
+
+    .btn-income.active {
+      background: var(--income);
+      color: white;
+    }
+
+    .income-form {
+      margin-top: 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .income-form h4 {
+      color: #065f46;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     /* ===== CHARTS ===== */
@@ -546,6 +634,16 @@
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-success {
+      background: var(--gradient-income);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
     }
 
     /* ===== BALANCE REVEAL BUTTONS ===== */
@@ -991,14 +1089,14 @@
           <span id="statusText">Initializing...</span>
         </div>
       </div>
-      <p>Tap on balance cards to reveal amounts • Track, analyze, and visualize your expenses</p>
+      <p>Track your income and expenses • Tap on balance cards to reveal amounts</p>
     </div>
 
     <!-- Dashboard Section -->
     <div class="dashboard">
       <div class="stats-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
+          <h3><i class="fas fa-chart-line"></i> Financial Overview</h3>
           <div class="balance-controls">
             <button class="btn btn-balance" onclick="revealAllBalances()">
               <i class="fas fa-eye"></i> Reveal All
@@ -1048,6 +1146,77 @@
             <div class="stat-value hidden" id="yearTotal">UGX 0</div>
             <div class="stat-change" id="yearChange">--</div>
             <div class="stat-tooltip">Click to reveal/hide amount</div>
+          </div>
+        </div>
+
+        <!-- Income Section -->
+        <div class="income-section">
+          <h3><i class="fas fa-money-bill-wave"></i> Income & Balance Tracking</h3>
+          
+          <div class="stats-grid">
+            <div class="stat-card income-card" id="incomeCard" onclick="toggleBalance('income')">
+              <div class="stat-label">
+                <span><i class="fas fa-wallet"></i> Total Income (This Month)</span>
+                <i class="fas fa-hand-pointer"></i>
+              </div>
+              <div class="stat-value income hidden" id="totalIncome">UGX 0</div>
+              <div class="stat-change" id="incomeChange">--</div>
+              <div class="stat-tooltip">Click to reveal/hide amount</div>
+            </div>
+            
+            <div class="stat-card" id="expensesCard" onclick="toggleBalance('expenses')">
+              <div class="stat-label">
+                <span><i class="fas fa-receipt"></i> Total Expenses (This Month)</span>
+                <i class="fas fa-hand-pointer"></i>
+              </div>
+              <div class="stat-value hidden" id="totalExpenses">UGX 0</div>
+              <div class="stat-change" id="expensesChange">--</div>
+              <div class="stat-tooltip">Click to reveal/hide amount</div>
+            </div>
+            
+            <div class="stat-card balance-card" id="balanceCard" onclick="toggleBalance('balance')">
+              <div class="stat-label">
+                <span><i class="fas fa-piggy-bank"></i> Available Balance</span>
+                <i class="fas fa-hand-pointer"></i>
+              </div>
+              <div class="stat-value balance hidden" id="availableBalance">UGX 0</div>
+              <div class="stat-change" id="balanceChange">--</div>
+              <div class="stat-tooltip">Click to reveal/hide amount</div>
+            </div>
+          </div>
+
+          <!-- Income Form -->
+          <div class="income-form">
+            <h4><i class="fas fa-plus-circle"></i> Add Income</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label><i class="fas fa-money-bill-wave"></i> Amount (UGX)</label>
+                <input type="number" id="incomeAmount" placeholder="e.g. 500000" min="0" step="100" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-tags"></i> Income Type</label>
+                <select id="incomeType" required>
+                  <option value="Salary" selected>💼 Salary</option>
+                  <option value="Business">📈 Business Income</option>
+                  <option value="Freelance">💻 Freelance</option>
+                  <option value="Investment">📊 Investment</option>
+                  <option value="Gift">🎁 Gift</option>
+                  <option value="Bonus">💰 Bonus</option>
+                  <option value="Other">📦 Other Income</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Date</label>
+                <input type="date" id="incomeDate" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-sticky-note"></i> Description</label>
+                <input type="text" id="incomeDescription" placeholder="Source of income">
+              </div>
+            </div>
+            <button class="btn btn-success" id="addIncomeBtn" disabled>
+              <i class="fas fa-plus"></i> Add Income
+            </button>
           </div>
         </div>
 
@@ -1236,8 +1405,10 @@
       <div style="margin-top: 15px;">
         <p><strong>Features:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
-          <li>Track expenses in UGX</li>
+          <li>Track income and expenses in UGX</li>
           <li>Tap-to-reveal balance privacy</li>
+          <li>Income vs Expense tracking</li>
+          <li>Available balance calculation</li>
           <li>Beautiful charts and visualizations</li>
           <li>PDF report generation</li>
           <li>Real-time Firebase sync</li>
@@ -1277,7 +1448,10 @@
       today: false,
       week: false,
       month: false,
-      year: false
+      year: false,
+      income: false,
+      expenses: false,
+      balance: false
     };
 
     // DOM Ready
@@ -1332,6 +1506,9 @@
       const addBtn = document.getElementById('addBtn');
       addBtn.addEventListener('click', addExpense);
       
+      const addIncomeBtn = document.getElementById('addIncomeBtn');
+      addIncomeBtn.addEventListener('click', addIncome);
+      
       document.getElementById('refreshBtn')?.addEventListener('click', loadDashboard);
       document.getElementById('cancelDelete')?.addEventListener('click', hideDeleteModal);
       document.getElementById('confirmDelete')?.addEventListener('click', deleteExpense);
@@ -1340,6 +1517,9 @@
       document.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && e.target.id === 'description') {
           addExpense();
+        }
+        if (e.key === 'Enter' && e.target.id === 'incomeDescription') {
+          addIncome();
         }
       });
 
@@ -1357,6 +1537,7 @@
     function setDefaultDates() {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('date').value = today;
+      document.getElementById('incomeDate').value = today;
       
       const fromDate = new Date();
       fromDate.setDate(fromDate.getDate() - 30);
@@ -1384,7 +1565,7 @@
         revealedBalances = JSON.parse(savedState);
         // Update UI based on saved state
         Object.keys(revealedBalances).forEach(period => {
-          const element = document.getElementById(`${period}Total`);
+          const element = document.getElementById(getElementId(period));
           if (element) {
             if (revealedBalances[period]) {
               element.classList.remove('hidden');
@@ -1396,6 +1577,20 @@
       }
     }
 
+    // Helper function to get element ID
+    function getElementId(period) {
+      const elementMap = {
+        'today': 'todayTotal',
+        'week': 'weekTotal',
+        'month': 'monthTotal',
+        'year': 'yearTotal',
+        'income': 'totalIncome',
+        'expenses': 'totalExpenses',
+        'balance': 'availableBalance'
+      };
+      return elementMap[period] || `${period}Total`;
+    }
+
     // Save revealed state to localStorage
     function saveRevealedState() {
       localStorage.setItem('revealedBalances', JSON.stringify(revealedBalances));
@@ -1403,7 +1598,8 @@
 
     // Toggle balance visibility
     function toggleBalance(period) {
-      const element = document.getElementById(`${period}Total`);
+      const elementId = getElementId(period);
+      const element = document.getElementById(elementId);
       const card = document.getElementById(`${period}Card`);
       
       if (!element || !card) return;
@@ -1416,11 +1612,11 @@
       if (element.classList.contains('hidden')) {
         element.classList.remove('hidden');
         revealedBalances[period] = true;
-        showMessage(`📊 ${period.charAt(0).toUpperCase() + period.slice(1)} balance revealed!`, 'info');
+        showMessage(`📊 ${period.charAt(0).toUpperCase() + period.slice(1)} revealed!`, 'info');
       } else {
         element.classList.add('hidden');
         revealedBalances[period] = false;
-        showMessage(`👁️ ${period.charAt(0).toUpperCase() + period.slice(1)} balance hidden`, 'info');
+        showMessage(`👁️ ${period.charAt(0).toUpperCase() + period.slice(1)} hidden`, 'info');
       }
       
       saveRevealedState();
@@ -1428,8 +1624,8 @@
 
     // Reveal all balances
     function revealAllBalances() {
-      ['today', 'week', 'month', 'year'].forEach(period => {
-        const element = document.getElementById(`${period}Total`);
+      ['today', 'week', 'month', 'year', 'income', 'expenses', 'balance'].forEach(period => {
+        const element = document.getElementById(getElementId(period));
         if (element) {
           element.classList.remove('hidden');
           revealedBalances[period] = true;
@@ -1441,8 +1637,8 @@
 
     // Hide all balances
     function hideAllBalances() {
-      ['today', 'week', 'month', 'year'].forEach(period => {
-        const element = document.getElementById(`${period}Total`);
+      ['today', 'week', 'month', 'year', 'income', 'expenses', 'balance'].forEach(period => {
+        const element = document.getElementById(getElementId(period));
         if (element) {
           element.classList.add('hidden');
           revealedBalances[period] = false;
@@ -1543,6 +1739,7 @@
     // Setup app after connection
     function setupApp() {
       document.getElementById('addBtn').disabled = false;
+      document.getElementById('addIncomeBtn').disabled = false;
       document.getElementById('refreshBtn').style.display = 'block';
     }
 
@@ -1580,17 +1777,18 @@
           category,
           date,
           description: description || '',
+          type: 'expense',
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           createdAt: new Date().toISOString()
         };
 
-        await db.collection('expenses').add(expenseData);
+        await db.collection('transactions').add(expenseData);
 
         // Clear form
         document.getElementById('amount').value = '';
         document.getElementById('description').value = '';
 
-        showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
+        showMessage(`✅ Added expense: ${formatCurrency(amount)} for ${category}`, 'success');
         
         // Refresh data
         loadDashboard();
@@ -1598,6 +1796,65 @@
 
       } catch (error) {
         showError('Failed to add expense: ' + error.message);
+      } finally {
+        addBtn.disabled = false;
+        addBtn.innerHTML = originalText;
+      }
+    }
+
+    // Add income
+    async function addIncome() {
+      if (!isFirestoreReady) {
+        showError('Please connect to Firebase first');
+        return;
+      }
+
+      const amount = document.getElementById('incomeAmount').value.trim();
+      const type = document.getElementById('incomeType').value;
+      const date = document.getElementById('incomeDate').value;
+      const description = document.getElementById('incomeDescription').value.trim();
+
+      if (!amount || parseFloat(amount) <= 0) {
+        showError('Please enter a valid income amount');
+        return;
+      }
+
+      if (!date) {
+        showError('Please select a date');
+        return;
+      }
+
+      const addBtn = document.getElementById('addIncomeBtn');
+      const originalText = addBtn.innerHTML;
+      
+      try {
+        addBtn.disabled = true;
+        addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        const incomeData = {
+          amount: parseFloat(amount),
+          category: type,
+          date,
+          description: description || '',
+          type: 'income',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: new Date().toISOString()
+        };
+
+        await db.collection('transactions').add(incomeData);
+
+        // Clear form
+        document.getElementById('incomeAmount').value = '';
+        document.getElementById('incomeDescription').value = '';
+
+        showMessage(`✅ Added income: ${formatCurrency(amount)} from ${type}`, 'success');
+        
+        // Refresh data
+        loadDashboard();
+        if (currentReportType) generateReport(currentReportType);
+
+      } catch (error) {
+        showError('Failed to add income: ' + error.message);
       } finally {
         addBtn.disabled = false;
         addBtn.innerHTML = originalText;
@@ -1647,32 +1904,41 @@
       `;
 
       try {
-        // Get ALL expenses
-        const snapshot = await db.collection('expenses').get();
+        // Get ALL transactions
+        const snapshot = await db.collection('transactions').get();
 
-        // Filter expenses by date range
-        let totalAmount = 0;
+        // Filter transactions by date range
+        let totalIncome = 0;
+        let totalExpenses = 0;
         let expenseCount = 0;
+        let incomeCount = 0;
         const categories = {};
-        const expenses = [];
+        const incomes = {};
+        const transactions = [];
 
         snapshot.forEach(doc => {
-          const expense = doc.data();
-          const expenseDate = new Date(expense.date);
-          expenseDate.setHours(0, 0, 0, 0);
+          const transaction = doc.data();
+          const transactionDate = new Date(transaction.date);
+          transactionDate.setHours(0, 0, 0, 0);
           
-          // Check if expense is within date range
-          if (expenseDate >= startDate && expenseDate <= endDate) {
-            totalAmount += expense.amount;
-            expenseCount++;
+          // Check if transaction is within date range
+          if (transactionDate >= startDate && transactionDate <= endDate) {
+            if (transaction.type === 'income') {
+              totalIncome += transaction.amount;
+              incomeCount++;
+              // Group by income type
+              incomes[transaction.category] = (incomes[transaction.category] || 0) + transaction.amount;
+            } else {
+              totalExpenses += transaction.amount;
+              expenseCount++;
+              // Group by category
+              categories[transaction.category] = (categories[transaction.category] || 0) + transaction.amount;
+            }
             
-            // Group by category
-            categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
-            
-            // Store expense for list
-            expenses.push({
+            // Store transaction for list
+            transactions.push({
               id: doc.id,
-              ...expense
+              ...transaction
             });
           }
         });
@@ -1681,18 +1947,25 @@
         const sortedCategories = Object.entries(categories)
           .sort((a, b) => b[1] - a[1]);
 
-        // Sort expenses by date (newest first)
-        expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Sort incomes by amount
+        const sortedIncomes = Object.entries(incomes)
+          .sort((a, b) => b[1] - a[1]);
+
+        // Sort transactions by date (newest first)
+        transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         // Store report data for PDF export
         currentReportData = {
           periodLabel,
           startDate,
           endDate,
-          totalAmount,
+          totalIncome,
+          totalExpenses,
           expenseCount,
+          incomeCount,
           categories: sortedCategories,
-          expenses,
+          incomes: sortedIncomes,
+          transactions,
           type
         };
 
@@ -1703,16 +1976,16 @@
           </h4>
           <div class="report-summary">
             <div class="report-summary-item">
+              <div class="label">Total Income</div>
+              <div class="value" style="color: var(--income);">${formatCurrency(totalIncome)}</div>
+            </div>
+            <div class="report-summary-item">
               <div class="label">Total Expenses</div>
-              <div class="value">${formatCurrency(totalAmount)}</div>
+              <div class="value">${formatCurrency(totalExpenses)}</div>
             </div>
             <div class="report-summary-item">
-              <div class="label">Number of Expenses</div>
-              <div class="value">${expenseCount}</div>
-            </div>
-            <div class="report-summary-item">
-              <div class="label">Average per Expense</div>
-              <div class="value">${formatCurrency(expenseCount > 0 ? Math.round(totalAmount / expenseCount) : 0)}</div>
+              <div class="label">Net Balance</div>
+              <div class="value" style="color: ${totalIncome >= totalExpenses ? 'var(--income)' : 'var(--danger)'};">${formatCurrency(totalIncome - totalExpenses)}</div>
             </div>
             <div class="report-summary-item">
               <div class="label">Date Range</div>
@@ -1721,16 +1994,45 @@
           </div>
         `;
 
+        if (sortedIncomes.length > 0) {
+          html += `
+            <div class="category-breakdown" style="margin-top: 25px;">
+              <h5 style="color: var(--income); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-money-bill-wave"></i> Income Breakdown
+              </h5>
+          `;
+          
+          sortedIncomes.forEach(([type, amount]) => {
+            const percentage = totalIncome > 0 ? Math.round((amount / totalIncome) * 100) : 0;
+            html += `
+              <div class="category-item">
+                <div class="category-name">
+                  <span style="padding: 4px 8px; background: var(--income-light); border-radius: 12px; font-size: 0.8rem; color: var(--income); font-weight: 600;">
+                    ${type}
+                  </span>
+                </div>
+                <div class="category-bar">
+                  <div class="category-fill" style="background: linear-gradient(90deg, var(--income), #059669); width: ${percentage}%"></div>
+                </div>
+                <div class="category-amount" style="color: var(--income);">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+
         if (sortedCategories.length > 0) {
           html += `
             <div class="category-breakdown">
               <h5 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-tags"></i> Category Breakdown
+                <i class="fas fa-tags"></i> Expense Breakdown
               </h5>
           `;
           
           sortedCategories.forEach(([category, amount]) => {
-            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
+            const percentage = totalExpenses > 0 ? Math.round((amount / totalExpenses) * 100) : 0;
             html += `
               <div class="category-item">
                 <div class="category-name">
@@ -1750,36 +2052,40 @@
           html += `</div>`;
         }
 
-        if (expenses.length > 0) {
+        if (transactions.length > 0) {
           html += `
             <div style="margin-top: 25px;">
               <h5 style="color: var(--primary-dark); margin-bottom: 15px; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-receipt"></i> Expense Details (${expenses.length} items)
+                <i class="fas fa-receipt"></i> Recent Transactions (${transactions.length} items)
               </h5>
           `;
           
-          expenses.forEach(expense => {
-            const date = new Date(expense.date);
+          transactions.slice(0, 20).forEach(transaction => {
+            const date = new Date(transaction.date);
             const formattedDate = date.toLocaleDateString('en-UG', {
               weekday: 'short',
               month: 'short',
               day: 'numeric'
             });
             
+            const isIncome = transaction.type === 'income';
+            const badgeClass = isIncome ? 'income' : transaction.category.toLowerCase().replace(' ', '-');
+            const badgeText = isIncome ? transaction.category : transaction.category;
+            
             html += `
               <div class="expense-item">
                 <div class="expense-details">
-                  <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
-                    <i class="fas fa-tag"></i>
-                    ${expense.category}
+                  <span class="category-badge category-${badgeClass}" style="${isIncome ? 'background: var(--gradient-income); color: white;' : ''}">
+                    <i class="fas ${isIncome ? 'fa-money-bill-wave' : 'fa-tag'}"></i>
+                    ${badgeText}
                   </span>
                   <strong>${formattedDate}</strong>
                   <div style="font-size: 0.8rem; color: var(--gray); margin-top: 3px;">
-                    ${expense.description || ''}
+                    ${transaction.description || ''}
                   </div>
                 </div>
-                <div class="expense-amount">
-                  ${formatCurrency(expense.amount)}
+                <div class="expense-amount" style="${isIncome ? 'background: linear-gradient(135deg, var(--income), #059669); -webkit-background-clip: text;' : ''}">
+                  ${isIncome ? '+' : ''}${formatCurrency(transaction.amount)}
                 </div>
               </div>
             `;
@@ -1788,20 +2094,20 @@
           html += `</div>`;
         }
 
-        if (expenseCount === 0) {
+        if (transactions.length === 0) {
           html += `
             <div class="empty-state" style="margin-top: 30px;">
               <i class="fas fa-chart-line"></i>
-              <h4>No expenses found</h4>
-              <p>No expenses recorded for this period.</p>
+              <h4>No transactions found</h4>
+              <p>No transactions recorded for this period.</p>
             </div>
           `;
         }
 
         reportResults.innerHTML = html;
         
-        // Show PDF download button if there are expenses
-        if (expenseCount > 0) {
+        // Show PDF download button if there are transactions
+        if (transactions.length > 0) {
           document.getElementById('reportActions').style.display = 'flex';
         } else {
           document.getElementById('reportActions').style.display = 'none';
@@ -1858,7 +2164,7 @@
 
     // Download PDF report
     function downloadPDF() {
-      if (!currentReportData || currentReportData.expenseCount === 0) {
+      if (!currentReportData || currentReportData.transactions.length === 0) {
         showMessage('❌ No report data available to download', 'error');
         return;
       }
@@ -1870,7 +2176,7 @@
         // Report title
         doc.setFontSize(18);
         doc.setTextColor(67, 97, 238);
-        doc.text('UGX Expenses Tracker - Report', 105, 20, { align: 'center' });
+        doc.text('UGX Expenses Tracker - Financial Report', 105, 20, { align: 'center' });
         
         // Report period
         doc.setFontSize(12);
@@ -1882,32 +2188,61 @@
         // Summary section
         doc.setFontSize(14);
         doc.setTextColor(67, 97, 238);
-        doc.text('Summary', 20, yPos);
+        doc.text('Financial Summary', 20, yPos);
         yPos += 10;
         
         doc.setFontSize(11);
         doc.setTextColor(0, 0, 0);
-        doc.text(`Total Expenses: ${formatCurrency(currentReportData.totalAmount)}`, 25, yPos);
+        doc.text(`Total Income: ${formatCurrency(currentReportData.totalIncome)}`, 25, yPos);
         yPos += 7;
-        doc.text(`Number of Expenses: ${currentReportData.expenseCount}`, 25, yPos);
+        doc.setTextColor(220, 38, 38);
+        doc.text(`Total Expenses: ${formatCurrency(currentReportData.totalExpenses)}`, 25, yPos);
         yPos += 7;
-        doc.text(`Average per Expense: ${formatCurrency(currentReportData.expenseCount > 0 ? Math.round(currentReportData.totalAmount / currentReportData.expenseCount) : 0)}`, 25, yPos);
+        const netBalance = currentReportData.totalIncome - currentReportData.totalExpenses;
+        doc.setTextColor(netBalance >= 0 ? 16, 185, 129 : 220, 38, 38);
+        doc.text(`Net Balance: ${formatCurrency(netBalance)}`, 25, yPos);
         yPos += 7;
+        doc.setTextColor(0, 0, 0);
         doc.text(`Date Range: ${currentReportData.startDate.toLocaleDateString('en-UG')} to ${currentReportData.endDate.toLocaleDateString('en-UG')}`, 25, yPos);
         yPos += 15;
         
-        // Category breakdown
+        // Income breakdown
+        if (currentReportData.incomes.length > 0) {
+          doc.setFontSize(14);
+          doc.setTextColor(16, 185, 129);
+          doc.text('Income Breakdown', 20, yPos);
+          yPos += 10;
+          
+          doc.setFontSize(11);
+          doc.setTextColor(0, 0, 0);
+          
+          currentReportData.incomes.forEach(([type, amount]) => {
+            const percentage = currentReportData.totalIncome > 0 ? Math.round((amount / currentReportData.totalIncome) * 100) : 0;
+            doc.text(`${type}: ${formatCurrency(amount)} (${percentage}%)`, 25, yPos);
+            yPos += 7;
+            
+            // Add new page if we're near the bottom
+            if (yPos > 270) {
+              doc.addPage();
+              yPos = 20;
+            }
+          });
+          
+          yPos += 10;
+        }
+        
+        // Expense breakdown
         if (currentReportData.categories.length > 0) {
           doc.setFontSize(14);
           doc.setTextColor(67, 97, 238);
-          doc.text('Category Breakdown', 20, yPos);
+          doc.text('Expense Breakdown', 20, yPos);
           yPos += 10;
           
           doc.setFontSize(11);
           doc.setTextColor(0, 0, 0);
           
           currentReportData.categories.forEach(([category, amount]) => {
-            const percentage = currentReportData.totalAmount > 0 ? Math.round((amount / currentReportData.totalAmount) * 100) : 0;
+            const percentage = currentReportData.totalExpenses > 0 ? Math.round((amount / currentReportData.totalExpenses) * 100) : 0;
             doc.text(`${category}: ${formatCurrency(amount)} (${percentage}%)`, 25, yPos);
             yPos += 7;
             
@@ -1921,44 +2256,58 @@
           yPos += 10;
         }
         
-        // Expense details
-        if (currentReportData.expenses.length > 0) {
+        // Transaction details
+        if (currentReportData.transactions.length > 0) {
           doc.setFontSize(14);
           doc.setTextColor(67, 97, 238);
-          doc.text('Expense Details', 20, yPos);
+          doc.text('Transaction Details', 20, yPos);
           yPos += 10;
           
           // Prepare table data
-          const tableData = currentReportData.expenses.map(expense => {
-            const date = new Date(expense.date);
+          const tableData = currentReportData.transactions.map(transaction => {
+            const date = new Date(transaction.date);
             const formattedDate = date.toLocaleDateString('en-UG', {
               day: 'numeric',
               month: 'short',
               year: 'numeric'
             });
             
+            const type = transaction.type === 'income' ? 'Income' : 'Expense';
+            const amount = transaction.type === 'income' ? `+${formatCurrency(transaction.amount)}` : `-${formatCurrency(transaction.amount)}`;
+            
             return [
               formattedDate,
-              expense.category,
-              expense.description || '-',
-              formatCurrency(expense.amount)
+              type,
+              transaction.category,
+              transaction.description || '-',
+              amount
             ];
           });
           
           // Add table
           doc.autoTable({
             startY: yPos,
-            head: [['Date', 'Category', 'Description', 'Amount']],
+            head: [['Date', 'Type', 'Category', 'Description', 'Amount']],
             body: tableData,
             theme: 'grid',
             headStyles: { fillColor: [67, 97, 238] },
             margin: { left: 20, right: 20 },
             styles: { fontSize: 10 },
             columnStyles: {
-              0: { cellWidth: 30 },
-              1: { cellWidth: 40 },
-              2: { cellWidth: 70 },
-              3: { cellWidth: 30 }
+              0: { cellWidth: 25 },
+              1: { cellWidth: 25 },
+              2: { cellWidth: 35 },
+              3: { cellWidth: 65 },
+              4: { cellWidth: 30 }
+            },
+            didParseCell: function(data) {
+              if (data.column.index === 4 && data.cell.raw) {
+                if (data.cell.raw.startsWith('+')) {
+                  data.cell.styles.textColor = [16, 185, 129];
+                } else if (data.cell.raw.startsWith('-')) {
+                  data.cell.styles.textColor = [220, 38, 38];
+                }
+              }
             }
           });
         }
@@ -1980,7 +2329,7 @@
         doc.text('© 2025 Pius Angulo - UGX Expenses Tracker', 105, 295, { align: 'center' });
         
         // Save the PDF
-        const fileName = `expenses_report_${currentReportData.type}_${new Date().toISOString().split('T')[0]}.pdf`;
+        const fileName = `financial_report_${currentReportData.type}_${new Date().toISOString().split('T')[0]}.pdf`;
         doc.save(fileName);
         
         showMessage('✅ PDF report downloaded successfully!', 'success');
@@ -1994,52 +2343,72 @@
     // Load dashboard data
     async function loadDashboard() {
       try {
-        const snapshot = await db.collection('expenses').get();
+        const snapshot = await db.collection('transactions').get();
         const now = new Date();
         const today = now.toISOString().split('T')[0];
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
         
         // Calculate totals
         const stats = {
-          today: 0, week: 0, month: 0, year: 0,
+          today: 0,
+          week: 0,
+          month: 0,
+          year: 0,
+          totalIncome: 0,
+          totalExpenses: 0,
           todayDate: today,
           currentYear: now.getFullYear(),
           currentMonth: now.getMonth() + 1
         };
 
-        // Categorize expenses
+        // Categorize transactions
         const categories = {};
         const weeklyData = Array(7).fill(0);
         
         snapshot.forEach(doc => {
-          const expense = doc.data();
-          const expenseDate = new Date(expense.date);
+          const transaction = doc.data();
+          const transactionDate = new Date(transaction.date);
           
           // Today
-          if (expense.date === today) stats.today += expense.amount;
+          if (transaction.date === today) {
+            if (transaction.type === 'expense') {
+              stats.today += transaction.amount;
+            }
+          }
           
           // This week (last 7 days)
           const weekAgo = new Date();
           weekAgo.setDate(weekAgo.getDate() - 7);
-          if (expenseDate > weekAgo) {
-            stats.week += expense.amount;
+          if (transactionDate > weekAgo && transaction.type === 'expense') {
+            stats.week += transaction.amount;
           }
           
           // This month
-          if (expenseDate.getMonth() === now.getMonth() && expenseDate.getFullYear() === now.getFullYear()) {
-            stats.month += expense.amount;
+          if (transactionDate.getMonth() === currentMonth && transactionDate.getFullYear() === currentYear) {
+            if (transaction.type === 'income') {
+              stats.totalIncome += transaction.amount;
+            } else {
+              stats.totalExpenses += transaction.amount;
+              stats.month += transaction.amount;
+            }
           }
           
           // This year
-          if (expenseDate.getFullYear() === now.getFullYear()) {
-            stats.year += expense.amount;
+          if (transactionDate.getFullYear() === currentYear && transaction.type === 'expense') {
+            stats.year += transaction.amount;
           }
           
-          // Category totals
-          categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
+          // Category totals for expenses
+          if (transaction.type === 'expense') {
+            categories[transaction.category] = (categories[transaction.category] || 0) + transaction.amount;
+          }
           
-          // Weekly data for chart
-          const dayOfWeek = expenseDate.getDay();
-          weeklyData[dayOfWeek] += expense.amount;
+          // Weekly data for chart (expenses only)
+          if (transaction.type === 'expense') {
+            const dayOfWeek = transactionDate.getDay();
+            weeklyData[dayOfWeek] += transaction.amount;
+          }
         });
 
         // Update UI
@@ -2059,6 +2428,22 @@
       document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
       document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
       document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
+      document.getElementById('totalIncome').textContent = formatCurrency(stats.totalIncome);
+      document.getElementById('totalExpenses').textContent = formatCurrency(stats.totalExpenses);
+      
+      // Calculate available balance
+      const availableBalance = stats.totalIncome - stats.totalExpenses;
+      document.getElementById('availableBalance').textContent = formatCurrency(availableBalance);
+      
+      // Add color to balance based on value
+      const balanceElement = document.getElementById('availableBalance');
+      if (availableBalance >= 0) {
+        balanceElement.classList.add('balance');
+        balanceElement.classList.remove('negative');
+      } else {
+        balanceElement.classList.add('negative');
+        balanceElement.classList.remove('balance');
+      }
 
       // Calculate percentage changes
       const calculateChange = (current, previous) => {
@@ -2072,11 +2457,21 @@
       const weekChange = document.getElementById('weekChange');
       const monthChange = document.getElementById('monthChange');
       const yearChange = document.getElementById('yearChange');
+      const incomeChange = document.getElementById('incomeChange');
+      const expensesChange = document.getElementById('expensesChange');
+      const balanceChange = document.getElementById('balanceChange');
 
       todayChange.textContent = calculateChange(stats.today, previousStats.today);
       weekChange.textContent = calculateChange(stats.week, previousStats.week);
       monthChange.textContent = calculateChange(stats.month, previousStats.month);
       yearChange.textContent = calculateChange(stats.year, previousStats.year);
+      incomeChange.textContent = calculateChange(stats.totalIncome, previousStats.totalIncome);
+      expensesChange.textContent = calculateChange(stats.totalExpenses, previousStats.totalExpenses);
+      
+      // Calculate balance change
+      const currentBalance = stats.totalIncome - stats.totalExpenses;
+      const previousBalance = (previousStats.totalIncome || 0) - (previousStats.totalExpenses || 0);
+      balanceChange.textContent = calculateChange(currentBalance, previousBalance);
 
       // Add color classes
       const updateChangeClass = (element, current, previous) => {
@@ -2094,6 +2489,20 @@
       updateChangeClass(weekChange, stats.week, previousStats.week);
       updateChangeClass(monthChange, stats.month, previousStats.month);
       updateChangeClass(yearChange, stats.year, previousStats.year);
+      updateChangeClass(incomeChange, stats.totalIncome, previousStats.totalIncome);
+      updateChangeClass(expensesChange, stats.totalExpenses, previousStats.totalExpenses);
+      
+      // Balance change color
+      balanceChange.classList.remove('positive', 'negative');
+      if (previousBalance > 0) {
+        if (currentBalance > previousBalance) {
+          balanceChange.classList.add('positive');
+        } else if (currentBalance < previousBalance) {
+          balanceChange.classList.add('negative');
+        }
+      } else if (currentBalance > 0) {
+        balanceChange.classList.add('positive');
+      }
 
       // Store for next comparison
       previousStats = stats;
@@ -2139,7 +2548,7 @@
                 label: (context) => {
                   const value = context.raw;
                   const total = Object.values(categories).reduce((a, b) => a + b, 0);
-                  const percentage = ((value / total) * 100).toFixed(1);
+                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                   return `${context.label}: ${formatCurrency(value)} (${percentage}%)`;
                 }
               }
@@ -2204,46 +2613,50 @@
         container.innerHTML = `
           <div class="empty-state">
             <i class="fas fa-inbox"></i>
-            <h4>No expenses yet</h4>
-            <p>Add your first expense to get started!</p>
+            <h4>No transactions yet</h4>
+            <p>Add your first expense or income to get started!</p>
           </div>
         `;
         return;
       }
 
       let html = '';
-      const expenses = [];
+      const transactions = [];
       
       snapshot.forEach(doc => {
-        expenses.push({ id: doc.id, ...doc.data() });
+        transactions.push({ id: doc.id, ...doc.data() });
       });
 
       // Sort by date (newest first)
-      expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+      transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
       
       // Take only last 20
-      expenses.slice(0, 20).forEach(expense => {
-        const date = new Date(expense.date);
+      transactions.slice(0, 20).forEach(transaction => {
+        const date = new Date(transaction.date);
         const formattedDate = date.toLocaleDateString('en-UG', {
           weekday: 'short',
           month: 'short',
           day: 'numeric'
         });
 
+        const isIncome = transaction.type === 'income';
+        const badgeClass = isIncome ? 'income' : transaction.category.toLowerCase().replace(' ', '-');
+        const badgeText = isIncome ? transaction.category : transaction.category;
+        
         html += `
           <div class="expense-item">
             <div>
-              <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
-                <i class="fas fa-tag"></i>
-                ${expense.category}
+              <span class="category-badge category-${badgeClass}" style="${isIncome ? 'background: var(--gradient-income); color: white;' : ''}">
+                <i class="fas ${isIncome ? 'fa-money-bill-wave' : 'fa-tag'}"></i>
+                ${badgeText}
               </span>
               <strong>${formattedDate}</strong>
               <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
-                ${expense.description || 'No description'}
+                ${transaction.description || 'No description'}
               </div>
             </div>
-            <div class="expense-amount">
-              ${formatCurrency(expense.amount)}
+            <div class="expense-amount" style="${isIncome ? 'background: linear-gradient(135deg, var(--income), #059669); -webkit-background-clip: text;' : ''}">
+              ${isIncome ? '+' : ''}${formatCurrency(transaction.amount)}
             </div>
           </div>
         `;
@@ -2264,13 +2677,13 @@
       }
 
       try {
-        await db.collection('expenses').doc(expenseToDelete).delete();
-        showMessage('✅ Expense deleted successfully', 'success');
+        await db.collection('transactions').doc(expenseToDelete).delete();
+        showMessage('✅ Transaction deleted successfully', 'success');
         hideDeleteModal();
         loadDashboard();
         if (currentReportType) generateReport(currentReportType);
       } catch (error) {
-        showError('Failed to delete expense: ' + error.message);
+        showError('Failed to delete transaction: ' + error.message);
         hideDeleteModal();
       }
     }
