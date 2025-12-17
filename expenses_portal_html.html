@@ -674,6 +674,28 @@
     @keyframes modalSlide { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
+    /* Specific Report Filter Styles */
+    .specific-report-filter {
+        background: var(--light);
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+    }
+    
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .filter-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { padding: 10px; }
@@ -693,6 +715,12 @@
       .report-period > div:last-child { align-self: auto; margin-top: 10px; }
       .theme-toggle-header {
         margin-left: 10px;
+      }
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+      .filter-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -986,6 +1014,109 @@
       </div>
     </div>
 
+    <!-- NEW: Specific Category Expense Report -->
+    <div class="report-section" id="categoryExpenseReportSection">
+      <h3 class="form-title" style="color: var(--warning);"><i class="fas fa-filter"></i> Specific Expense Category Report</h3>
+      
+      <div class="specific-report-filter">
+        <div class="filter-grid">
+          <div class="form-group">
+            <label><i class="fas fa-tags"></i> Expense Category</label>
+            <select id="specificExpenseCategory" required>
+              <option value="Yaka">⚡ Yaka (Electricity)</option>
+              <option value="Water">💧 Water Bill</option>
+              <option value="Groceries" selected>🛒 Groceries</option>
+              <option value="Food">🍲 Food & Dining</option>
+              <option value="Fuel">⛽ Fuel</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Internet">🌐 Internet</option>
+              <option value="Airtime">📱 Airtime</option>
+              <option value="Rent">🏠 Rent</option>
+              <option value="Laundry">👕 Laundry</option>
+              <option value="Clothing">👔 Clothing</option>
+              <option value="School Fees">📚 School Fees</option>
+              <option value="Medical">🏥 Medical</option>
+              <option value="Savings">💰 Savings</option>
+              <option value="Debt">💳 Debt Payment</option>
+              <option value="Giving">🤲 Giving</option>
+              <option value="Entertainment">🎬 Entertainment</option>
+              <option value="Payments">💸 Payments</option>
+              <option value="Purchases">🛍️ Purchases</option>
+              <option value="General">📦 General</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> From Date</label>
+            <input type="date" id="categoryFromDate" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> To Date</label>
+            <input type="date" id="categoryToDate" required>
+          </div>
+        </div>
+        
+        <div class="filter-actions">
+          <button class="btn btn-primary" onclick="generateCategoryExpenseReport()">
+            <i class="fas fa-chart-pie"></i> Generate Category Report
+          </button>
+          <button class="btn btn-warning" onclick="downloadCategoryExpensePDF()" id="categoryExpensePDFBtn" style="display: none;">
+            <i class="fas fa-file-pdf"></i> Download Category PDF
+          </button>
+          <button class="btn" style="background: var(--gray); color: white;" onclick="resetCategoryExpenseForm()">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="report-results" id="categoryExpenseReportResults">
+        <div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>
+      </div>
+    </div>
+
+    <!-- NEW: Specific Source Income Report -->
+    <div class="report-section" id="sourceIncomeReportSection">
+      <h3 class="form-title" style="color: var(--info);"><i class="fas fa-money-bill-wave"></i> Specific Income Source Report</h3>
+      
+      <div class="specific-report-filter">
+        <div class="filter-grid">
+          <div class="form-group">
+            <label><i class="fas fa-briefcase"></i> Income Source</label>
+            <select id="specificIncomeSource" required>
+              <option value="Salary" selected>💼 Salary</option>
+              <option value="Freelance">💻 Freelance/Side-Hustle</option>
+              <option value="Investment">📈 Investment/Dividends</option>
+              <option value="Gift">🎁 Gift/Reimbursement</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> From Date</label>
+            <input type="date" id="sourceFromDate" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-calendar"></i> To Date</label>
+            <input type="date" id="sourceToDate" required>
+          </div>
+        </div>
+        
+        <div class="filter-actions">
+          <button class="btn btn-success" onclick="generateSourceIncomeReport()">
+            <i class="fas fa-chart-line"></i> Generate Source Report
+          </button>
+          <button class="btn btn-info" onclick="downloadSourceIncomePDF()" id="sourceIncomePDFBtn" style="display: none;">
+            <i class="fas fa-file-pdf"></i> Download Source PDF
+          </button>
+          <button class="btn" style="background: var(--gray); color: white;" onclick="resetSourceIncomeForm()">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <div class="report-results" id="sourceIncomeReportResults">
+        <div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>
+      </div>
+    </div>
+
     <div class="expenses-list" id="expensesListSection">
       <div class="list-header" onclick="toggleList('expensesListSection')">
         <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
@@ -1043,6 +1174,7 @@
           <li>Tap-to-reveal balance privacy</li>
           <li>Beautiful charts and visualizations</li>
           <li>Full Financial Reports (Income & Expense)</li>
+          <li>Specific Category/Source Reports</li>
           <li>PDF report generation</li>
           <li>Real-time Firebase sync</li>
           <li>Dark/Light Mode toggle</li>
@@ -1073,7 +1205,7 @@
     let isEditingExpense = false, editingExpenseId = null;
     let isEditingIncome = false, editingIncomeId = null;
     let currentReportPeriod = { expense: 'today', income: 'today' };
-    let currentReportData = { expense: null, income: null };
+    let currentReportData = { expense: null, income: null, categoryExpense: null, sourceIncome: null };
     let pieChart = null, barChart = null, previousStats = {};
     let revealedBalances = { today: false, week: false, month: false, year: false, totalIncome: false, totalExpense: false, availableBalance: false };
 
@@ -1134,6 +1266,7 @@
       setupEventListeners();
       checkLoginState();
       initTheme();
+      setDefaultSpecificReportDates();
     });
 
     function initFirebase() {
@@ -1181,6 +1314,7 @@
 
     function initAppAfterLogin() {
       setDefaultDates();
+      setDefaultSpecificReportDates();
       loadRevealedState();
       setupEventListeners();
       testFirestoreConnection();
@@ -1271,10 +1405,8 @@
       document.getElementById('cancelIncomeBtn')?.addEventListener('click', cancelEditIncome);
       
       document.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            if (e.target.id === 'description') handleExpenseSubmit();
-            if (e.target.id === 'incomeNotes') handleIncomeSubmit();
-        }
+        if (e.target.id === 'description' && e.key === 'Enter') handleExpenseSubmit();
+        if (e.target.id === 'incomeNotes' && e.key === 'Enter') handleIncomeSubmit();
       });
     }
     
@@ -1304,6 +1436,21 @@
       // Income custom range defaults
       document.getElementById('incomeFromDate').value = defaultFrom;
       document.getElementById('incomeToDate').value = today;
+    }
+    
+    function setDefaultSpecificReportDates() {
+      const today = new Date().toISOString().split('T')[0];
+      const firstDayOfMonth = new Date();
+      firstDayOfMonth.setDate(1);
+      const firstDayStr = firstDayOfMonth.toISOString().split('T')[0];
+      
+      // Set default dates for category expense report
+      document.getElementById('categoryFromDate').value = firstDayStr;
+      document.getElementById('categoryToDate').value = today;
+      
+      // Set default dates for source income report
+      document.getElementById('sourceFromDate').value = firstDayStr;
+      document.getElementById('sourceToDate').value = today;
     }
 
     function showAbout() { document.getElementById('aboutModal').style.display = 'flex'; }
@@ -1643,6 +1790,406 @@
       await fetchAndDisplayReport(startDate, endDate, `Custom Range (${startDate.toLocaleDateString('en-UG')} - ${endDate.toLocaleDateString('en-UG')})`, reportType);
     }
 
+    // NEW: Generate Specific Category Expense Report
+    async function generateCategoryExpenseReport() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      
+      const category = document.getElementById('specificExpenseCategory').value;
+      const fromDate = document.getElementById('categoryFromDate').value;
+      const toDate = document.getElementById('categoryToDate').value;
+      
+      if (!category) { showError('Please select an expense category'); return; }
+      if (!fromDate || !toDate) { showError('Please select both from and to dates'); return; }
+      if (new Date(fromDate) > new Date(toDate)) { showError('From date cannot be after to date'); return; }
+      
+      const startDate = new Date(fromDate); startDate.setHours(0,0,0,0);
+      const endDate = new Date(toDate); endDate.setHours(23,59,59,999);
+      
+      const resultsContainer = document.getElementById('categoryExpenseReportResults');
+      resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating category expense report...</p></div>';
+      
+      try {
+        const expenseSnapshot = await db.collection('expenses').get();
+        
+        let totalAmount = 0, count = 0, items = [];
+        let dailyBreakdown = {};
+        
+        expenseSnapshot.forEach(doc => {
+          const expense = doc.data();
+          const expenseDate = new Date(expense.date); expenseDate.setHours(0,0,0,0);
+          
+          // Filter by category and date range
+          if (expense.category === category && expenseDate >= startDate && expenseDate <= endDate) {
+            totalAmount += expense.amount;
+            count++;
+            items.push({ id: doc.id, ...expense });
+            
+            // Group by date for daily breakdown
+            const dateKey = expense.date;
+            dailyBreakdown[dateKey] = (dailyBreakdown[dateKey] || 0) + expense.amount;
+          }
+        });
+        
+        items.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Prepare data for storage
+        currentReportData.categoryExpense = {
+          category,
+          startDate,
+          endDate,
+          totalAmount,
+          count,
+          items,
+          dailyBreakdown,
+          periodLabel: `${category} Expenses (${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')})`
+        };
+        
+        // Generate HTML for display
+        let html = `
+          <h4 style="color: var(--warning); margin-bottom: 15px; font-size: 1.2rem;">
+            <i class="fas fa-filter"></i> ${category} Expense Report
+          </h4>
+          <p style="color: var(--gray); margin-bottom: 20px;">
+            <i class="fas fa-calendar"></i> ${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')}
+          </p>
+          
+          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="report-summary-item" style="border: 1px solid var(--warning);">
+              <div class="label" style="color: var(--warning);">Total ${category} Expenses</div>
+              <div class="value" style="color: var(--warning);">${formatCurrency(totalAmount)}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Total Transactions</div>
+              <div class="value">${count}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Average per Transaction</div>
+              <div class="value">${count > 0 ? formatCurrency(totalAmount / count) : formatCurrency(0)}</div>
+            </div>
+          </div>
+        `;
+        
+        if (Object.keys(dailyBreakdown).length > 0) {
+          html += `<div class="category-breakdown"><h5 style="color: var(--warning); margin-bottom: 15px; display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-line"></i> Daily Breakdown</h5>`;
+          
+          // Sort dates descending
+          const sortedDates = Object.keys(dailyBreakdown).sort((a, b) => new Date(b) - new Date(a));
+          
+          sortedDates.forEach(date => {
+            const amount = dailyBreakdown[date];
+            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
+            
+            html += `
+              <div class="category-item">
+                <div class="category-name">${new Date(date).toLocaleDateString('en-UG', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width: ${percentage}%; background: linear-gradient(90deg, var(--warning), #ffc107);"></div>
+                </div>
+                <div class="category-amount" style="color: var(--warning);">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+        
+        if (items.length > 0) {
+          html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">Transaction Details</h5>`;
+          
+          items.forEach(item => {
+            html += `
+              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;">
+                <div class="item-content">
+                  <span style="font-weight:600; font-size:0.9rem;">${new Date(item.date).toLocaleDateString('en-UG')}</span>
+                  <div style="font-size:0.85rem; color:var(--gray); margin-top:5px;">${item.description || 'No description'}</div>
+                </div>
+                <div class="expense-amount" style="color: var(--warning); -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        } else {
+          html += `<div class="empty-state"><h4>No ${category} expenses found for the selected period</h4></div>`;
+        }
+        
+        resultsContainer.innerHTML = html;
+        document.getElementById('categoryExpensePDFBtn').style.display = 'inline-flex';
+        showMessage(`✅ ${category} expense report generated successfully!`, 'success');
+        
+      } catch (error) {
+        showError('Failed to generate category expense report: ' + error.message);
+      }
+    }
+
+    // NEW: Generate Specific Source Income Report
+    async function generateSourceIncomeReport() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      
+      const source = document.getElementById('specificIncomeSource').value;
+      const fromDate = document.getElementById('sourceFromDate').value;
+      const toDate = document.getElementById('sourceToDate').value;
+      
+      if (!source) { showError('Please select an income source'); return; }
+      if (!fromDate || !toDate) { showError('Please select both from and to dates'); return; }
+      if (new Date(fromDate) > new Date(toDate)) { showError('From date cannot be after to date'); return; }
+      
+      const startDate = new Date(fromDate); startDate.setHours(0,0,0,0);
+      const endDate = new Date(toDate); endDate.setHours(23,59,59,999);
+      
+      const resultsContainer = document.getElementById('sourceIncomeReportResults');
+      resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating source income report...</p></div>';
+      
+      try {
+        const incomeSnapshot = await db.collection('income').get();
+        
+        let totalAmount = 0, count = 0, items = [];
+        let monthlyBreakdown = {};
+        
+        incomeSnapshot.forEach(doc => {
+          const income = doc.data();
+          const incomeDate = new Date(income.date); incomeDate.setHours(0,0,0,0);
+          
+          // Filter by source and date range
+          if (income.source === source && incomeDate >= startDate && incomeDate <= endDate) {
+            totalAmount += income.amount;
+            count++;
+            items.push({ id: doc.id, ...income });
+            
+            // Group by month for monthly breakdown
+            const monthKey = new Date(income.date).toLocaleDateString('en-UG', { month: 'long', year: 'numeric' });
+            monthlyBreakdown[monthKey] = (monthlyBreakdown[monthKey] || 0) + income.amount;
+          }
+        });
+        
+        items.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Prepare data for storage
+        currentReportData.sourceIncome = {
+          source,
+          startDate,
+          endDate,
+          totalAmount,
+          count,
+          items,
+          monthlyBreakdown,
+          periodLabel: `${source} Income (${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')})`
+        };
+        
+        // Generate HTML for display
+        let html = `
+          <h4 style="color: var(--info); margin-bottom: 15px; font-size: 1.2rem;">
+            <i class="fas fa-money-bill-wave"></i> ${source} Income Report
+          </h4>
+          <p style="color: var(--gray); margin-bottom: 20px;">
+            <i class="fas fa-calendar"></i> ${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')}
+          </p>
+          
+          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="report-summary-item" style="border: 1px solid var(--info);">
+              <div class="label" style="color: var(--info);">Total ${source} Income</div>
+              <div class="value" style="color: var(--info);">${formatCurrency(totalAmount)}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Total Transactions</div>
+              <div class="value">${count}</div>
+            </div>
+            <div class="report-summary-item">
+              <div class="label">Average per Transaction</div>
+              <div class="value">${count > 0 ? formatCurrency(totalAmount / count) : formatCurrency(0)}</div>
+            </div>
+          </div>
+        `;
+        
+        if (Object.keys(monthlyBreakdown).length > 0) {
+          html += `<div class="category-breakdown"><h5 style="color: var(--info); margin-bottom: 15px; display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-bar"></i> Monthly Breakdown</h5>`;
+          
+          // Sort months by date
+          const sortedMonths = Object.keys(monthlyBreakdown).sort((a, b) => {
+            return new Date(b.split(' ')[1], new Date(`${a} 1`).getMonth()) - 
+                   new Date(a.split(' ')[1], new Date(`${b} 1`).getMonth());
+          });
+          
+          sortedMonths.forEach(month => {
+            const amount = monthlyBreakdown[month];
+            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
+            
+            html += `
+              <div class="category-item">
+                <div class="category-name">${month}</div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width: ${percentage}%; background: linear-gradient(90deg, var(--info), #17a2b8);"></div>
+                </div>
+                <div class="category-amount" style="color: var(--info);">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+        
+        if (items.length > 0) {
+          html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">Transaction Details</h5>`;
+          
+          items.forEach(item => {
+            html += `
+              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;">
+                <div class="item-content">
+                  <span style="font-weight:600; font-size:0.9rem;">${new Date(item.date).toLocaleDateString('en-UG')}</span>
+                  <div style="font-size:0.85rem; color:var(--gray); margin-top:5px;">${item.notes || 'No notes'}</div>
+                </div>
+                <div class="expense-amount income-amount" style="color: var(--info); -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        } else {
+          html += `<div class="empty-state"><h4>No ${source} income found for the selected period</h4></div>`;
+        }
+        
+        resultsContainer.innerHTML = html;
+        document.getElementById('sourceIncomePDFBtn').style.display = 'inline-flex';
+        showMessage(`✅ ${source} income report generated successfully!`, 'success');
+        
+      } catch (error) {
+        showError('Failed to generate source income report: ' + error.message);
+      }
+    }
+
+    // NEW: Download Category Expense PDF
+    function downloadCategoryExpensePDF() {
+      const reportData = currentReportData.categoryExpense;
+      if (!reportData) { showError('No category expense report data available to download.'); return; }
+      
+      try {
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        const title = `${reportData.category} Expense Report`;
+        
+        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45;
+        
+        // Summary
+        doc.setFontSize(14); doc.setTextColor(255, 193, 7); doc.text('Summary', 20, yPos); yPos+=10;
+        doc.setFontSize(11); doc.setTextColor(0,0,0);
+        doc.text(`Total ${reportData.category} Expenses: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); yPos+=7;
+        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); yPos+=7;
+        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); yPos+=15;
+        
+        // Daily Breakdown
+        if (Object.keys(reportData.dailyBreakdown).length > 0) {
+          doc.setFontSize(14); doc.setTextColor(255, 193, 7); doc.text('Daily Breakdown', 20, yPos); yPos+=10;
+          
+          const dailyTable = Object.entries(reportData.dailyBreakdown)
+            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+            .map(([date, amount]) => {
+              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
+              return [new Date(date).toLocaleDateString('en-UG'), formatCurrency(amount), percentage];
+            });
+          
+          doc.autoTable({ startY: yPos, head: [['Date', 'Amount', 'Percentage']], body: dailyTable, headStyles: { fillColor: [255, 193, 7] } });
+          yPos = doc.lastAutoTable.finalY + 15;
+        }
+        
+        // Transaction Details
+        if (reportData.items.length > 0) {
+          doc.setFontSize(14); doc.setTextColor(67, 97, 238); doc.text('Transaction Details', 20, yPos); yPos+=10;
+          
+          const detailTable = reportData.items.map(item => {
+            return [
+              new Date(item.date).toLocaleDateString('en-UG'),
+              item.description || '-',
+              formatCurrency(item.amount)
+            ];
+          });
+          
+          doc.autoTable({ startY: yPos, head: [['Date', 'Description', 'Amount']], body: detailTable, headStyles: { fillColor: [255, 193, 7] } });
+        }
+        
+        doc.save(`${reportData.category.toLowerCase().replace(' ', '_')}_expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Category Expense PDF Downloaded', 'success');
+      } catch (error) { showError('PDF Error: ' + error.message); }
+    }
+
+    // NEW: Download Source Income PDF
+    function downloadSourceIncomePDF() {
+      const reportData = currentReportData.sourceIncome;
+      if (!reportData) { showError('No source income report data available to download.'); return; }
+      
+      try {
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        const title = `${reportData.source} Income Report`;
+        
+        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45;
+        
+        // Summary
+        doc.setFontSize(14); doc.setTextColor(23, 162, 184); doc.text('Summary', 20, yPos); yPos+=10;
+        doc.setFontSize(11); doc.setTextColor(0,0,0);
+        doc.text(`Total ${reportData.source} Income: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); yPos+=7;
+        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); yPos+=7;
+        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); yPos+=15;
+        
+        // Monthly Breakdown
+        if (Object.keys(reportData.monthlyBreakdown).length > 0) {
+          doc.setFontSize(14); doc.setTextColor(23, 162, 184); doc.text('Monthly Breakdown', 20, yPos); yPos+=10;
+          
+          const monthlyTable = Object.entries(reportData.monthlyBreakdown)
+            .sort((a, b) => {
+              return new Date(b[0].split(' ')[1], new Date(`${a[0]} 1`).getMonth()) - 
+                     new Date(a[0].split(' ')[1], new Date(`${b[0]} 1`).getMonth());
+            })
+            .map(([month, amount]) => {
+              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
+              return [month, formatCurrency(amount), percentage];
+            });
+          
+          doc.autoTable({ startY: yPos, head: [['Month', 'Amount', 'Percentage']], body: monthlyTable, headStyles: { fillColor: [23, 162, 184] } });
+          yPos = doc.lastAutoTable.finalY + 15;
+        }
+        
+        // Transaction Details
+        if (reportData.items.length > 0) {
+          doc.setFontSize(14); doc.setTextColor(67, 97, 238); doc.text('Transaction Details', 20, yPos); yPos+=10;
+          
+          const detailTable = reportData.items.map(item => {
+            return [
+              new Date(item.date).toLocaleDateString('en-UG'),
+              item.notes || '-',
+              formatCurrency(item.amount)
+            ];
+          });
+          
+          doc.autoTable({ startY: yPos, head: [['Date', 'Notes', 'Amount']], body: detailTable, headStyles: { fillColor: [23, 162, 184] } });
+        }
+        
+        doc.save(`${reportData.source.toLowerCase().replace(' ', '_')}_income_report_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Source Income PDF Downloaded', 'success');
+      } catch (error) { showError('PDF Error: ' + error.message); }
+    }
+
+    // NEW: Reset form functions
+    function resetCategoryExpenseForm() {
+      setDefaultSpecificReportDates();
+      document.getElementById('specificExpenseCategory').value = 'Groceries';
+      document.getElementById('categoryExpenseReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>';
+      document.getElementById('categoryExpensePDFBtn').style.display = 'none';
+    }
+    
+    function resetSourceIncomeForm() {
+      setDefaultSpecificReportDates();
+      document.getElementById('specificIncomeSource').value = 'Salary';
+      document.getElementById('sourceIncomeReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>';
+      document.getElementById('sourceIncomePDFBtn').style.display = 'none';
+    }
 
     function downloadPDF(reportType) {
       const reportData = currentReportData[reportType];
