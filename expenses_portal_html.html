@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Angulo's Expense & Income Tracker</title>
+  <title>Angulo's Expense & Income Tracker PRO</title>
   <style>
     /* ===== DARK/LIGHT MODE CSS VARIABLES ===== */
     :root {
@@ -37,6 +36,8 @@
       --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       --form-bg: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       --income-form-bg: linear-gradient(135deg, #e9fdf5 0%, #d4f8e8 100%);
+      --budget-color: #9c88ff;
+      --reminder-color: #ff9ff3;
     }
 
     body.dark-mode {
@@ -69,6 +70,8 @@
       --header-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
       --form-bg: linear-gradient(135deg, #374151 0%, #1f2937 100%);
       --income-form-bg: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      --budget-color: #a78bfa;
+      --reminder-color: #d8b4fe;
     }
 
     /* ===== LOGIN PAGE STYLES ===== */
@@ -286,7 +289,7 @@
     }
 
     .container {
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
       background: var(--card-bg);
       border-radius: 24px;
@@ -374,13 +377,14 @@
     /* ===== DASHBOARD LAYOUT ===== */
     .dashboard {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 2fr 1fr;
       gap: 20px;
       padding: 30px;
       background: var(--light);
       align-items: start;
       transition: background 0.3s ease;
     }
+    
     /* New wrapper for stacking forms */
     .forms-wrapper {
       display: flex;
@@ -388,7 +392,7 @@
       gap: 20px;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1200px) {
       .dashboard { grid-template-columns: 1fr; }
     }
 
@@ -417,6 +421,8 @@
     #totalIncomeCard::before { background: var(--gradient-income); }
     #totalExpenseCard::before { background: var(--gradient-2); }
     #availableBalanceCard::before { background: var(--gradient-balance); }
+    #monthlyBudgetCard::before { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); }
+    #savingsGoalCard::before { background: linear-gradient(135deg, var(--success), #2ecc71); }
     .stat-card.expense-card:nth-child(1)::before { background: var(--gradient-1); }
     .stat-card.expense-card:nth-child(2)::before { background: var(--gradient-2); }
     .stat-card.expense-card:nth-child(3)::before { background: var(--gradient-3); }
@@ -431,6 +437,8 @@
     #totalIncomeValue { background: var(--gradient-income); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     #totalExpenseValue { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     #availableBalanceValue { background: var(--gradient-balance); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #monthlyBudgetValue { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #savingsGoalValue { background: linear-gradient(135deg, var(--success), #2ecc71); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
     .stat-value.hidden { filter: blur(8px); -webkit-filter: blur(8px); background: var(--gray); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .stat-value.hidden::after {
@@ -460,6 +468,13 @@
       background: var(--income-form-bg);
       border: 1px solid var(--success);
     }
+    .budget-form-section {
+      background: linear-gradient(135deg, #f9f0ff 0%, #e6d4ff 100%);
+      border: 1px solid var(--budget-color);
+    }
+    body.dark-mode .budget-form-section {
+      background: linear-gradient(135deg, #2d1b69 0%, #3b2a7a 100%);
+    }
     
     /* Header for collapsing */
     .form-header {
@@ -472,6 +487,7 @@
       color: var(--primary-dark); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0;
     }
     .income-form-section .form-title { color: var(--success); }
+    .budget-form-section .form-title { color: var(--budget-color); }
     
     .toggle-icon {
       font-size: 1.2rem; color: var(--gray); transition: transform 0.3s ease;
@@ -492,13 +508,21 @@
     .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); font-size: 0.95rem; }
     .form-group i { position: absolute; left: 12px; top: 40px; color: var(--primary); }
     .income-form-section .form-group i { color: var(--success); }
-    .form-group input, .form-group select {
+    .budget-form-section .form-group i { color: var(--budget-color); }
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%; padding: 12px 12px 12px 40px; border: 2px solid var(--border);
       border-radius: 12px; font-size: 15px; transition: all 0.3s; background: var(--input-bg);
       color: var(--text-color);
     }
-    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+      outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); 
+    }
     .income-form-section .form-group input:focus { border-color: var(--success); box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2); }
+    .budget-form-section .form-group input:focus { border-color: var(--budget-color); box-shadow: 0 0 0 3px rgba(156, 136, 255, 0.2); }
 
     /* Buttons */
     .btn {
@@ -510,6 +534,8 @@
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3); }
     .btn-success { background: var(--gradient-income); color: white; }
     .btn-success:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(78, 205, 196, 0.3); }
+    .btn-budget { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); color: white; }
+    .btn-budget:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(156, 136, 255, 0.3); }
     .btn-cancel { background: var(--gray); color: white; margin-left: 10px; }
     .btn-balance { background: var(--light); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; font-size: 0.85rem; }
     .btn-balance:hover, .btn-balance.active { background: var(--primary); color: white; }
@@ -523,7 +549,10 @@
     .report-section h3 { margin-bottom: 20px; } 
 
     /* New List Header styles for collapse functionality */
-    .expenses-list, .income-list { background: var(--card-bg); border-radius: 20px; padding: 25px; margin-top: 30px; box-shadow: 0 10px 30px var(--shadow); transition: background 0.3s ease; }
+    .expenses-list, .income-list, .reminders-list, .budgets-list { 
+      background: var(--card-bg); border-radius: 20px; padding: 25px; margin-top: 30px; 
+      box-shadow: 0 10px 30px var(--shadow); transition: background 0.3s ease; 
+    }
     
     .list-header {
       display: flex; 
@@ -537,17 +566,25 @@
     
     .expenses-list h3 { color: var(--primary); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
     .income-list h3 { color: var(--success); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
+    .reminders-list h3 { color: var(--reminder-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
+    .budgets-list h3 { color: var(--budget-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
     
     .expenses-list.collapsed .toggle-icon,
-    .income-list.collapsed .toggle-icon {
+    .income-list.collapsed .toggle-icon,
+    .reminders-list.collapsed .toggle-icon,
+    .budgets-list.collapsed .toggle-icon {
         transform: rotate(-180deg);
     }
     .expenses-list.collapsed .list-body,
-    .income-list.collapsed .list-body {
+    .income-list.collapsed .list-body,
+    .reminders-list.collapsed .list-body,
+    .budgets-list.collapsed .list-body {
         display: none;
     }
     .expenses-list.collapsed .list-header,
-    .income-list.collapsed .list-header {
+    .income-list.collapsed .list-header,
+    .reminders-list.collapsed .list-header,
+    .budgets-list.collapsed .list-header {
         margin-bottom: 0;
     }
     
@@ -609,10 +646,20 @@
     .category-amount { flex: 0 0 100px; text-align: right; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 600; }
     .category-percentage { flex: 0 0 50px; text-align: right; font-size: 0.8rem; color: var(--gray); }
 
-    .expense-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 2px solid var(--border); transition: all 0.3s; border-radius: 12px; margin-bottom: 8px; background: var(--light); }
-    .expense-item:hover { transform: translateX(8px); box-shadow: 0 5px 20px var(--shadow); }
+    .expense-item, .reminder-item, .budget-item { 
+      display: flex; justify-content: space-between; align-items: center; padding: 15px; 
+      border-bottom: 2px solid var(--border); transition: all 0.3s; border-radius: 12px; 
+      margin-bottom: 8px; background: var(--light); 
+    }
+    .expense-item:hover, .reminder-item:hover, .budget-item:hover { 
+      transform: translateX(8px); box-shadow: 0 5px 20px var(--shadow); 
+    }
     .item-content { flex: 1; }
-    .expense-amount { font-weight: 700; font-size: 1.1rem; font-family: 'SF Mono', 'Courier New', monospace; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; min-width: 100px; text-align: right; margin-right: 15px; }
+    .expense-amount { 
+      font-weight: 700; font-size: 1.1rem; font-family: 'SF Mono', 'Courier New', monospace; 
+      background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+      min-width: 100px; text-align: right; margin-right: 15px; 
+    }
     .income-amount { background: var(--gradient-income); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .item-actions { display: flex; gap: 8px; }
     .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
@@ -622,6 +669,9 @@
     .action-btn.delete { background: #fee2e2; color: var(--danger); } 
     body.dark-mode .action-btn.delete { background: #374151; }
     .action-btn.delete:hover { background: var(--danger); color: white; }
+    .action-btn.complete { background: #d4edda; color: var(--success); }
+    body.dark-mode .action-btn.complete { background: #374151; }
+    .action-btn.complete:hover { background: var(--success); color: white; }
 
     /* Category Badges */
     .category-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; transition: all 0.3s; }
@@ -653,6 +703,69 @@
     .category-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
     .category-other { background: var(--gray); color: white; }
 
+    /* Progress Bar for Budget */
+    .budget-progress {
+      height: 10px;
+      background: var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    
+    .budget-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--budget-color), #8c7ae6);
+      border-radius: 5px;
+      transition: width 0.5s ease;
+    }
+    
+    .budget-progress-fill.over {
+      background: linear-gradient(90deg, var(--danger), #ff6b6b);
+    }
+    
+    .budget-status {
+      font-size: 0.8rem;
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .budget-status .remaining {
+      color: var(--success);
+    }
+    
+    .budget-status .exceeded {
+      color: var(--danger);
+    }
+
+    /* Reminder Item */
+    .reminder-due {
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    
+    .reminder-due.today {
+      background: #ffeb3b;
+      color: #333;
+    }
+    
+    .reminder-due.upcoming {
+      background: #4caf50;
+      color: white;
+    }
+    
+    .reminder-due.overdue {
+      background: #f44336;
+      color: white;
+    }
+    
+    .reminder-completed {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
     /* Messages & Loader */
     .message { padding: 15px 20px; border-radius: 12px; margin: 15px 0; display: none; align-items: center; gap: 12px; animation: slideIn 0.3s ease; font-size: 0.95rem; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -660,9 +773,11 @@
     .message.success { background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; border-left: 4px solid #28a745; }
     .message.error { background: linear-gradient(135deg, #f8d7da, #f5c6cb); color: #721c24; border-left: 4px solid #dc3545; }
     .message.info { background: linear-gradient(135deg, #d1ecf1, #bee5eb); color: #0c5460; border-left: 4px solid #17a2b8; }
+    .message.warning { background: linear-gradient(135deg, #fff3cd, #ffeaa7); color: #856404; border-left: 4px solid #ffc107; }
     body.dark-mode .message.success { background: linear-gradient(135deg, #064e3b, #065f46); color: #d1fae5; border-left: 4px solid #10b981; }
     body.dark-mode .message.error { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fecaca; border-left: 4px solid #ef4444; }
     body.dark-mode .message.info { background: linear-gradient(135deg, #164e63, #155e75); color: #cffafe; border-left: 4px solid #06b6d4; }
+    body.dark-mode .message.warning { background: linear-gradient(135deg, #78350f, #92400e); color: #fef3c7; border-left: 4px solid #f59e0b; }
     
     .loading { text-align: center; padding: 40px; color: var(--gray); display: flex; flex-direction: column; align-items: center; gap: 15px; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -670,10 +785,20 @@
     .empty-state { text-align: center; padding: 40px; color: var(--gray); }
 
     /* Modal */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
-    .modal { background: var(--modal-bg); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: modalSlide 0.3s ease; color: var(--text-color); }
+    .modal-overlay { 
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+      background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; 
+      align-items: center; z-index: 1000; backdrop-filter: blur(5px); 
+    }
+    .modal { 
+      background: var(--modal-bg); border-radius: 20px; padding: 30px; 
+      max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2); 
+      animation: modalSlide 0.3s ease; color: var(--text-color); 
+      max-height: 90vh; overflow-y: auto;
+    }
     @keyframes modalSlide { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .modal h3 { margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
 
     /* Specific Report Filter Styles */
     .specific-report-filter {
@@ -697,6 +822,68 @@
         flex-wrap: wrap;
     }
 
+    /* Search and Filter */
+    .search-filter-container {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 10px 15px 10px 40px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text-color);
+    }
+    
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    
+    .filter-select {
+      min-width: 150px;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    
+    .quick-action-btn {
+      padding: 8px 15px;
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .quick-action-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { padding: 10px; }
@@ -705,8 +892,8 @@
       .content { padding: 20px; }
       .charts-section { grid-template-columns: 1fr; }
       .main-stats-grid, .stats-grid, .form-grid { grid-template-columns: 1fr; }
-      .expense-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .expense-amount { text-align: left; width: 100%; margin-right: 0; margin-bottom: 10px; }
+      .expense-item, .reminder-item, .budget-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .expense-amount, .budget-amount { text-align: left; width: 100%; margin-right: 0; margin-bottom: 10px; }
       .item-actions { width: 100%; justify-content: flex-end; }
       .footer-content { flex-direction: column; gap: 15px; }
       .footer-links { margin-left: 0; justify-content: center; }
@@ -722,6 +909,12 @@
       }
       .filter-actions {
         flex-direction: column;
+      }
+      .search-filter-container {
+        flex-direction: column;
+      }
+      .quick-actions {
+        justify-content: center;
       }
     }
   </style>
@@ -749,7 +942,7 @@
       </div>
       
       <div class="login-header">
-        <h2><i class="fas fa-wallet"></i> Angulo's Expense & Income Tracker</h2>
+        <h2><i class="fas fa-wallet"></i> Angulo's Expense & Income Tracker PRO</h2>
         <p>Secure login required to access your financial dashboard</p>
       </div>
       
@@ -785,7 +978,7 @@
   <div class="container" id="mainApp">
     <div class="header">
       <div class="header-top">
-        <h1><i class="fas fa-wallet"></i><span>Angulo's Expense & Income Tracker</span></h1>
+        <h1><i class="fas fa-wallet"></i><span>Angulo's Expense & Income Tracker PRO</span></h1>
         <div style="display: flex; align-items: center;">
           <div class="status-indicator" id="statusIndicator">
             <div class="status-dot connecting" id="statusDot"></div>
@@ -831,6 +1024,22 @@
             <div class="stat-label"><span><i class="fas fa-balance-scale"></i> Available Balance</span><i class="fas fa-hand-pointer"></i></div>
             <div class="stat-value hidden" id="availableBalanceValue">UGX 0</div>
             <div class="stat-change" style="color: var(--primary); font-weight: 600;">Income - Expenses</div>
+            <div class="stat-tooltip">Click to reveal/hide</div>
+          </div>
+          
+          <!-- NEW: Monthly Budget Card -->
+          <div class="stat-card" id="monthlyBudgetCard" onclick="toggleBalance('monthlyBudget')">
+            <div class="stat-label"><span><i class="fas fa-chart-pie"></i> Monthly Budget</span><i class="fas fa-hand-pointer"></i></div>
+            <div class="stat-value hidden" id="monthlyBudgetValue">UGX 0</div>
+            <div class="stat-change" id="monthlyBudgetStatus" style="color: var(--budget-color); font-weight: 600;">Set a budget</div>
+            <div class="stat-tooltip">Click to reveal/hide</div>
+          </div>
+          
+          <!-- NEW: Savings Goal Card -->
+          <div class="stat-card" id="savingsGoalCard" onclick="toggleBalance('savingsGoal')">
+            <div class="stat-label"><span><i class="fas fa-bullseye"></i> Savings Goal</span><i class="fas fa-hand-pointer"></i></div>
+            <div class="stat-value hidden" id="savingsGoalValue">UGX 0</div>
+            <div class="stat-change" id="savingsGoalProgress" style="color: var(--success); font-weight: 600;">Set a goal</div>
             <div class="stat-tooltip">Click to reveal/hide</div>
           </div>
         </div>
@@ -960,181 +1169,361 @@
             </div>
           </div>
         </div>
+        
+        <!-- NEW: Budget Form Section -->
+        <div class="form-section budget-form-section" id="budgetFormSection">
+          <div class="form-header" onclick="toggleForm('budgetFormSection')">
+            <h3 class="form-title" id="budgetFormTitle"><i class="fas fa-chart-pie"></i> Set Monthly Budget</h3>
+            <i class="fas fa-chevron-up toggle-icon"></i>
+          </div>
+          <div class="form-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label><i class="fas fa-money-bill-wave"></i> Budget Amount (UGX)</label>
+                <input type="number" id="budgetAmount" placeholder="e.g. 500000" min="0" step="1000" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Month</label>
+                <input type="month" id="budgetMonth" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-tags"></i> Category (Optional)</label>
+                <select id="budgetCategory">
+                  <option value="">All Categories</option>
+                  <option value="Groceries">🛒 Groceries</option>
+                  <option value="Food">🍲 Food & Dining</option>
+                  <option value="Transport">🚗 Transport</option>
+                  <option value="Entertainment">🎬 Entertainment</option>
+                  <option value="Utilities">⚡ Utilities</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-sticky-note"></i> Notes</label>
+                <input type="text" id="budgetNotes" placeholder="Budget description">
+              </div>
+            </div>
+            <div class="btn-actions-container">
+              <button class="btn btn-budget" id="addBudgetBtn" disabled><i class="fas fa-plus"></i> Set Budget</button>
+              <button class="btn btn-cancel" id="cancelBudgetBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- NEW: Reminder Form Section -->
+        <div class="form-section" id="reminderFormSection">
+          <div class="form-header" onclick="toggleForm('reminderFormSection')">
+            <h3 class="form-title" id="reminderFormTitle"><i class="fas fa-bell"></i> Add Payment Reminder</h3>
+            <i class="fas fa-chevron-up toggle-icon"></i>
+          </div>
+          <div class="form-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label><i class="fas fa-sticky-note"></i> Title</label>
+                <input type="text" id="reminderTitle" placeholder="e.g. Rent Payment" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-money-bill-wave"></i> Amount (UGX)</label>
+                <input type="number" id="reminderAmount" placeholder="e.g. 300000" min="0" step="1000" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Due Date</label>
+                <input type="date" id="reminderDueDate" required>
+              </div>
+              <div class="form-group">
+                <label><i class="fas fa-tags"></i> Category</label>
+                <select id="reminderCategory">
+                  <option value="Rent">🏠 Rent</option>
+                  <option value="Utilities">⚡ Utilities</option>
+                  <option value="Loan">💳 Loan Payment</option>
+                  <option value="Subscription">📱 Subscription</option>
+                  <option value="Other">📦 Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="btn-actions-container">
+              <button class="btn btn-primary" id="addReminderBtn" disabled><i class="fas fa-bell"></i> Add Reminder</button>
+              <button class="btn btn-cancel" id="cancelReminderBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div id="statusMessage" class="message"></div>
 
-    <div class="report-section" id="expenseReportSection">
-      <h3 class="form-title" style="color: var(--danger);"><i class="fas fa-chart-bar"></i> Expense Reports</h3>
-      <div class="report-controls" id="expenseReportControls">
-        <button class="btn btn-report active" onclick="generateReport('today', 'expense', this)"><i class="fas fa-calendar-day"></i> Today</button>
-        <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
-        <button class="btn btn-report" onclick="generateReport('week', 'expense', this)"><i class="fas fa-calendar-week"></i> This Week</button>
-        <button class="btn btn-report" onclick="generateReport('month', 'expense', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
-        <button class="btn btn-report" onclick="generateReport('year', 'expense', this)"><i class="fas fa-calendar"></i> This Year</button>
-        <button class="btn btn-report" onclick="showCustomRange('expense', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
+    <div class="content">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="quick-action-btn" onclick="showQuickAddExpense()">
+          <i class="fas fa-bolt"></i> Quick Expense
+        </button>
+        <button class="quick-action-btn" onclick="showQuickAddIncome()">
+          <i class="fas fa-money-bill-wave"></i> Quick Income
+        </button>
+        <button class="quick-action-btn" onclick="exportAllData()">
+          <i class="fas fa-file-export"></i> Export All Data
+        </button>
+        <button class="quick-action-btn" onclick="showSavingsCalculator()">
+          <i class="fas fa-calculator"></i> Savings Calculator
+        </button>
+        <button class="quick-action-btn" onclick="showYearlyOverview()">
+          <i class="fas fa-chart-bar"></i> Yearly Overview
+        </button>
       </div>
 
-      <div class="report-period" id="expenseCustomRange" style="display: none;">
-        <div><label>From Date</label><input type="date" id="expenseFromDate"></div>
-        <div><label>To Date</label><input type="date" id="expenseToDate"></div>
-        <div style="align-self: flex-end;"><button class="btn btn-danger" onclick="generateCustomReport('expense')"><i class="fas fa-play"></i> Generate</button></div>
-      </div>
-
-      <div class="report-results" id="expenseReportResults">
-        <div class="loading"><div class="spinner"></div><p>Select a period or click 'Today' to generate an Expense Report</p></div>
-      </div>
-      <div class="report-actions" id="expenseReportActions" style="display: none;">
-        <button class="btn btn-danger" onclick="downloadPDF('expense')"><i class="fas fa-file-pdf"></i> Download Expense PDF</button>
-      </div>
-    </div>
-
-    <div class="report-section" id="incomeReportSection">
-      <h3 class="form-title" style="color: var(--success);"><i class="fas fa-chart-line"></i> Income Reports</h3>
-      <div class="report-controls" id="incomeReportControls">
-        <button class="btn btn-report active" onclick="generateReport('today', 'income', this)"><i class="fas fa-calendar-day"></i> Today</button>
-        <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
-        <button class="btn btn-report" onclick="generateReport('week', 'income', this)"><i class="fas fa-calendar-week"></i> This Week</button>
-        <button class="btn btn-report" onclick="generateReport('month', 'income', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
-        <button class="btn btn-report" onclick="generateReport('year', 'income', this)"><i class="fas fa-calendar"></i> This Year</button>
-        <button class="btn btn-report" onclick="showCustomRange('income', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
-      </div>
-
-      <div class="report-period" id="incomeCustomRange" style="display: none;">
-        <div><label>From Date</label><input type="date" id="incomeFromDate"></div>
-        <div><label>To Date</label><input type="date" id="incomeToDate"></div>
-        <div style="align-self: flex-end;"><button class="btn btn-success" onclick="generateCustomReport('income')"><i class="fas fa-play"></i> Generate</button></div>
-      </div>
-
-      <div class="report-results" id="incomeReportResults">
-        <div class="loading"><div class="spinner"></div><p>Select a period or click 'Today' to generate an Income Report</p></div>
-      </div>
-      <div class="report-actions" id="incomeReportActions" style="display: none;">
-        <button class="btn btn-success" onclick="downloadPDF('income')"><i class="fas fa-file-pdf"></i> Download Income PDF</button>
-      </div>
-    </div>
-
-    <!-- NEW: Specific Category Expense Report -->
-    <div class="report-section" id="categoryExpenseReportSection">
-      <h3 class="form-title" style="color: var(--warning);"><i class="fas fa-filter"></i> Specific Expense Category Report</h3>
-      
-      <div class="specific-report-filter">
-        <div class="filter-grid">
-          <div class="form-group">
-            <label><i class="fas fa-tags"></i> Expense Category</label>
-            <select id="specificExpenseCategory" required>
-              <option value="Yaka">⚡ Yaka (Electricity)</option>
-              <option value="Water">💧 Water Bill</option>
-              <option value="Groceries" selected>🛒 Groceries</option>
-              <option value="Food">🍲 Food & Dining</option>
-              <option value="Fuel">⛽ Fuel</option>
-              <option value="Transport">🚗 Transport</option>
-              <option value="Internet">🌐 Internet</option>
-              <option value="Airtime">📱 Airtime</option>
-              <option value="Rent">🏠 Rent</option>
-              <option value="Laundry">👕 Laundry</option>
-              <option value="Clothing">👔 Clothing</option>
-              <option value="School Fees">📚 School Fees</option>
-              <option value="Medical">🏥 Medical</option>
-              <option value="Savings">💰 Savings</option>
-              <option value="Debt">💳 Debt Payment</option>
-              <option value="Giving">🤲 Giving</option>
-              <option value="Entertainment">🎬 Entertainment</option>
-              <option value="Payments">💸 Payments</option>
-              <option value="Purchases">🛍️ Purchases</option>
-              <option value="General">📦 General</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar"></i> From Date</label>
-            <input type="date" id="categoryFromDate" required>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar"></i> To Date</label>
-            <input type="date" id="categoryToDate" required>
-          </div>
+      <div class="report-section" id="expenseReportSection">
+        <h3 class="form-title" style="color: var(--danger);"><i class="fas fa-chart-bar"></i> Expense Reports</h3>
+        <div class="report-controls" id="expenseReportControls">
+          <button class="btn btn-report active" onclick="generateReport('today', 'expense', this)"><i class="fas fa-calendar-day"></i> Today</button>
+          <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
+          <button class="btn btn-report" onclick="generateReport('week', 'expense', this)"><i class="fas fa-calendar-week"></i> This Week</button>
+          <button class="btn btn-report" onclick="generateReport('month', 'expense', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
+          <button class="btn btn-report" onclick="generateReport('year', 'expense', this)"><i class="fas fa-calendar"></i> This Year</button>
+          <button class="btn btn-report" onclick="showCustomRange('expense', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
         </div>
+
+        <div class="report-period" id="expenseCustomRange" style="display: none;">
+          <div><label>From Date</label><input type="date" id="expenseFromDate"></div>
+          <div><label>To Date</label><input type="date" id="expenseToDate"></div>
+          <div style="align-self: flex-end;"><button class="btn btn-danger" onclick="generateCustomReport('expense')"><i class="fas fa-play"></i> Generate</button></div>
+        </div>
+
+        <div class="report-results" id="expenseReportResults">
+          <div class="loading"><div class="spinner"></div><p>Select a period or click 'Today' to generate an Expense Report</p></div>
+        </div>
+        <div class="report-actions" id="expenseReportActions" style="display: none;">
+          <button class="btn btn-danger" onclick="downloadPDF('expense')"><i class="fas fa-file-pdf"></i> Download Expense PDF</button>
+          <button class="btn btn-primary" onclick="exportCSV('expense')"><i class="fas fa-file-csv"></i> Export Expense CSV</button>
+        </div>
+      </div>
+
+      <div class="report-section" id="incomeReportSection">
+        <h3 class="form-title" style="color: var(--success);"><i class="fas fa-chart-line"></i> Income Reports</h3>
+        <div class="report-controls" id="incomeReportControls">
+          <button class="btn btn-report active" onclick="generateReport('today', 'income', this)"><i class="fas fa-calendar-day"></i> Today</button>
+          <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
+          <button class="btn btn-report" onclick="generateReport('week', 'income', this)"><i class="fas fa-calendar-week"></i> This Week</button>
+          <button class="btn btn-report" onclick="generateReport('month', 'income', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
+          <button class="btn btn-report" onclick="generateReport('year', 'income', this)"><i class="fas fa-calendar"></i> This Year</button>
+          <button class="btn btn-report" onclick="showCustomRange('income', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
+        </div>
+
+        <div class="report-period" id="incomeCustomRange" style="display: none;">
+          <div><label>From Date</label><input type="date" id="incomeFromDate"></div>
+          <div><label>To Date</label><input type="date" id="incomeToDate"></div>
+          <div style="align-self: flex-end;"><button class="btn btn-success" onclick="generateCustomReport('income')"><i class="fas fa-play"></i> Generate</button></div>
+        </div>
+
+        <div class="report-results" id="incomeReportResults">
+          <div class="loading"><div class="spinner"></div><p>Select a period or click 'Today' to generate an Income Report</p></div>
+        </div>
+        <div class="report-actions" id="incomeReportActions" style="display: none;">
+          <button class="btn btn-success" onclick="downloadPDF('income')"><i class="fas fa-file-pdf"></i> Download Income PDF</button>
+          <button class="btn btn-primary" onclick="exportCSV('income')"><i class="fas fa-file-csv"></i> Export Income CSV</button>
+        </div>
+      </div>
+
+      <!-- NEW: Specific Category Expense Report -->
+      <div class="report-section" id="categoryExpenseReportSection">
+        <h3 class="form-title" style="color: var(--warning);"><i class="fas fa-filter"></i> Specific Expense Category Report</h3>
         
-        <div class="filter-actions">
-          <button class="btn btn-primary" onclick="generateCategoryExpenseReport()">
-            <i class="fas fa-chart-pie"></i> Generate Category Report
-          </button>
-          <button class="btn btn-warning" onclick="downloadCategoryExpensePDF()" id="categoryExpensePDFBtn" style="display: none;">
-            <i class="fas fa-file-pdf"></i> Download Category PDF
-          </button>
-          <button class="btn" style="background: var(--gray); color: white;" onclick="resetCategoryExpenseForm()">
-            <i class="fas fa-redo"></i> Reset
-          </button>
+        <div class="specific-report-filter">
+          <div class="filter-grid">
+            <div class="form-group">
+              <label><i class="fas fa-tags"></i> Expense Category</label>
+              <select id="specificExpenseCategory" required>
+                <option value="Yaka">⚡ Yaka (Electricity)</option>
+                <option value="Water">💧 Water Bill</option>
+                <option value="Groceries" selected>🛒 Groceries</option>
+                <option value="Food">🍲 Food & Dining</option>
+                <option value="Fuel">⛽ Fuel</option>
+                <option value="Transport">🚗 Transport</option>
+                <option value="Internet">🌐 Internet</option>
+                <option value="Airtime">📱 Airtime</option>
+                <option value="Rent">🏠 Rent</option>
+                <option value="Laundry">👕 Laundry</option>
+                <option value="Clothing">👔 Clothing</option>
+                <option value="School Fees">📚 School Fees</option>
+                <option value="Medical">🏥 Medical</option>
+                <option value="Savings">💰 Savings</option>
+                <option value="Debt">💳 Debt Payment</option>
+                <option value="Giving">🤲 Giving</option>
+                <option value="Entertainment">🎬 Entertainment</option>
+                <option value="Payments">💸 Payments</option>
+                <option value="Purchases">🛍️ Purchases</option>
+                <option value="General">📦 General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar"></i> From Date</label>
+              <input type="date" id="categoryFromDate" required>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar"></i> To Date</label>
+              <input type="date" id="categoryToDate" required>
+            </div>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="btn btn-primary" onclick="generateCategoryExpenseReport()">
+              <i class="fas fa-chart-pie"></i> Generate Category Report
+            </button>
+            <button class="btn btn-warning" onclick="downloadCategoryExpensePDF()" id="categoryExpensePDFBtn" style="display: none;">
+              <i class="fas fa-file-pdf"></i> Download Category PDF
+            </button>
+            <button class="btn" style="background: var(--gray); color: white;" onclick="resetCategoryExpenseForm()">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="report-results" id="categoryExpenseReportResults">
+          <div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>
         </div>
       </div>
 
-      <div class="report-results" id="categoryExpenseReportResults">
-        <div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>
-      </div>
-    </div>
-
-    <!-- NEW: Specific Source Income Report -->
-    <div class="report-section" id="sourceIncomeReportSection">
-      <h3 class="form-title" style="color: var(--info);"><i class="fas fa-money-bill-wave"></i> Specific Income Source Report</h3>
-      
-      <div class="specific-report-filter">
-        <div class="filter-grid">
-          <div class="form-group">
-            <label><i class="fas fa-briefcase"></i> Income Source</label>
-            <select id="specificIncomeSource" required>
-              <option value="Salary" selected>💼 Salary</option>
-              <option value="Freelance">💻 Freelance/Side-Hustle</option>
-              <option value="Investment">📈 Investment/Dividends</option>
-              <option value="Allowances">🎁 Allowances/Reimbursement</option>
-              <option value="Other">📦 Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar"></i> From Date</label>
-            <input type="date" id="sourceFromDate" required>
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-calendar"></i> To Date</label>
-            <input type="date" id="sourceToDate" required>
-          </div>
-        </div>
+      <!-- NEW: Specific Source Income Report -->
+      <div class="report-section" id="sourceIncomeReportSection">
+        <h3 class="form-title" style="color: var(--info);"><i class="fas fa-money-bill-wave"></i> Specific Income Source Report</h3>
         
-        <div class="filter-actions">
-          <button class="btn btn-success" onclick="generateSourceIncomeReport()">
-            <i class="fas fa-chart-line"></i> Generate Source Report
-          </button>
-          <button class="btn btn-info" onclick="downloadSourceIncomePDF()" id="sourceIncomePDFBtn" style="display: none;">
-            <i class="fas fa-file-pdf"></i> Download Source PDF
-          </button>
-          <button class="btn" style="background: var(--gray); color: white;" onclick="resetSourceIncomeForm()">
-            <i class="fas fa-redo"></i> Reset
-          </button>
+        <div class="specific-report-filter">
+          <div class="filter-grid">
+            <div class="form-group">
+              <label><i class="fas fa-briefcase"></i> Income Source</label>
+              <select id="specificIncomeSource" required>
+                <option value="Salary" selected>💼 Salary</option>
+                <option value="Freelance">💻 Freelance/Side-Hustle</option>
+                <option value="Investment">📈 Investment/Dividends</option>
+                <option value="Allowances">🎁 Allowances/Reimbursement</option>
+                <option value="Other">📦 Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar"></i> From Date</label>
+              <input type="date" id="sourceFromDate" required>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-calendar"></i> To Date</label>
+              <input type="date" id="sourceToDate" required>
+            </div>
+          </div>
+          
+          <div class="filter-actions">
+            <button class="btn btn-success" onclick="generateSourceIncomeReport()">
+              <i class="fas fa-chart-line"></i> Generate Source Report
+            </button>
+            <button class="btn btn-info" onclick="downloadSourceIncomePDF()" id="sourceIncomePDFBtn" style="display: none;">
+              <i class="fas fa-file-pdf"></i> Download Source PDF
+            </button>
+            <button class="btn" style="background: var(--gray); color: white;" onclick="resetSourceIncomeForm()">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="report-results" id="sourceIncomeReportResults">
+          <div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>
+        </div>
+      </div>
+      
+      <!-- NEW: Budgets List -->
+      <div class="budgets-list" id="budgetsListSection">
+        <div class="list-header" onclick="toggleList('budgetsListSection')">
+          <h3><i class="fas fa-chart-pie"></i> Monthly Budgets</h3>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="list-body">
+          <div class="search-filter-container">
+            <div class="search-box" style="position: relative;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchBudgets" placeholder="Search budgets..." onkeyup="searchBudgets()">
+            </div>
+            <div class="filter-select">
+              <select id="filterBudgetMonth" onchange="filterBudgets()">
+                <option value="">All Months</option>
+              </select>
+            </div>
+          </div>
+          <div id="budgetsList"><div class="loading"><div class="spinner"></div><p>Loading budgets...</p></div></div>
+        </div>
+      </div>
+      
+      <!-- NEW: Reminders List -->
+      <div class="reminders-list" id="remindersListSection">
+        <div class="list-header" onclick="toggleList('remindersListSection')">
+          <h3><i class="fas fa-bell"></i> Payment Reminders</h3>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="list-body">
+          <div class="search-filter-container">
+            <div class="search-box" style="position: relative;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchReminders" placeholder="Search reminders..." onkeyup="searchReminders()">
+            </div>
+            <div class="filter-select">
+              <select id="filterReminderStatus" onchange="filterReminders()">
+                <option value="">All Status</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="today">Due Today</option>
+                <option value="overdue">Overdue</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div id="remindersList"><div class="loading"><div class="spinner"></div><p>Loading reminders...</p></div></div>
         </div>
       </div>
 
-      <div class="report-results" id="sourceIncomeReportResults">
-        <div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>
+      <div class="expenses-list" id="expensesListSection">
+        <div class="list-header" onclick="toggleList('expensesListSection')">
+          <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="list-body">
+          <div class="search-filter-container">
+            <div class="search-box" style="position: relative;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchExpenses" placeholder="Search expenses..." onkeyup="searchExpenses()">
+            </div>
+            <div class="filter-select">
+              <select id="filterExpenseCategory" onchange="filterExpenses()">
+                <option value="">All Categories</option>
+              </select>
+            </div>
+            <div class="filter-select">
+              <select id="filterExpenseMonth" onchange="filterExpenses()">
+                <option value="">All Months</option>
+              </select>
+            </div>
+          </div>
+          <div id="expensesList"><div class="loading"><div class="spinner"></div><p>Loading expenses...</p></div></div>
+        </div>
       </div>
-    </div>
-
-    <div class="expenses-list" id="expensesListSection">
-      <div class="list-header" onclick="toggleList('expensesListSection')">
-        <h3><i class="fas fa-receipt"></i> Recent Expenses</h3>
-        <i class="fas fa-chevron-up toggle-icon"></i>
-      </div>
-      <div class="list-body">
-        <div id="expensesList"><div class="loading"><div class="spinner"></div><p>Loading expenses...</p></div></div>
-      </div>
-    </div>
-    
-    <div class="income-list" id="incomeListSection">
-      <div class="list-header" onclick="toggleList('incomeListSection')">
-        <h3><i class="fas fa-money-check-alt"></i> Recent Income</h3>
-        <i class="fas fa-chevron-up toggle-icon"></i>
-      </div>
-      <div class="list-body">
-        <div id="incomeList"><div class="loading"><div class="spinner"></div><p>Loading income...</p></div></div>
+      
+      <div class="income-list" id="incomeListSection">
+        <div class="list-header" onclick="toggleList('incomeListSection')">
+          <h3><i class="fas fa-money-check-alt"></i> Recent Income</h3>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="list-body">
+          <div class="search-filter-container">
+            <div class="search-box" style="position: relative;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchIncome" placeholder="Search income..." onkeyup="searchIncome()">
+            </div>
+            <div class="filter-select">
+              <select id="filterIncomeSource" onchange="filterIncome()">
+                <option value="">All Sources</option>
+              </select>
+            </div>
+            <div class="filter-select">
+              <select id="filterIncomeMonth" onchange="filterIncome()">
+                <option value="">All Months</option>
+              </select>
+            </div>
+          </div>
+          <div id="incomeList"><div class="loading"><div class="spinner"></div><p>Loading income...</p></div></div>
+        </div>
       </div>
     </div>
 
@@ -1145,6 +1534,7 @@
           <a href="javascript:void(0)" onclick="showAbout()"><i class="fas fa-info-circle"></i> About</a>
           <a href="javascript:void(0)" onclick="showPrivacy()"><i class="fas fa-shield-alt"></i> Privacy</a>
           <a href="javascript:void(0)" onclick="showContact()"><i class="fas fa-envelope"></i> Contact</a>
+          <a href="javascript:void(0)" onclick="exportAllData()"><i class="fas fa-file-export"></i> Export Data</a>
           <a href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
       </div>
@@ -1165,10 +1555,23 @@
 
   <div class="modal-overlay" id="aboutModal">
     <div class="modal">
-      <h3><i class="fas fa-info-circle"></i> About Angulo's Expense & Income Tracker</h3>
+      <h3><i class="fas fa-info-circle"></i> About Angulo's Expense & Income Tracker PRO</h3>
       <p>A modern expense and income tracking application designed specifically for Ugandan Shillings (UGX).</p>
       <div style="margin-top: 15px;">
-        <p><strong>Features:</strong></p>
+        <p><strong>New Features:</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>✅ Monthly Budget Tracking with Progress Bars</li>
+          <li>✅ Payment Reminders with Due Dates</li>
+          <li>✅ Savings Goals Tracking</li>
+          <li>✅ Search and Filter for All Lists</li>
+          <li>✅ CSV Export for Reports</li>
+          <li>✅ Quick Actions for Common Tasks</li>
+          <li>✅ Enhanced Dashboard with More Stats</li>
+          <li>✅ Data Export (JSON Backup)</li>
+          <li>✅ Yearly Financial Overview</li>
+          <li>✅ Savings Calculator</li>
+        </ul>
+        <p style="margin-top: 15px;"><strong>Existing Features:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
           <li>Track expenses and Income in UGX</li>
           <li>Edit and Delete records</li>
@@ -1183,6 +1586,62 @@
       </div>
       <div class="modal-actions">
         <button class="btn btn-primary" onclick="document.getElementById('aboutModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Savings Calculator Modal -->
+  <div class="modal-overlay" id="savingsCalculatorModal">
+    <div class="modal">
+      <h3><i class="fas fa-calculator"></i> Savings Goal Calculator</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label><i class="fas fa-bullseye"></i> Goal Amount (UGX)</label>
+          <input type="number" id="goalAmount" placeholder="e.g. 5000000" min="0" step="1000" value="5000000">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-calendar"></i> Target Date</label>
+          <input type="date" id="targetDate" value="">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-piggy-bank"></i> Monthly Savings (UGX)</label>
+          <input type="number" id="monthlySavings" placeholder="e.g. 200000" min="0" step="1000" value="200000">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-chart-line"></i> Expected Growth Rate (%)</label>
+          <input type="number" id="growthRate" placeholder="e.g. 5" min="0" max="50" step="0.1" value="5">
+        </div>
+      </div>
+      <div id="savingsCalculationResult" style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px; display: none;">
+        <h4 style="color: var(--success); margin-bottom: 10px;">Calculation Results</h4>
+        <div id="savingsResultDetails"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" style="background: var(--gray); color: white;" onclick="document.getElementById('savingsCalculatorModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
+        <button class="btn btn-success" onclick="calculateSavingsGoal()"><i class="fas fa-calculator"></i> Calculate</button>
+        <button class="btn btn-primary" onclick="setSavingsGoal()"><i class="fas fa-bullseye"></i> Set as Goal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Yearly Overview Modal -->
+  <div class="modal-overlay" id="yearlyOverviewModal">
+    <div class="modal" style="max-width: 800px;">
+      <h3><i class="fas fa-chart-bar"></i> Yearly Financial Overview</h3>
+      <div style="margin-bottom: 20px;">
+        <label><i class="fas fa-calendar"></i> Select Year:</label>
+        <select id="yearSelect" onchange="loadYearlyOverview()" style="margin-left: 10px; padding: 8px; border-radius: 8px; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border);">
+          <option value="2024">2024</option>
+          <option value="2025" selected>2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <div id="yearlyOverviewContent">
+        <div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('yearlyOverviewModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
+        <button class="btn btn-success" onclick="downloadYearlyPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
       </div>
     </div>
   </div>
@@ -1205,10 +1664,22 @@
     let itemToDeleteId = null, collectionToDelete = null;
     let isEditingExpense = false, editingExpenseId = null;
     let isEditingIncome = false, editingIncomeId = null;
+    let isEditingBudget = false, editingBudgetId = null;
+    let isEditingReminder = false, editingReminderId = null;
     let currentReportPeriod = { expense: 'today', income: 'today' };
     let currentReportData = { expense: null, income: null, categoryExpense: null, sourceIncome: null };
     let pieChart = null, barChart = null, previousStats = {};
-    let revealedBalances = { today: false, week: false, month: false, year: false, totalIncome: false, totalExpense: false, availableBalance: false };
+    let revealedBalances = { 
+      today: false, week: false, month: false, year: false, 
+      totalIncome: false, totalExpense: false, availableBalance: false,
+      monthlyBudget: false, savingsGoal: false 
+    };
+    
+    // New data structures
+    let monthlyBudget = 0;
+    let savingsGoal = { amount: 0, targetDate: '', currentSavings: 0 };
+    let reminders = [];
+    let budgets = [];
 
     // Theme Management
     let currentTheme = 'light';
@@ -1268,6 +1739,7 @@
       checkLoginState();
       initTheme();
       setDefaultSpecificReportDates();
+      setDefaultTargetDate();
     });
 
     function initFirebase() {
@@ -1316,7 +1788,9 @@
     function initAppAfterLogin() {
       setDefaultDates();
       setDefaultSpecificReportDates();
+      setDefaultTargetDate();
       loadRevealedState();
+      loadSavingsGoal();
       setupEventListeners();
       testFirestoreConnection();
     }
@@ -1378,6 +1852,8 @@
         showMessage('✅ Successfully connected to Firebase!', 'success');
         setupApp();
         loadDashboard();
+        loadBudgets();
+        loadReminders();
         setTimeout(() => {
           generateReport('today', 'expense', document.querySelector('#expenseReportControls .btn.active'));
           generateReport('today', 'income', document.querySelector('#incomeReportControls .btn.active'));
@@ -1400,14 +1876,20 @@
       
       document.getElementById('addBtn')?.addEventListener('click', handleExpenseSubmit);
       document.getElementById('addIncomeBtn')?.addEventListener('click', handleIncomeSubmit);
+      document.getElementById('addBudgetBtn')?.addEventListener('click', handleBudgetSubmit);
+      document.getElementById('addReminderBtn')?.addEventListener('click', handleReminderSubmit);
       document.getElementById('cancelDelete')?.addEventListener('click', hideDeleteModal);
       document.getElementById('confirmDelete')?.addEventListener('click', deleteItem);
       document.getElementById('cancelExpenseBtn')?.addEventListener('click', cancelEditExpense);
       document.getElementById('cancelIncomeBtn')?.addEventListener('click', cancelEditIncome);
+      document.getElementById('cancelBudgetBtn')?.addEventListener('click', cancelEditBudget);
+      document.getElementById('cancelReminderBtn')?.addEventListener('click', cancelEditReminder);
       
       document.addEventListener('keypress', (e) => {
         if (e.target.id === 'description' && e.key === 'Enter') handleExpenseSubmit();
         if (e.target.id === 'incomeNotes' && e.key === 'Enter') handleIncomeSubmit();
+        if (e.target.id === 'budgetNotes' && e.key === 'Enter') handleBudgetSubmit();
+        if (e.target.id === 'reminderTitle' && e.key === 'Enter') handleReminderSubmit();
       });
     }
     
@@ -1425,8 +1907,13 @@
 
     function setDefaultDates() {
       const today = new Date().toISOString().split('T')[0];
+      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+      
       document.getElementById('date').value = today;
       document.getElementById('incomeDate').value = today;
+      document.getElementById('budgetMonth').value = currentMonth;
+      document.getElementById('reminderDueDate').value = today;
+      
       const fromDate = new Date(); fromDate.setDate(fromDate.getDate() - 30);
       const defaultFrom = fromDate.toISOString().split('T')[0];
       
@@ -1453,10 +1940,39 @@
       document.getElementById('sourceFromDate').value = firstDayStr;
       document.getElementById('sourceToDate').value = today;
     }
+    
+    function setDefaultTargetDate() {
+      const nextYear = new Date();
+      nextYear.setFullYear(nextYear.getFullYear() + 1);
+      document.getElementById('targetDate').value = nextYear.toISOString().split('T')[0];
+    }
 
     function showAbout() { document.getElementById('aboutModal').style.display = 'flex'; }
     function showPrivacy() { alert('Privacy Policy: Your expense data is stored securely in Firebase.'); }
     function showContact() { alert('Contact: For support or inquiries, please contact Pius Angulo.'); }
+    
+    function showSavingsCalculator() { 
+      document.getElementById('savingsCalculatorModal').style.display = 'flex'; 
+    }
+    
+    function showYearlyOverview() { 
+      document.getElementById('yearlyOverviewModal').style.display = 'flex';
+      loadYearlyOverview();
+    }
+    
+    function showQuickAddExpense() {
+      const formSection = document.getElementById('expenseFormSection');
+      formSection.classList.remove('collapsed');
+      formSection.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('amount').focus();
+    }
+    
+    function showQuickAddIncome() {
+      const formSection = document.getElementById('incomeFormSection');
+      formSection.classList.remove('collapsed');
+      formSection.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('incomeAmount').focus();
+    }
 
     function loadRevealedState() {
       const savedState = localStorage.getItem('revealedBalances');
@@ -1471,29 +1987,77 @@
         });
       }
     }
+    
+    function loadSavingsGoal() {
+      const savedGoal = localStorage.getItem('savingsGoal');
+      if (savedGoal) {
+        savingsGoal = JSON.parse(savedGoal);
+        updateSavingsGoalUI();
+      }
+    }
+    
+    function saveSavingsGoal() {
+      localStorage.setItem('savingsGoal', JSON.stringify(savingsGoal));
+    }
+    
+    function updateSavingsGoalUI() {
+      if (savingsGoal.amount > 0) {
+        document.getElementById('savingsGoalValue').textContent = formatCurrency(savingsGoal.amount);
+        const progress = savingsGoal.currentSavings > 0 ? 
+          Math.min(100, Math.round((savingsGoal.currentSavings / savingsGoal.amount) * 100)) : 0;
+        document.getElementById('savingsGoalProgress').textContent = `${progress}% achieved`;
+        
+        if (revealedBalances.savingsGoal) {
+          document.getElementById('savingsGoalValue').classList.remove('hidden');
+        } else {
+          document.getElementById('savingsGoalValue').classList.add('hidden');
+        }
+      }
+    }
+    
     function saveRevealedState() { localStorage.setItem('revealedBalances', JSON.stringify(revealedBalances)); }
+    
     function toggleBalance(period) {
       const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
       const card = document.getElementById(`${period}Card`);
       if (!element || !card) return;
-      card.classList.add('tapped'); setTimeout(() => card.classList.remove('tapped'), 500);
-      if (element.classList.contains('hidden')) { element.classList.remove('hidden'); revealedBalances[period] = true; showMessage(`📊 Balance revealed!`, 'info'); }
-      else { element.classList.add('hidden'); revealedBalances[period] = false; showMessage(`👁️ Balance hidden`, 'info'); }
+      card.classList.add('tapped'); 
+      setTimeout(() => card.classList.remove('tapped'), 500);
+      
+      if (element.classList.contains('hidden')) { 
+        element.classList.remove('hidden'); 
+        revealedBalances[period] = true; 
+        showMessage(`📊 ${period.replace(/([A-Z])/g, ' $1')} revealed!`, 'info'); 
+      } else { 
+        element.classList.add('hidden'); 
+        revealedBalances[period] = false; 
+        showMessage(`👁️ ${period.replace(/([A-Z])/g, ' $1')} hidden`, 'info'); 
+      }
       saveRevealedState();
     }
+    
     function revealAllBalances() {
-      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance'].forEach(period => {
+      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance', 'monthlyBudget', 'savingsGoal'].forEach(period => {
         const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
-        if (element) { element.classList.remove('hidden'); revealedBalances[period] = true; }
+        if (element) { 
+          element.classList.remove('hidden'); 
+          revealedBalances[period] = true; 
+        }
       });
-      saveRevealedState(); showMessage('🔓 All balances revealed!', 'success');
+      saveRevealedState(); 
+      showMessage('🔓 All balances revealed!', 'success');
     }
+    
     function hideAllBalances() {
-      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance'].forEach(period => {
+      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance', 'monthlyBudget', 'savingsGoal'].forEach(period => {
         const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
-        if (element) { element.classList.add('hidden'); revealedBalances[period] = false; }
+        if (element) { 
+          element.classList.add('hidden'); 
+          revealedBalances[period] = false; 
+        }
       });
-      saveRevealedState(); showMessage('👁️ All balances hidden', 'info');
+      saveRevealedState(); 
+      showMessage('👁️ All balances hidden', 'info');
     }
 
     function updateStatus(status, message) {
@@ -1501,16 +2065,22 @@
       if (dot) dot.className = 'status-dot ' + status;
       if (text) text.textContent = message;
     }
+    
     function showMessage(message, type = 'info') {
       const messageDiv = document.getElementById('statusMessage');
-      const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+      const icon = type === 'success' ? 'fa-check-circle' : 
+                   type === 'error' ? 'fa-exclamation-circle' : 
+                   type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
       messageDiv.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
       messageDiv.className = `message ${type} show`;
       if (type === 'success') setTimeout(() => messageDiv.classList.remove('show'), 5000);
     }
+    
     function showError(message) { showMessage('❌ ' + message, 'error'); }
 
-    function formatCurrency(amount) { return 'UGX ' + parseInt(amount).toLocaleString('en-UG'); }
+    function formatCurrency(amount) { 
+      return 'UGX ' + parseInt(amount).toLocaleString('en-UG'); 
+    }
 
     function getDateRange(period) {
       const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -1529,8 +2099,11 @@
     function setupApp() {
       document.getElementById('addBtn').disabled = false;
       document.getElementById('addIncomeBtn').disabled = false;
+      document.getElementById('addBudgetBtn').disabled = false;
+      document.getElementById('addReminderBtn').disabled = false;
     }
 
+    // ===== EXPENSE FUNCTIONS =====
     async function handleExpenseSubmit() {
       if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
       if (!currentUser) { showError('Please login first'); return; }
@@ -1565,36 +2138,45 @@
           expenseData.createdAt = new Date().toISOString();
           await db.collection('expenses').add(expenseData);
           showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
-          document.getElementById('amount').value = ''; document.getElementById('description').value = '';
-          document.getElementById('category').value = 'Groceries'; document.getElementById('date').value = new Date().toISOString().split('T')[0];
+          document.getElementById('amount').value = ''; 
+          document.getElementById('description').value = '';
+          document.getElementById('category').value = 'Groceries'; 
+          document.getElementById('date').value = new Date().toISOString().split('T')[0];
         }
         loadDashboard(); 
+        loadBudgets(); // Update budget progress
         if (currentReportPeriod.expense) generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
-      } catch (error) { showError('Operation failed: ' + error.message); } finally { btn.disabled = false; btn.innerHTML = originalText; }
+      } catch (error) { showError('Operation failed: ' + error.message); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
 
     function prepareEditExpense(id, amount, category, date, description) {
       isEditingExpense = true; editingExpenseId = id;
-      document.getElementById('amount').value = amount; document.getElementById('category').value = category;
-      document.getElementById('date').value = date; document.getElementById('description').value = description;
+      document.getElementById('amount').value = amount; 
+      document.getElementById('category').value = category;
+      document.getElementById('date').value = date; 
+      document.getElementById('description').value = description;
       document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Expense';
       document.getElementById('addBtn').innerHTML = '<i class="fas fa-save"></i> Update Expense';
       document.getElementById('cancelExpenseBtn').style.display = 'inline-flex';
       
       const formSection = document.getElementById('expenseFormSection');
-      formSection.classList.remove('collapsed'); // Ensure it's open
+      formSection.classList.remove('collapsed');
       formSection.scrollIntoView({ behavior: 'smooth' });
     }
 
     function cancelEditExpense() {
       isEditingExpense = false; editingExpenseId = null;
-      document.getElementById('amount').value = ''; document.getElementById('description').value = '';
-      document.getElementById('category').value = 'Groceries'; document.getElementById('date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('amount').value = ''; 
+      document.getElementById('description').value = '';
+      document.getElementById('category').value = 'Groceries'; 
+      document.getElementById('date').value = new Date().toISOString().split('T')[0];
       document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Expense';
       document.getElementById('addBtn').innerHTML = '<i class="fas fa-plus"></i> Add Expense';
       document.getElementById('cancelExpenseBtn').style.display = 'none';
     }
 
+    // ===== INCOME FUNCTIONS =====
     async function handleIncomeSubmit() {
       if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
       if (!currentUser) { showError('Please login first'); return; }
@@ -1629,37 +2211,558 @@
           incomeData.createdAt = new Date().toISOString();
           await db.collection('income').add(incomeData);
           showMessage(`💰 Recorded ${formatCurrency(amount)} from ${source}`, 'success');
-          document.getElementById('incomeAmount').value = ''; document.getElementById('incomeNotes').value = '';
-          document.getElementById('incomeSource').value = 'Salary'; document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+          document.getElementById('incomeAmount').value = ''; 
+          document.getElementById('incomeNotes').value = '';
+          document.getElementById('incomeSource').value = 'Salary'; 
+          document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
         }
         loadDashboard(); 
         if (currentReportPeriod.income) generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
-      } catch (error) { showError('Operation failed: ' + error.message); } finally { btn.disabled = false; btn.innerHTML = originalText; }
+      } catch (error) { showError('Operation failed: ' + error.message); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
 
     function prepareEditIncome(id, amount, source, date, notes) {
       isEditingIncome = true; editingIncomeId = id;
-      document.getElementById('incomeAmount').value = amount; document.getElementById('incomeSource').value = source;
-      document.getElementById('incomeDate').value = date; document.getElementById('incomeNotes').value = notes;
+      document.getElementById('incomeAmount').value = amount; 
+      document.getElementById('incomeSource').value = source;
+      document.getElementById('incomeDate').value = date; 
+      document.getElementById('incomeNotes').value = notes;
       document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Income';
       document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-save"></i> Update Income';
       document.getElementById('cancelIncomeBtn').style.display = 'inline-flex';
       
       const formSection = document.getElementById('incomeFormSection');
-      formSection.classList.remove('collapsed'); // Ensure it's open
+      formSection.classList.remove('collapsed');
       formSection.scrollIntoView({ behavior: 'smooth' });
     }
 
     function cancelEditIncome() {
       isEditingIncome = false; editingIncomeId = null;
-      document.getElementById('incomeAmount').value = ''; document.getElementById('incomeNotes').value = '';
-      document.getElementById('incomeSource').value = 'Salary'; document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('incomeAmount').value = ''; 
+      document.getElementById('incomeNotes').value = '';
+      document.getElementById('incomeSource').value = 'Salary'; 
+      document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
       document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
       document.getElementById('cancelIncomeBtn').style.display = 'none';
     }
     
-    // Updated Reporting Functions
+    // ===== BUDGET FUNCTIONS =====
+    async function handleBudgetSubmit() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      if (!currentUser) { showError('Please login first'); return; }
+      
+      const amount = document.getElementById('budgetAmount').value.trim();
+      const month = document.getElementById('budgetMonth').value;
+      const category = document.getElementById('budgetCategory').value;
+      const notes = document.getElementById('budgetNotes').value.trim();
+
+      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid budget amount'); return; }
+      if (!month) { showError('Please select a month'); return; }
+
+      const btn = document.getElementById('addBudgetBtn'), originalText = btn.innerHTML;
+      try {
+        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        const budgetData = { 
+          amount: parseFloat(amount), 
+          month, 
+          category: category || 'All',
+          notes: notes || '',
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          spent: 0 // Initialize spent amount
+        };
+
+        if (isEditingBudget && editingBudgetId) {
+          budgetData.updatedAt = new Date().toISOString();
+          await db.collection('budgets').doc(editingBudgetId).update(budgetData);
+          showMessage(`✅ Budget updated successfully!`, 'success');
+          cancelEditBudget();
+        } else {
+          budgetData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+          budgetData.createdAt = new Date().toISOString();
+          await db.collection('budgets').add(budgetData);
+          showMessage(`✅ Budget of ${formatCurrency(amount)} set for ${month}`, 'success');
+          document.getElementById('budgetAmount').value = ''; 
+          document.getElementById('budgetNotes').value = '';
+          document.getElementById('budgetCategory').value = ''; 
+        }
+        loadBudgets();
+        updateBudgetStats();
+      } catch (error) { showError('Operation failed: ' + error.message); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
+    }
+    
+    async function loadBudgets() {
+      try {
+        const snapshot = await db.collection('budgets').get();
+        budgets = [];
+        snapshot.forEach(doc => budgets.push({ id: doc.id, ...doc.data() }));
+        
+        // Calculate spent amounts for each budget
+        const expenseSnapshot = await db.collection('expenses').get();
+        const now = new Date();
+        const currentMonth = now.toISOString().slice(0, 7); // YYYY-MM
+        
+        budgets.forEach(budget => {
+          let spent = 0;
+          expenseSnapshot.forEach(doc => {
+            const expense = doc.data();
+            const expenseMonth = expense.date.slice(0, 7); // Get YYYY-MM from date
+            
+            if (expenseMonth === budget.month) {
+              if (budget.category === 'All' || expense.category === budget.category) {
+                spent += expense.amount;
+              }
+            }
+          });
+          budget.spent = spent;
+          budget.remaining = budget.amount - spent;
+          budget.percentage = Math.min(100, Math.round((spent / budget.amount) * 100));
+        });
+        
+        displayBudgets();
+        updateBudgetStats();
+      } catch (error) {
+        console.error('Error loading budgets:', error);
+      }
+    }
+    
+    function displayBudgets() {
+      const container = document.getElementById('budgetsList');
+      if (!budgets || budgets.length === 0) { 
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-chart-pie"></i><p>No budgets set yet. Add your first budget above!</p></div>`; 
+        return; 
+      }
+      
+      let html = '';
+      budgets.sort((a, b) => b.month.localeCompare(a.month)).forEach(budget => {
+        const monthName = new Date(budget.month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const isOverBudget = budget.spent > budget.amount;
+        
+        html += `
+          <div class="budget-item">
+            <div class="item-content">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="category-badge" style="background: var(--budget-color); color: white;">
+                  <i class="fas fa-calendar"></i> ${monthName}
+                </span>
+                <span style="font-size: 0.8rem; color: var(--gray);">
+                  ${budget.category === 'All' ? 'All Categories' : budget.category}
+                </span>
+              </div>
+              <div style="margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                  <span>Budget: <strong>${formatCurrency(budget.amount)}</strong></span>
+                  <span>Spent: <strong style="color: ${isOverBudget ? 'var(--danger)' : 'var(--primary)'}">${formatCurrency(budget.spent)}</strong></span>
+                </div>
+                <div class="budget-progress">
+                  <div class="budget-progress-fill ${isOverBudget ? 'over' : ''}" style="width: ${Math.min(100, budget.percentage)}%"></div>
+                </div>
+                <div class="budget-status">
+                  <span class="${budget.remaining >= 0 ? 'remaining' : 'exceeded'}">
+                    ${budget.remaining >= 0 ? `Remaining: ${formatCurrency(budget.remaining)}` : `Over budget: ${formatCurrency(Math.abs(budget.remaining))}`}
+                  </span>
+                  <span>${budget.percentage}%</span>
+                </div>
+                ${budget.notes ? `<div style="margin-top: 5px; font-size: 0.8rem; color: var(--gray);">${budget.notes}</div>` : ''}
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="action-btn edit" onclick="prepareEditBudget('${budget.id}', ${budget.amount}, '${budget.month}', '${budget.category}', '${budget.notes.replace(/'/g, "\\'")}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete" onclick="confirmDeleteModal('${budget.id}', 'budgets', 'Budget for ${monthName} - ${formatCurrency(budget.amount)}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+      populateBudgetFilterOptions();
+    }
+    
+    function updateBudgetStats() {
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      const currentBudget = budgets.find(b => b.month === currentMonth && b.category === 'All');
+      
+      if (currentBudget) {
+        monthlyBudget = currentBudget.amount;
+        document.getElementById('monthlyBudgetValue').textContent = formatCurrency(monthlyBudget);
+        const status = currentBudget.remaining >= 0 ? 
+          `Remaining: ${formatCurrency(currentBudget.remaining)}` : 
+          `Over: ${formatCurrency(Math.abs(currentBudget.remaining))}`;
+        document.getElementById('monthlyBudgetStatus').textContent = status;
+        document.getElementById('monthlyBudgetStatus').style.color = currentBudget.remaining >= 0 ? 'var(--success)' : 'var(--danger)';
+      } else {
+        monthlyBudget = 0;
+        document.getElementById('monthlyBudgetValue').textContent = formatCurrency(0);
+        document.getElementById('monthlyBudgetStatus').textContent = 'Set a budget';
+        document.getElementById('monthlyBudgetStatus').style.color = 'var(--budget-color)';
+      }
+      
+      // Update revealed state
+      if (revealedBalances.monthlyBudget) {
+        document.getElementById('monthlyBudgetValue').classList.remove('hidden');
+      } else {
+        document.getElementById('monthlyBudgetValue').classList.add('hidden');
+      }
+    }
+    
+    function prepareEditBudget(id, amount, month, category, notes) {
+      isEditingBudget = true; editingBudgetId = id;
+      document.getElementById('budgetAmount').value = amount; 
+      document.getElementById('budgetMonth').value = month;
+      document.getElementById('budgetCategory').value = category; 
+      document.getElementById('budgetNotes').value = notes;
+      document.getElementById('budgetFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Budget';
+      document.getElementById('addBudgetBtn').innerHTML = '<i class="fas fa-save"></i> Update Budget';
+      document.getElementById('cancelBudgetBtn').style.display = 'inline-flex';
+      
+      const formSection = document.getElementById('budgetFormSection');
+      formSection.classList.remove('collapsed');
+      formSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function cancelEditBudget() {
+      isEditingBudget = false; editingBudgetId = null;
+      document.getElementById('budgetAmount').value = ''; 
+      document.getElementById('budgetNotes').value = '';
+      document.getElementById('budgetCategory').value = ''; 
+      document.getElementById('budgetMonth').value = new Date().toISOString().slice(0, 7);
+      document.getElementById('budgetFormTitle').innerHTML = '<i class="fas fa-chart-pie"></i> Set Monthly Budget';
+      document.getElementById('addBudgetBtn').innerHTML = '<i class="fas fa-plus"></i> Set Budget';
+      document.getElementById('cancelBudgetBtn').style.display = 'none';
+    }
+    
+    // ===== REMINDER FUNCTIONS =====
+    async function handleReminderSubmit() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      if (!currentUser) { showError('Please login first'); return; }
+      
+      const title = document.getElementById('reminderTitle').value.trim();
+      const amount = document.getElementById('reminderAmount').value.trim();
+      const dueDate = document.getElementById('reminderDueDate').value;
+      const category = document.getElementById('reminderCategory').value;
+
+      if (!title) { showError('Please enter a reminder title'); return; }
+      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid amount'); return; }
+      if (!dueDate) { showError('Please select a due date'); return; }
+
+      const btn = document.getElementById('addReminderBtn'), originalText = btn.innerHTML;
+      try {
+        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        const reminderData = { 
+          title,
+          amount: parseFloat(amount), 
+          dueDate, 
+          category,
+          completed: false,
+          userId: currentUser.uid,
+          userEmail: currentUser.email
+        };
+
+        if (isEditingReminder && editingReminderId) {
+          reminderData.updatedAt = new Date().toISOString();
+          await db.collection('reminders').doc(editingReminderId).update(reminderData);
+          showMessage(`✅ Reminder updated successfully!`, 'success');
+          cancelEditReminder();
+        } else {
+          reminderData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+          reminderData.createdAt = new Date().toISOString();
+          await db.collection('reminders').add(reminderData);
+          showMessage(`🔔 Reminder "${title}" added`, 'success');
+          document.getElementById('reminderTitle').value = ''; 
+          document.getElementById('reminderAmount').value = '';
+          document.getElementById('reminderCategory').value = 'Rent'; 
+          document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
+        }
+        loadReminders();
+      } catch (error) { showError('Operation failed: ' + error.message); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
+    }
+    
+    async function loadReminders() {
+      try {
+        const snapshot = await db.collection('reminders').get();
+        reminders = [];
+        snapshot.forEach(doc => reminders.push({ id: doc.id, ...doc.data() }));
+        displayReminders();
+      } catch (error) {
+        console.error('Error loading reminders:', error);
+      }
+    }
+    
+    function displayReminders() {
+      const container = document.getElementById('remindersList');
+      if (!reminders || reminders.length === 0) { 
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-bell"></i><p>No reminders set yet. Add your first reminder above!</p></div>`; 
+        return; 
+      }
+      
+      let html = '';
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      reminders.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)).forEach(reminder => {
+        const dueDate = new Date(reminder.dueDate);
+        const isOverdue = dueDate < today && !reminder.completed;
+        const isToday = dueDate.toDateString() === today.toDateString() && !reminder.completed;
+        const isUpcoming = dueDate > today && !reminder.completed;
+        
+        let statusClass = '';
+        let statusText = '';
+        
+        if (reminder.completed) {
+          statusClass = 'completed';
+          statusText = 'Completed';
+        } else if (isOverdue) {
+          statusClass = 'overdue';
+          statusText = 'Overdue';
+        } else if (isToday) {
+          statusClass = 'today';
+          statusText = 'Due Today';
+        } else if (isUpcoming) {
+          statusClass = 'upcoming';
+          statusText = 'Upcoming';
+        }
+        
+        const daysUntil = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+        
+        html += `
+          <div class="reminder-item ${reminder.completed ? 'reminder-completed' : ''}">
+            <div class="item-content">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600; font-size: 1rem;">${reminder.title}</span>
+                <span class="reminder-due ${statusClass}">${statusText}</span>
+              </div>
+              <div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
+                <span class="category-badge category-${reminder.category.toLowerCase().replace(' ', '-')}">
+                  <i class="fas fa-tag"></i> ${reminder.category}
+                </span>
+                <span style="font-size: 0.9rem; color: var(--gray);">
+                  Due: ${dueDate.toLocaleDateString('en-UG')} ${!reminder.completed && daysUntil > 0 ? `(${daysUntil} days)` : ''}
+                </span>
+              </div>
+              <div style="margin-top: 10px; font-size: 1rem; font-weight: 700; color: var(--primary);">
+                ${formatCurrency(reminder.amount)}
+              </div>
+            </div>
+            <div class="item-actions">
+              ${!reminder.completed ? `
+                <button class="action-btn complete" onclick="markReminderComplete('${reminder.id}')">
+                  <i class="fas fa-check"></i>
+                </button>
+              ` : ''}
+              <button class="action-btn edit" onclick="prepareEditReminder('${reminder.id}', '${reminder.title.replace(/'/g, "\\'")}', ${reminder.amount}, '${reminder.dueDate}', '${reminder.category}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete" onclick="confirmDeleteModal('${reminder.id}', 'reminders', 'Reminder: ${reminder.title} - ${formatCurrency(reminder.amount)}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    async function markReminderComplete(id) {
+      try {
+        await db.collection('reminders').doc(id).update({
+          completed: true,
+          completedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        showMessage('✅ Reminder marked as completed!', 'success');
+        loadReminders();
+      } catch (error) {
+        showError('Failed to mark reminder as complete: ' + error.message);
+      }
+    }
+    
+    function prepareEditReminder(id, title, amount, dueDate, category) {
+      isEditingReminder = true; editingReminderId = id;
+      document.getElementById('reminderTitle').value = title; 
+      document.getElementById('reminderAmount').value = amount;
+      document.getElementById('reminderDueDate').value = dueDate; 
+      document.getElementById('reminderCategory').value = category;
+      document.getElementById('reminderFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Reminder';
+      document.getElementById('addReminderBtn').innerHTML = '<i class="fas fa-save"></i> Update Reminder';
+      document.getElementById('cancelReminderBtn').style.display = 'inline-flex';
+      
+      const formSection = document.getElementById('reminderFormSection');
+      formSection.classList.remove('collapsed');
+      formSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function cancelEditReminder() {
+      isEditingReminder = false; editingReminderId = null;
+      document.getElementById('reminderTitle').value = ''; 
+      document.getElementById('reminderAmount').value = '';
+      document.getElementById('reminderCategory').value = 'Rent'; 
+      document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('reminderFormTitle').innerHTML = '<i class="fas fa-bell"></i> Add Payment Reminder';
+      document.getElementById('addReminderBtn').innerHTML = '<i class="fas fa-bell"></i> Add Reminder';
+      document.getElementById('cancelReminderBtn').style.display = 'none';
+    }
+    
+    // ===== SEARCH AND FILTER FUNCTIONS =====
+    function searchExpenses() {
+      const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
+      const expenseItems = document.querySelectorAll('#expensesList .expense-item');
+      
+      expenseItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+      });
+    }
+    
+    function filterExpenses() {
+      const category = document.getElementById('filterExpenseCategory').value;
+      const month = document.getElementById('filterExpenseMonth').value;
+      const expenseItems = document.querySelectorAll('#expensesList .expense-item');
+      
+      expenseItems.forEach(item => {
+        const itemCategory = item.querySelector('.category-badge').textContent.trim();
+        const itemDate = item.querySelector('strong').textContent;
+        const itemMonth = getMonthFromDate(itemDate);
+        
+        const categoryMatch = !category || itemCategory.includes(category);
+        const monthMatch = !month || itemMonth === month;
+        
+        item.style.display = categoryMatch && monthMatch ? 'flex' : 'none';
+      });
+    }
+    
+    function searchIncome() {
+      const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+      const incomeItems = document.querySelectorAll('#incomeList .expense-item');
+      
+      incomeItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+      });
+    }
+    
+    function filterIncome() {
+      const source = document.getElementById('filterIncomeSource').value;
+      const month = document.getElementById('filterIncomeMonth').value;
+      const incomeItems = document.querySelectorAll('#incomeList .expense-item');
+      
+      incomeItems.forEach(item => {
+        const itemSource = item.querySelector('.category-badge').textContent.trim();
+        const itemDate = item.querySelector('strong').textContent;
+        const itemMonth = getMonthFromDate(itemDate);
+        
+        const sourceMatch = !source || itemSource.includes(source);
+        const monthMatch = !month || itemMonth === month;
+        
+        item.style.display = sourceMatch && monthMatch ? 'flex' : 'none';
+      });
+    }
+    
+    function searchBudgets() {
+      const searchTerm = document.getElementById('searchBudgets').value.toLowerCase();
+      const budgetItems = document.querySelectorAll('#budgetsList .budget-item');
+      
+      budgetItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+      });
+    }
+    
+    function filterBudgets() {
+      const month = document.getElementById('filterBudgetMonth').value;
+      const budgetItems = document.querySelectorAll('#budgetsList .budget-item');
+      
+      budgetItems.forEach(item => {
+        const itemMonth = item.querySelector('.category-badge').textContent;
+        const itemMonthFormatted = formatMonthForFilter(itemMonth);
+        
+        item.style.display = !month || itemMonthFormatted === month ? 'flex' : 'none';
+      });
+    }
+    
+    function searchReminders() {
+      const searchTerm = document.getElementById('searchReminders').value.toLowerCase();
+      const reminderItems = document.querySelectorAll('#remindersList .reminder-item');
+      
+      reminderItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+      });
+    }
+    
+    function filterReminders() {
+      const status = document.getElementById('filterReminderStatus').value;
+      const reminderItems = document.querySelectorAll('#remindersList .reminder-item');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      reminderItems.forEach(item => {
+        const statusElement = item.querySelector('.reminder-due');
+        const itemStatus = statusElement ? statusElement.textContent.toLowerCase() : '';
+        const isCompleted = item.classList.contains('reminder-completed');
+        
+        let show = true;
+        if (status) {
+          if (status === 'completed') {
+            show = isCompleted;
+          } else if (status === 'today') {
+            show = itemStatus.includes('today');
+          } else if (status === 'overdue') {
+            show = itemStatus.includes('overdue');
+          } else if (status === 'upcoming') {
+            show = itemStatus.includes('upcoming') && !isCompleted;
+          }
+        }
+        
+        item.style.display = show ? 'flex' : 'none';
+      });
+    }
+    
+    function getMonthFromDate(dateStr) {
+      // Convert "Mar 25" to month name
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthPart = dateStr.split(' ')[0];
+      const monthIndex = monthNames.indexOf(monthPart);
+      return monthIndex >= 0 ? monthNames[monthIndex] : '';
+    }
+    
+    function formatMonthForFilter(monthText) {
+      // Convert "March 2024" to "Mar"
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      for (let i = 0; i < monthNames.length; i++) {
+        if (monthText.includes(monthNames[i])) {
+          return shortMonths[i];
+        }
+      }
+      return '';
+    }
+    
+    function populateBudgetFilterOptions() {
+      const select = document.getElementById('filterBudgetMonth');
+      const months = new Set();
+      
+      budgets.forEach(budget => {
+        const monthName = new Date(budget.month + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        months.add(monthName);
+      });
+      
+      select.innerHTML = '<option value="">All Months</option>';
+      months.forEach(month => {
+        select.innerHTML += `<option value="${month.split(' ')[0]}">${month}</option>`;
+      });
+    }
+    
+    // ===== REPORT FUNCTIONS =====
     async function generateReport(period, reportType, buttonElement) {
       if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
       if (!currentUser) { showError('Please login first'); return; }
@@ -1671,7 +2774,7 @@
       if (controlContainer) {
         controlContainer.querySelectorAll('.btn-report').forEach(b => b.classList.remove('active'));
         buttonElement.classList.add('active');
-        document.getElementById(`${reportType}CustomRange`).style.display = 'none'; // Hide custom range when a preset is clicked
+        document.getElementById(`${reportType}CustomRange`).style.display = 'none';
       }
       
       try { 
@@ -1702,7 +2805,7 @@
         if (reportType === 'expense') {
           expenseSnapshot.forEach(doc => {
             const expense = doc.data(), expenseDate = new Date(expense.date); expenseDate.setHours(0, 0, 0, 0);
-            // Filter by date only (no user filter for backward compatibility)
+            // Filter by date only
             if (expenseDate >= startDate && expenseDate <= endDate) {
               totalAmount += expense.amount; count++;
               breakdown[expense.category] = (breakdown[expense.category] || 0) + expense.amount;
@@ -1765,7 +2868,6 @@
 
 
     function showCustomRange(reportType, buttonElement) { 
-      // Reset active button state
       const controlContainer = buttonElement.closest('.report-controls');
       if (controlContainer) {
         controlContainer.querySelectorAll('.btn-report').forEach(b => b.classList.remove('active'));
@@ -1791,7 +2893,7 @@
       await fetchAndDisplayReport(startDate, endDate, `Custom Range (${startDate.toLocaleDateString('en-UG')} - ${endDate.toLocaleDateString('en-UG')})`, reportType);
     }
 
-    // NEW: Generate Specific Category Expense Report
+    // ===== SPECIFIC CATEGORY EXPENSE REPORT =====
     async function generateCategoryExpenseReport() {
       if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
       
@@ -1924,7 +3026,7 @@
       }
     }
 
-    // NEW: Generate Specific Source Income Report
+    // ===== SPECIFIC SOURCE INCOME REPORT =====
     async function generateSourceIncomeReport() {
       if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
       
@@ -2060,188 +3162,345 @@
       }
     }
 
-    // NEW: Download Category Expense PDF
-    function downloadCategoryExpensePDF() {
-      const reportData = currentReportData.categoryExpense;
-      if (!reportData) { showError('No category expense report data available to download.'); return; }
+    // ===== EXPORT FUNCTIONS =====
+    function exportCSV(reportType) {
+      const reportData = currentReportData[reportType];
+      if (!reportData) { showError('No report data available to export.'); return; }
       
       try {
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF();
-        const title = `${reportData.category} Expense Report`;
+        let csvContent = '';
+        const isExpense = reportType === 'expense';
+        const headers = isExpense ? ['Date', 'Category', 'Description', 'Amount (UGX)'] : ['Date', 'Source', 'Notes', 'Amount (UGX)'];
         
-        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
-        doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        // Add headers
+        csvContent += headers.join(',') + '\n';
         
-        let yPos = 45;
-        
-        // Summary
-        doc.setFontSize(14); doc.setTextColor(255, 193, 7); doc.text('Summary', 20, yPos); yPos+=10;
-        doc.setFontSize(11); doc.setTextColor(0,0,0);
-        doc.text(`Total ${reportData.category} Expenses: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); yPos+=7;
-        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); yPos+=7;
-        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); yPos+=15;
-        
-        // Daily Breakdown
-        if (Object.keys(reportData.dailyBreakdown).length > 0) {
-          doc.setFontSize(14); doc.setTextColor(255, 193, 7); doc.text('Daily Breakdown', 20, yPos); yPos+=10;
+        // Add data rows
+        reportData.items.forEach(item => {
+          const date = new Date(item.date).toLocaleDateString('en-UG');
+          const name = isExpense ? item.category : item.source;
+          const description = isExpense ? item.description || '' : item.notes || '';
+          const amount = item.amount;
           
-          const dailyTable = Object.entries(reportData.dailyBreakdown)
-            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
-            .map(([date, amount]) => {
-              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
-              return [new Date(date).toLocaleDateString('en-UG'), formatCurrency(amount), percentage];
-            });
-          
-          doc.autoTable({ startY: yPos, head: [['Date', 'Amount', 'Percentage']], body: dailyTable, headStyles: { fillColor: [255, 193, 7] } });
-          yPos = doc.lastAutoTable.finalY + 15;
-        }
+          csvContent += `"${date}","${name}","${description.replace(/"/g, '""')}",${amount}\n`;
+        });
         
-        // Transaction Details
-        if (reportData.items.length > 0) {
-          doc.setFontSize(14); doc.setTextColor(67, 97, 238); doc.text('Transaction Details', 20, yPos); yPos+=10;
-          
-          const detailTable = reportData.items.map(item => {
-            return [
-              new Date(item.date).toLocaleDateString('en-UG'),
-              item.description || '-',
-              formatCurrency(item.amount)
-            ];
-          });
-          
-          doc.autoTable({ startY: yPos, head: [['Date', 'Description', 'Amount']], body: detailTable, headStyles: { fillColor: [255, 193, 7] } });
-        }
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${reportType}_report_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         
-        doc.save(`${reportData.category.toLowerCase().replace(' ', '_')}_expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ Category Expense PDF Downloaded', 'success');
-      } catch (error) { showError('PDF Error: ' + error.message); }
-    }
-
-    // NEW: Download Source Income PDF
-    function downloadSourceIncomePDF() {
-      const reportData = currentReportData.sourceIncome;
-      if (!reportData) { showError('No source income report data available to download.'); return; }
-      
-      try {
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF();
-        const title = `${reportData.source} Income Report`;
-        
-        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
-        doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
-        
-        let yPos = 45;
-        
-        // Summary
-        doc.setFontSize(14); doc.setTextColor(23, 162, 184); doc.text('Summary', 20, yPos); yPos+=10;
-        doc.setFontSize(11); doc.setTextColor(0,0,0);
-        doc.text(`Total ${reportData.source} Income: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); yPos+=7;
-        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); yPos+=7;
-        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); yPos+=15;
-        
-        // Monthly Breakdown
-        if (Object.keys(reportData.monthlyBreakdown).length > 0) {
-          doc.setFontSize(14); doc.setTextColor(23, 162, 184); doc.text('Monthly Breakdown', 20, yPos); yPos+=10;
-          
-          const monthlyTable = Object.entries(reportData.monthlyBreakdown)
-            .sort((a, b) => {
-              return new Date(b[0].split(' ')[1], new Date(`${a[0]} 1`).getMonth()) - 
-                     new Date(a[0].split(' ')[1], new Date(`${b[0]} 1`).getMonth());
-            })
-            .map(([month, amount]) => {
-              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
-              return [month, formatCurrency(amount), percentage];
-            });
-          
-          doc.autoTable({ startY: yPos, head: [['Month', 'Amount', 'Percentage']], body: monthlyTable, headStyles: { fillColor: [23, 162, 184] } });
-          yPos = doc.lastAutoTable.finalY + 15;
-        }
-        
-        // Transaction Details
-        if (reportData.items.length > 0) {
-          doc.setFontSize(14); doc.setTextColor(67, 97, 238); doc.text('Transaction Details', 20, yPos); yPos+=10;
-          
-          const detailTable = reportData.items.map(item => {
-            return [
-              new Date(item.date).toLocaleDateString('en-UG'),
-              item.notes || '-',
-              formatCurrency(item.amount)
-            ];
-          });
-          
-          doc.autoTable({ startY: yPos, head: [['Date', 'Notes', 'Amount']], body: detailTable, headStyles: { fillColor: [23, 162, 184] } });
-        }
-        
-        doc.save(`${reportData.source.toLowerCase().replace(' ', '_')}_income_report_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ Source Income PDF Downloaded', 'success');
-      } catch (error) { showError('PDF Error: ' + error.message); }
-    }
-
-    // NEW: Reset form functions
-    function resetCategoryExpenseForm() {
-      setDefaultSpecificReportDates();
-      document.getElementById('specificExpenseCategory').value = 'Groceries';
-      document.getElementById('categoryExpenseReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>';
-      document.getElementById('categoryExpensePDFBtn').style.display = 'none';
+        showMessage('✅ CSV exported successfully!', 'success');
+      } catch (error) {
+        showError('CSV export failed: ' + error.message);
+      }
     }
     
-    function resetSourceIncomeForm() {
-      setDefaultSpecificReportDates();
-      document.getElementById('specificIncomeSource').value = 'Salary';
-      document.getElementById('sourceIncomeReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>';
-      document.getElementById('sourceIncomePDFBtn').style.display = 'none';
+    async function exportAllData() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      
+      try {
+        showMessage('📊 Preparing data export...', 'info');
+        
+        // Fetch all data
+        const expenseSnapshot = await db.collection('expenses').get();
+        const incomeSnapshot = await db.collection('income').get();
+        const budgetSnapshot = await db.collection('budgets').get();
+        const reminderSnapshot = await db.collection('reminders').get();
+        
+        const exportData = {
+          exportDate: new Date().toISOString(),
+          expenses: [],
+          income: [],
+          budgets: [],
+          reminders: [],
+          metadata: {
+            totalExpenses: expenseSnapshot.size,
+            totalIncome: incomeSnapshot.size,
+            totalBudgets: budgetSnapshot.size,
+            totalReminders: reminderSnapshot.size
+          }
+        };
+        
+        expenseSnapshot.forEach(doc => exportData.expenses.push({ id: doc.id, ...doc.data() }));
+        incomeSnapshot.forEach(doc => exportData.income.push({ id: doc.id, ...doc.data() }));
+        budgetSnapshot.forEach(doc => exportData.budgets.push({ id: doc.id, ...doc.data() }));
+        reminderSnapshot.forEach(doc => exportData.reminders.push({ id: doc.id, ...doc.data() }));
+        
+        // Convert to JSON string
+        const jsonString = JSON.stringify(exportData, null, 2);
+        
+        // Create download link
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `financial_data_backup_${new Date().toISOString().split('T')[0]}.json`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showMessage('✅ All data exported successfully!', 'success');
+      } catch (error) {
+        showError('Data export failed: ' + error.message);
+      }
     }
 
-    function downloadPDF(reportType) {
-      const reportData = currentReportData[reportType];
-      if (!reportData) { showError('No report data available to download.'); return; }
+    // ===== SAVINGS CALCULATOR =====
+    function calculateSavingsGoal() {
+      const goalAmount = parseFloat(document.getElementById('goalAmount').value) || 0;
+      const targetDate = new Date(document.getElementById('targetDate').value);
+      const monthlySavings = parseFloat(document.getElementById('monthlySavings').value) || 0;
+      const growthRate = parseFloat(document.getElementById('growthRate').value) || 0;
       
+      if (!goalAmount || !monthlySavings || targetDate <= new Date()) {
+        showError('Please enter valid values for all fields');
+        return;
+      }
+      
+      const today = new Date();
+      const months = Math.max(1, Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24 * 30.44)));
+      
+      // Simple calculation without compounding for now
+      const totalSavings = monthlySavings * months;
+      const monthlyGrowth = growthRate / 12 / 100;
+      let futureValue = 0;
+      
+      // Calculate with monthly contributions and growth
+      for (let i = 0; i < months; i++) {
+        futureValue = (futureValue + monthlySavings) * (1 + monthlyGrowth);
+      }
+      
+      const resultDiv = document.getElementById('savingsCalculationResult');
+      const detailsDiv = document.getElementById('savingsResultDetails');
+      
+      detailsDiv.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Goal Amount</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--success);">${formatCurrency(goalAmount)}</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Monthly Savings</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">${formatCurrency(monthlySavings)}</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Time Required</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--info);">${months} months</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Future Value</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--warning);">${formatCurrency(futureValue)}</div>
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <div style="font-weight: 600; color: ${futureValue >= goalAmount ? 'var(--success)' : 'var(--warning)'};">
+            ${futureValue >= goalAmount ? '✅ Goal achievable!' : '⚠️ Increase monthly savings or extend timeline'}
+          </div>
+          ${futureValue < goalAmount ? `
+            <div style="margin-top: 5px; font-size: 0.9rem;">
+              Shortfall: ${formatCurrency(goalAmount - futureValue)}<br>
+              Required monthly: ${formatCurrency(goalAmount / months)}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      resultDiv.style.display = 'block';
+      
+      // Store calculation for potential goal setting
+      window.calculatedGoal = {
+        amount: goalAmount,
+        targetDate: targetDate.toISOString().split('T')[0],
+        monthlySavings,
+        futureValue
+      };
+    }
+    
+    function setSavingsGoal() {
+      if (!window.calculatedGoal) {
+        showError('Please calculate first before setting a goal');
+        return;
+      }
+      
+      savingsGoal = {
+        amount: window.calculatedGoal.amount,
+        targetDate: window.calculatedGoal.targetDate,
+        currentSavings: 0 // Start with 0 savings
+      };
+      
+      saveSavingsGoal();
+      updateSavingsGoalUI();
+      document.getElementById('savingsCalculatorModal').style.display = 'none';
+      showMessage('✅ Savings goal set successfully!', 'success');
+    }
+    
+    // ===== YEARLY OVERVIEW =====
+    async function loadYearlyOverview() {
+      const year = document.getElementById('yearSelect').value;
+      const container = document.getElementById('yearlyOverviewContent');
+      
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>';
+      
+      try {
+        const expenseSnapshot = await db.collection('expenses').get();
+        const incomeSnapshot = await db.collection('income').get();
+        
+        const monthlyExpenses = Array(12).fill(0);
+        const monthlyIncome = Array(12).fill(0);
+        const categories = {};
+        
+        // Process expenses
+        expenseSnapshot.forEach(doc => {
+          const expense = doc.data();
+          const expenseDate = new Date(expense.date);
+          
+          if (expenseDate.getFullYear() == year) {
+            const month = expenseDate.getMonth();
+            monthlyExpenses[month] += expense.amount;
+            
+            categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
+          }
+        });
+        
+        // Process income
+        incomeSnapshot.forEach(doc => {
+          const income = doc.data();
+          const incomeDate = new Date(income.date);
+          
+          if (incomeDate.getFullYear() == year) {
+            const month = incomeDate.getMonth();
+            monthlyIncome[month] += income.amount;
+          }
+        });
+        
+        // Calculate totals
+        const totalExpenses = monthlyExpenses.reduce((a, b) => a + b, 0);
+        const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
+        const netSavings = totalIncome - totalExpenses;
+        const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100).toFixed(1) : 0;
+        
+        // Generate HTML
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        let html = `
+          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr 1fr; margin-bottom: 25px;">
+            <div class="report-summary-item" style="border: 1px solid var(--success);">
+              <div class="label" style="color: var(--success);">Total Income</div>
+              <div class="value" style="color: var(--success);">${formatCurrency(totalIncome)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid var(--danger);">
+              <div class="label" style="color: var(--danger);">Total Expenses</div>
+              <div class="value" style="color: var(--danger);">${formatCurrency(totalExpenses)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">
+              <div class="label" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">Net Savings</div>
+              <div class="value" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(netSavings)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid var(--info);">
+              <div class="label" style="color: var(--info);">Savings Rate</div>
+              <div class="value" style="color: var(--info);">${savingsRate}%</div>
+            </div>
+          </div>
+          
+          <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-line"></i> Monthly Trends</h4>
+          <div style="margin-bottom: 25px;">
+        `;
+        
+        // Monthly chart
+        monthNames.forEach((month, index) => {
+          const expenseHeight = monthlyExpenses[index] > 0 ? Math.min(100, (monthlyExpenses[index] / Math.max(...monthlyExpenses)) * 100) : 0;
+          const incomeHeight = monthlyIncome[index] > 0 ? Math.min(100, (monthlyIncome[index] / Math.max(...monthlyIncome)) * 100) : 0;
+          
+          html += `
+            <div style="margin-bottom: 15px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="font-weight: 600;">${month}</span>
+                <span style="font-size: 0.9rem;">
+                  <span style="color: var(--success);">${formatCurrency(monthlyIncome[index])}</span> / 
+                  <span style="color: var(--danger);">${formatCurrency(monthlyExpenses[index])}</span>
+                </span>
+              </div>
+              <div style="display: flex; height: 20px; background: var(--light); border-radius: 4px; overflow: hidden;">
+                <div style="width: ${incomeHeight}%; background: linear-gradient(90deg, var(--success), #2ecc71);"></div>
+                <div style="width: ${expenseHeight}%; background: linear-gradient(90deg, var(--danger), #e74c3c);"></div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+        
+        // Category breakdown
+        if (Object.keys(categories).length > 0) {
+          const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]).slice(0, 8);
+          
+          html += `
+            <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-pie"></i> Top Expense Categories</h4>
+            <div class="category-breakdown">
+          `;
+          
+          sortedCategories.forEach(([name, amount]) => {
+            const percentage = totalExpenses > 0 ? Math.round((amount / totalExpenses) * 100) : 0;
+            
+            html += `
+              <div class="category-item">
+                <div class="category-name"><span class="category-badge category-${name.toLowerCase().replace(' ', '-')}">${name}</span></div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="category-amount">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+        
+        container.innerHTML = html;
+        
+      } catch (error) {
+        container.innerHTML = `<div class="empty-state"><h4>Error loading yearly overview</h4><p>${error.message}</p></div>`;
+      }
+    }
+    
+    function downloadYearlyPDF() {
+      const year = document.getElementById('yearSelect').value;
       try {
         const { jsPDF } = window.jspdf; 
         const doc = new jsPDF();
-        const isExpense = reportType === 'expense';
-        const title = isExpense ? 'Expense Report' : 'Income Report';
-        const totalLabel = isExpense ? 'Total Expenses' : 'Total Income';
-        const breakdownTitle = isExpense ? 'Category Breakdown' : 'Source Breakdown';
-        const detailHeaders = isExpense ? ['Date', 'Category', 'Description', 'Amount'] : ['Date', 'Source', 'Notes', 'Amount'];
-        const tableColor = isExpense ? [220, 53, 69] : [40, 167, 69];
-
-        doc.setFontSize(18); doc.setTextColor(67, 97, 238); doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
-        doc.setFontSize(12); doc.setTextColor(0,0,0); doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
-        let yPos = 45; 
         
-        // Summary
-        doc.setFontSize(14); doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); doc.text('Summary', 20, yPos); yPos+=10;
-        doc.setFontSize(11); doc.setTextColor(0,0,0);
-        doc.text(`${totalLabel}: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); yPos+=7;
-        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); yPos+=15;
+        doc.setFontSize(18); 
+        doc.setTextColor(67, 97, 238); 
+        doc.text(`Yearly Financial Overview - ${year}`, 105, 20, { align: 'center' });
         
-        // Breakdown
-        if (reportData.breakdown.length > 0) {
-            doc.setFontSize(14); doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); doc.text(breakdownTitle, 20, yPos); yPos+=10;
-            const breakdownTable = reportData.breakdown.map(([name, amount]) => {
-                const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
-                return [name, formatCurrency(amount), percentage];
-            });
-            doc.autoTable({ startY: yPos, head: [['Name', 'Amount', 'Percentage']], body: breakdownTable, headStyles: { fillColor: tableColor } });
-            yPos = doc.lastAutoTable.finalY + 15;
-        }
-
-        // Details
-        if (reportData.items.length > 0) {
-            doc.setFontSize(14); doc.setTextColor(67, 97, 238); doc.text('Detailed Transactions', 20, yPos); yPos+=10;
-            const detailTable = reportData.items.map(item => {
-                const name = isExpense ? item.category : item.source;
-                const description = isExpense ? item.description || '-' : item.notes || '-';
-                return [new Date(item.date).toLocaleDateString('en-UG'), name, description, formatCurrency(item.amount)];
-            });
-            doc.autoTable({ startY: yPos, head: [detailHeaders], body: detailTable, headStyles: { fillColor: tableColor } });
-        }
+        let yPos = 35;
         
-        doc.save(`${reportType}_report_${new Date().toISOString().split('T')[0]}.pdf`); showMessage('✅ PDF Downloaded', 'success');
-      } catch (error) { showError('PDF Error: ' + error.message); }
+        // Add summary
+        doc.setFontSize(12);
+        doc.text('Generated on: ' + new Date().toLocaleDateString('en-UG'), 20, yPos);
+        yPos += 15;
+        
+        doc.setFontSize(14);
+        doc.text('Note: This is a simplified yearly overview. For detailed reports, use the specific report features.', 20, yPos, { maxWidth: 170 });
+        yPos += 20;
+        
+        doc.save(`yearly_overview_${year}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Yearly overview PDF downloaded!', 'success');
+      } catch (error) {
+        showError('PDF download failed: ' + error.message);
+      }
     }
 
+    // ===== DASHBOARD FUNCTIONS =====
     async function loadDashboard() {
       try {
         // Get all data without filtering by userEmail for backward compatibility
@@ -2262,10 +3521,23 @@
           categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
           weeklyData[expenseDate.getDay()] += expense.amount;
         });
+        
         incomeSnapshot.forEach(doc => { stats.totalIncome += doc.data().amount; });
         stats.availableBalance = stats.totalIncome - stats.totalExpense;
-        updateStatsUI(stats); updateCharts(categories, weeklyData); loadExpensesList(expenseSnapshot); loadIncomeList(incomeSnapshot);
-      } catch (error) { showError('Failed to load dashboard: ' + error.message); }
+        
+        updateStatsUI(stats); 
+        updateCharts(categories, weeklyData); 
+        loadExpensesList(expenseSnapshot); 
+        loadIncomeList(incomeSnapshot);
+        
+        // Update savings goal with current savings (simplified: use available balance as savings)
+        if (savingsGoal.amount > 0) {
+          savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
+          updateSavingsGoalUI();
+        }
+      } catch (error) { 
+        showError('Failed to load dashboard: ' + error.message); 
+      }
     }
 
     function updateStatsUI(stats) {
@@ -2276,64 +3548,561 @@
       document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
       document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
       document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
-      const calcChange = (cur, prev) => { if (!prev || prev === 0) return '--'; const chg = ((cur - prev) / prev * 100).toFixed(1); return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; };
-      document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); previousStats = stats;
+      
+      const calcChange = (cur, prev) => { 
+        if (!prev || prev === 0) return '--'; 
+        const chg = ((cur - prev) / prev * 100).toFixed(1); 
+        return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; 
+      };
+      
+      document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); 
+      previousStats = stats;
     }
 
     function updateCharts(categories, weeklyData) {
-      const pieCtx = document.getElementById('pieChart').getContext('2d'), categoryColors = ['#667eea', '#f093fb', '#f5576c', '#4ecdc4', '#ffd166', '#06d6a0', '#a78bfa', '#f97316'];
+      const pieCtx = document.getElementById('pieChart').getContext('2d'), 
+            categoryColors = ['#667eea', '#f093fb', '#f5576c', '#4ecdc4', '#ffd166', '#06d6a0', '#a78bfa', '#f97316'];
+      
       if (pieChart) pieChart.destroy();
-      pieChart = new Chart(pieCtx, { type: 'doughnut', data: { labels: Object.keys(categories), datasets: [{ data: Object.values(categories), backgroundColor: categoryColors, borderWidth: 2 }] }, options: { responsive: true, cutout: '70%' } });
+      pieChart = new Chart(pieCtx, { 
+        type: 'doughnut', 
+        data: { 
+          labels: Object.keys(categories), 
+          datasets: [{ 
+            data: Object.values(categories), 
+            backgroundColor: categoryColors, 
+            borderWidth: 2 
+          }] 
+        }, 
+        options: { 
+          responsive: true, 
+          cutout: '70%',
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        } 
+      });
+      
       const barCtx = document.getElementById('barChart').getContext('2d');
       if (barChart) barChart.destroy();
-      barChart = new Chart(barCtx, { type: 'bar', data: { labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], datasets: [{ label: 'Expenses', data: weeklyData, backgroundColor: 'rgba(102, 126, 234, 0.7)' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+      barChart = new Chart(barCtx, { 
+        type: 'bar', 
+        data: { 
+          labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], 
+          datasets: [{ 
+            label: 'Expenses', 
+            data: weeklyData, 
+            backgroundColor: 'rgba(102, 126, 234, 0.7)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 1
+          }] 
+        }, 
+        options: { 
+          responsive: true, 
+          scales: { 
+            y: { 
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return 'UGX ' + value.toLocaleString('en-UG');
+                }
+              }
+            } 
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        } 
+      });
     }
 
     function loadExpensesList(snapshot) {
       const container = document.getElementById('expensesList');
-      if (!snapshot || snapshot.empty) { container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No expenses found.</p></div>`; return; }
-      let expenses = []; snapshot.forEach(doc => expenses.push({ id: doc.id, ...doc.data() })); expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-      let html = ''; expenses.slice(0, 20).forEach(expense => {
+      if (!snapshot || snapshot.empty) { 
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No expenses found.</p></div>`; 
+        return; 
+      }
+      
+      let expenses = []; 
+      snapshot.forEach(doc => expenses.push({ id: doc.id, ...doc.data() })); 
+      expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      let html = ''; 
+      expenses.slice(0, 30).forEach(expense => {
         const date = new Date(expense.date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric' });
         const descSafe = (expense.description || '').replace(/'/g, "\\'");
-        html += `<div class="expense-item"><div class="item-content"><span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}"><i class="fas fa-tag"></i> ${expense.category}</span><strong>${date}</strong><div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">${expense.description || ''}</div></div><div class="expense-amount">${formatCurrency(expense.amount)}</div><div class="item-actions"><button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', ${expense.amount}, '${expense.category}', '${expense.date}', '${descSafe}')"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${expense.category} - ${formatCurrency(expense.amount)}')"><i class="fas fa-trash"></i></button></div></div>`;
+        html += `
+          <div class="expense-item">
+            <div class="item-content">
+              <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
+                <i class="fas fa-tag"></i> ${expense.category}
+              </span>
+              <strong>${date}</strong>
+              <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                ${expense.description || ''}
+              </div>
+            </div>
+            <div class="expense-amount">${formatCurrency(expense.amount)}</div>
+            <div class="item-actions">
+              <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', ${expense.amount}, '${expense.category}', '${expense.date}', '${descSafe}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${expense.category} - ${formatCurrency(expense.amount)}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
       });
+      
       container.innerHTML = html;
+      
+      // Populate filter dropdowns
+      populateCategoryFilter();
+      populateMonthFilter('expense');
     }
     
     function loadIncomeList(snapshot) {
       const container = document.getElementById('incomeList');
-      if (!snapshot || snapshot.empty) { container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No income records found.</p></div>`; return; }
-      let income = []; snapshot.forEach(doc => income.push({ id: doc.id, ...doc.data() })); income.sort((a, b) => new Date(b.date) - new Date(a.date));
-      let html = ''; income.slice(0, 10).forEach(inc => {
+      if (!snapshot || snapshot.empty) { 
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No income records found.</p></div>`; 
+        return; 
+      }
+      
+      let income = []; 
+      snapshot.forEach(doc => income.push({ id: doc.id, ...doc.data() })); 
+      income.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      let html = ''; 
+      income.slice(0, 20).forEach(inc => {
         const date = new Date(inc.date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric' });
         const notesSafe = (inc.notes || '').replace(/'/g, "\\'");
-        html += `<div class="expense-item"><div class="item-content"><span class="category-badge category-${inc.source.toLowerCase().replace('/', '-')}" style="background:var(--success); color:white;"><i class="fas fa-briefcase"></i> ${inc.source}</span><strong>${date}</strong><div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">${inc.notes || ''}</div></div><div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div><div class="item-actions"><button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${inc.source}', '${inc.date}', '${notesSafe}')"><i class="fas fa-edit"></i></button><button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${inc.source} - ${formatCurrency(inc.amount)}')"><i class="fas fa-trash"></i></button></div></div>`;
+        html += `
+          <div class="expense-item">
+            <div class="item-content">
+              <span class="category-badge category-${inc.source.toLowerCase().replace('/', '-')}" style="background:var(--success); color:white;">
+                <i class="fas fa-briefcase"></i> ${inc.source}
+              </span>
+              <strong>${date}</strong>
+              <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+                ${inc.notes || ''}
+              </div>
+            </div>
+            <div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div>
+            <div class="item-actions">
+              <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${inc.source}', '${inc.date}', '${notesSafe}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${inc.source} - ${formatCurrency(inc.amount)}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
       });
+      
       container.innerHTML = html;
+      
+      // Populate filter dropdowns
+      populateSourceFilter();
+      populateMonthFilter('income');
+    }
+    
+    function populateCategoryFilter() {
+      const select = document.getElementById('filterExpenseCategory');
+      const categories = new Set();
+      
+      // Get unique categories from all expenses
+      document.querySelectorAll('#expensesList .category-badge').forEach(badge => {
+        const category = badge.textContent.replace('⚡', '').replace('💧', '').replace('🛒', '').replace('🍲', '').replace('⛽', '').replace('🚗', '').replace('🌐', '').replace('📱', '').replace('🏠', '').replace('👕', '').replace('👔', '').replace('📚', '').replace('🏥', '').replace('💰', '').replace('💳', '').replace('🤲', '').replace('🎬', '').replace('💸', '').replace('🛍️', '').replace('📦', '').trim();
+        categories.add(category);
+      });
+      
+      select.innerHTML = '<option value="">All Categories</option>';
+      categories.forEach(category => {
+        select.innerHTML += `<option value="${category}">${category}</option>`;
+      });
+    }
+    
+    function populateSourceFilter() {
+      const select = document.getElementById('filterIncomeSource');
+      const sources = new Set();
+      
+      document.querySelectorAll('#incomeList .category-badge').forEach(badge => {
+        const source = badge.textContent.replace('💼', '').replace('💻', '').replace('📈', '').replace('🎁', '').replace('📦', '').trim();
+        sources.add(source);
+      });
+      
+      select.innerHTML = '<option value="">All Sources</option>';
+      sources.forEach(source => {
+        select.innerHTML += `<option value="${source}">${source}</option>`;
+      });
+    }
+    
+    function populateMonthFilter(type) {
+      const select = document.getElementById(`filter${type.charAt(0).toUpperCase() + type.slice(1)}Month`);
+      const months = new Set();
+      
+      document.querySelectorAll(`#${type}List strong`).forEach(dateElement => {
+        const dateText = dateElement.textContent;
+        if (dateText) {
+          const month = getMonthFromDate(dateText);
+          if (month) months.add(month);
+        }
+      });
+      
+      select.innerHTML = '<option value="">All Months</option>';
+      months.forEach(month => {
+        select.innerHTML += `<option value="${month}">${month}</option>`;
+      });
     }
 
+    // ===== DELETE FUNCTIONS =====
     function confirmDeleteModal(id, collection, description) {
       itemToDeleteId = id; collectionToDelete = collection;
       document.getElementById('deleteExpenseDetails').textContent = description;
       document.getElementById('deleteModal').style.display = 'flex';
     }
 
-    function hideDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; itemToDeleteId = null; collectionToDelete = null; }
+    function hideDeleteModal() { 
+      document.getElementById('deleteModal').style.display = 'none'; 
+      itemToDeleteId = null; 
+      collectionToDelete = null; 
+    }
+    
     async function deleteItem() {
-      if (!itemToDeleteId || !collectionToDelete || !isFirestoreReady) { hideDeleteModal(); return; }
+      if (!itemToDeleteId || !collectionToDelete || !isFirestoreReady) { 
+        hideDeleteModal(); 
+        return; 
+      }
+      
       try {
         await db.collection(collectionToDelete).doc(itemToDeleteId).delete();
         showMessage('✅ Item deleted successfully', 'success');
+        
+        // Reset editing states if deleting an item being edited
         if (collectionToDelete === 'expenses' && itemToDeleteId === editingExpenseId) cancelEditExpense();
         if (collectionToDelete === 'income' && itemToDeleteId === editingIncomeId) cancelEditIncome();
-        hideDeleteModal(); loadDashboard(); 
-        if (currentReportPeriod.expense) generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
-        if (currentReportPeriod.income) generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
-      } catch (error) { showError('Failed to delete: ' + error.message); hideDeleteModal(); }
+        if (collectionToDelete === 'budgets' && itemToDeleteId === editingBudgetId) cancelEditBudget();
+        if (collectionToDelete === 'reminders' && itemToDeleteId === editingReminderId) cancelEditReminder();
+        
+        hideDeleteModal(); 
+        
+        // Reload relevant data
+        loadDashboard(); 
+        if (collectionToDelete === 'budgets') loadBudgets();
+        if (collectionToDelete === 'reminders') loadReminders();
+        
+        if (currentReportPeriod.expense && collectionToDelete === 'expenses') {
+          generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
+        }
+        if (currentReportPeriod.income && collectionToDelete === 'income') {
+          generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
+        }
+      } catch (error) { 
+        showError('Failed to delete: ' + error.message); 
+        hideDeleteModal(); 
+      }
     }
 
-    setInterval(() => { if (isFirestoreReady && !isEditingExpense && !isEditingIncome && currentUser) loadDashboard(); }, 60000);
+    // Reset functions for specific reports
+    function resetCategoryExpenseForm() {
+      setDefaultSpecificReportDates();
+      document.getElementById('specificExpenseCategory').value = 'Groceries';
+      document.getElementById('categoryExpenseReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>';
+      document.getElementById('categoryExpensePDFBtn').style.display = 'none';
+    }
+    
+    function resetSourceIncomeForm() {
+      setDefaultSpecificReportDates();
+      document.getElementById('specificIncomeSource').value = 'Salary';
+      document.getElementById('sourceIncomeReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>';
+      document.getElementById('sourceIncomePDFBtn').style.display = 'none';
+    }
+
+    // ===== PDF DOWNLOAD FUNCTIONS =====
+    function downloadPDF(reportType) {
+      const reportData = currentReportData[reportType];
+      if (!reportData) { showError('No report data available to download.'); return; }
+      
+      try {
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        const isExpense = reportType === 'expense';
+        const title = isExpense ? 'Expense Report' : 'Income Report';
+        const totalLabel = isExpense ? 'Total Expenses' : 'Total Income';
+        const breakdownTitle = isExpense ? 'Category Breakdown' : 'Source Breakdown';
+        const detailHeaders = isExpense ? ['Date', 'Category', 'Description', 'Amount'] : ['Date', 'Source', 'Notes', 'Amount'];
+        const tableColor = isExpense ? [220, 53, 69] : [40, 167, 69];
+
+        doc.setFontSize(18); 
+        doc.setTextColor(67, 97, 238); 
+        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        
+        doc.setFontSize(12); 
+        doc.setTextColor(0,0,0); 
+        doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45; 
+        
+        // Summary
+        doc.setFontSize(14); 
+        doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); 
+        doc.text('Summary', 20, yPos); 
+        yPos += 10;
+        
+        doc.setFontSize(11); 
+        doc.setTextColor(0,0,0);
+        doc.text(`${totalLabel}: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); 
+        yPos += 7;
+        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
+        yPos += 15;
+        
+        // Breakdown
+        if (reportData.breakdown.length > 0) {
+            doc.setFontSize(14); 
+            doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); 
+            doc.text(breakdownTitle, 20, yPos); 
+            yPos += 10;
+            
+            const breakdownTable = reportData.breakdown.map(([name, amount]) => {
+                const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
+                return [name, formatCurrency(amount), percentage];
+            });
+            
+            doc.autoTable({ 
+              startY: yPos, 
+              head: [['Name', 'Amount', 'Percentage']], 
+              body: breakdownTable, 
+              headStyles: { fillColor: tableColor } 
+            });
+            
+            yPos = doc.lastAutoTable.finalY + 15;
+        }
+
+        // Details
+        if (reportData.items.length > 0) {
+            doc.setFontSize(14); 
+            doc.setTextColor(67, 97, 238); 
+            doc.text('Detailed Transactions', 20, yPos); 
+            yPos += 10;
+            
+            const detailTable = reportData.items.map(item => {
+                const name = isExpense ? item.category : item.source;
+                const description = isExpense ? item.description || '-' : item.notes || '-';
+                return [
+                  new Date(item.date).toLocaleDateString('en-UG'), 
+                  name, 
+                  description, 
+                  formatCurrency(item.amount)
+                ];
+            });
+            
+            doc.autoTable({ 
+              startY: yPos, 
+              head: [detailHeaders], 
+              body: detailTable, 
+              headStyles: { fillColor: tableColor } 
+            });
+        }
+        
+        doc.save(`${reportType}_report_${new Date().toISOString().split('T')[0]}.pdf`); 
+        showMessage('✅ PDF Downloaded', 'success');
+      } catch (error) { 
+        showError('PDF Error: ' + error.message); 
+      }
+    }
+
+    function downloadCategoryExpensePDF() {
+      const reportData = currentReportData.categoryExpense;
+      if (!reportData) { showError('No category expense report data available to download.'); return; }
+      
+      try {
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        const title = `${reportData.category} Expense Report`;
+        
+        doc.setFontSize(18); 
+        doc.setTextColor(67, 97, 238); 
+        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        
+        doc.setFontSize(12); 
+        doc.setTextColor(0,0,0); 
+        doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45;
+        
+        // Summary
+        doc.setFontSize(14); 
+        doc.setTextColor(255, 193, 7); 
+        doc.text('Summary', 20, yPos); 
+        yPos += 10;
+        
+        doc.setFontSize(11); 
+        doc.setTextColor(0,0,0);
+        doc.text(`Total ${reportData.category} Expenses: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); 
+        yPos += 7;
+        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
+        yPos += 7;
+        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); 
+        yPos += 15;
+        
+        // Daily Breakdown
+        if (Object.keys(reportData.dailyBreakdown).length > 0) {
+          doc.setFontSize(14); 
+          doc.setTextColor(255, 193, 7); 
+          doc.text('Daily Breakdown', 20, yPos); 
+          yPos += 10;
+          
+          const dailyTable = Object.entries(reportData.dailyBreakdown)
+            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+            .map(([date, amount]) => {
+              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
+              return [new Date(date).toLocaleDateString('en-UG'), formatCurrency(amount), percentage];
+            });
+          
+          doc.autoTable({ 
+            startY: yPos, 
+            head: [['Date', 'Amount', 'Percentage']], 
+            body: dailyTable, 
+            headStyles: { fillColor: [255, 193, 7] } 
+          });
+          
+          yPos = doc.lastAutoTable.finalY + 15;
+        }
+        
+        // Transaction Details
+        if (reportData.items.length > 0) {
+          doc.setFontSize(14); 
+          doc.setTextColor(67, 97, 238); 
+          doc.text('Transaction Details', 20, yPos); 
+          yPos += 10;
+          
+          const detailTable = reportData.items.map(item => {
+            return [
+              new Date(item.date).toLocaleDateString('en-UG'),
+              item.description || '-',
+              formatCurrency(item.amount)
+            ];
+          });
+          
+          doc.autoTable({ 
+            startY: yPos, 
+            head: [['Date', 'Description', 'Amount']], 
+            body: detailTable, 
+            headStyles: { fillColor: [255, 193, 7] } 
+          });
+        }
+        
+        doc.save(`${reportData.category.toLowerCase().replace(' ', '_')}_expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Category Expense PDF Downloaded', 'success');
+      } catch (error) { 
+        showError('PDF Error: ' + error.message); 
+      }
+    }
+
+    function downloadSourceIncomePDF() {
+      const reportData = currentReportData.sourceIncome;
+      if (!reportData) { showError('No source income report data available to download.'); return; }
+      
+      try {
+        const { jsPDF } = window.jspdf; 
+        const doc = new jsPDF();
+        const title = `${reportData.source} Income Report`;
+        
+        doc.setFontSize(18); 
+        doc.setTextColor(67, 97, 238); 
+        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        
+        doc.setFontSize(12); 
+        doc.setTextColor(0,0,0); 
+        doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
+        
+        let yPos = 45;
+        
+        // Summary
+        doc.setFontSize(14); 
+        doc.setTextColor(23, 162, 184); 
+        doc.text('Summary', 20, yPos); 
+        yPos += 10;
+        
+        doc.setFontSize(11); 
+        doc.setTextColor(0,0,0);
+        doc.text(`Total ${reportData.source} Income: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); 
+        yPos += 7;
+        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
+        yPos += 7;
+        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); 
+        yPos += 15;
+        
+        // Monthly Breakdown
+        if (Object.keys(reportData.monthlyBreakdown).length > 0) {
+          doc.setFontSize(14); 
+          doc.setTextColor(23, 162, 184); 
+          doc.text('Monthly Breakdown', 20, yPos); 
+          yPos += 10;
+          
+          const monthlyTable = Object.entries(reportData.monthlyBreakdown)
+            .sort((a, b) => {
+              return new Date(b[0].split(' ')[1], new Date(`${a[0]} 1`).getMonth()) - 
+                     new Date(a[0].split(' ')[1], new Date(`${b[0]} 1`).getMonth());
+            })
+            .map(([month, amount]) => {
+              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
+              return [month, formatCurrency(amount), percentage];
+            });
+          
+          doc.autoTable({ 
+            startY: yPos, 
+            head: [['Month', 'Amount', 'Percentage']], 
+            body: monthlyTable, 
+            headStyles: { fillColor: [23, 162, 184] } 
+          });
+          
+          yPos = doc.lastAutoTable.finalY + 15;
+        }
+        
+        // Transaction Details
+        if (reportData.items.length > 0) {
+          doc.setFontSize(14); 
+          doc.setTextColor(67, 97, 238); 
+          doc.text('Transaction Details', 20, yPos); 
+          yPos += 10;
+          
+          const detailTable = reportData.items.map(item => {
+            return [
+              new Date(item.date).toLocaleDateString('en-UG'),
+              item.notes || '-',
+              formatCurrency(item.amount)
+            ];
+          });
+          
+          doc.autoTable({ 
+            startY: yPos, 
+            head: [['Date', 'Notes', 'Amount']], 
+            body: detailTable, 
+            headStyles: { fillColor: [23, 162, 184] } 
+          });
+        }
+        
+        doc.save(`${reportData.source.toLowerCase().replace(' ', '_')}_income_report_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Source Income PDF Downloaded', 'success');
+      } catch (error) { 
+        showError('PDF Error: ' + error.message); 
+      }
+    }
+
+    // Auto-refresh dashboard every 60 seconds
+    setInterval(() => { 
+      if (isFirestoreReady && !isEditingExpense && !isEditingIncome && currentUser) {
+        loadDashboard(); 
+        loadReminders(); // Also refresh reminders to update due dates
+      } 
+    }, 60000);
   </script>
 </body>
 </html>
