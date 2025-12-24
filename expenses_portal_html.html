@@ -1145,7 +1145,7 @@
   <div class="container" id="mainApp">
     <div class="header">
       <div class="header-top">
-        <h1><i class="fas fa-wallet"></i><span>Expense & Income Tracker PRO</span></h1>
+        <h1><i class="fas fa-wallet"></i><span id="appTitle">Expense & Income Tracker PRO</span></h1>
         <div style="display: flex; align-items: center; gap: 15px;">
           <div class="user-profile" id="userProfile">
             <div class="user-avatar" id="userAvatar">U</div>
@@ -1528,7 +1528,7 @@
       </div>
 
       <div class="report-section" id="expenseReportSection">
-        <h3 class="form-title" style="color: var(--danger);"><i class="fas fa-chart-bar"></i> Expense Reports</h3>
+        <h3 class="form-title" style="color: var(--danger);"><i class="fas fa-chart-bar"></i> <span id="expenseReportTitle">Expense Reports</span></h3>
         <div class="report-controls" id="expenseReportControls">
           <button class="btn btn-report active" onclick="generateReport('today', 'expense', this)"><i class="fas fa-calendar-day"></i> Today</button>
           <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
@@ -1555,7 +1555,7 @@
       </div>
 
       <div class="report-section" id="incomeReportSection">
-        <h3 class="form-title" style="color: var(--success);"><i class="fas fa-chart-line"></i> Income Reports</h3>
+        <h3 class="form-title" style="color: var(--success);"><i class="fas fa-chart-line"></i> <span id="incomeReportTitle">Income Reports</span></h3>
         <div class="report-controls" id="incomeReportControls">
           <button class="btn btn-report active" onclick="generateReport('today', 'income', this)"><i class="fas fa-calendar-day"></i> Today</button>
           <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
@@ -2039,10 +2039,17 @@
     function updateUserProfile() {
       if (currentUser) {
         document.getElementById('userEmail').textContent = currentUser.email;
-        const firstName = currentUser.email.split('@')[0];
+        const firstName = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
         const initial = firstName.charAt(0).toUpperCase();
         document.getElementById('userAvatar').textContent = initial;
         document.getElementById('userAvatar').title = currentUser.email;
+        
+        // Update app title with user's first name
+        document.getElementById('appTitle').textContent = firstName + "'s Expense & Income Tracker PRO";
+        
+        // Update report titles
+        document.getElementById('expenseReportTitle').textContent = firstName + "'s Expense Reports";
+        document.getElementById('incomeReportTitle').textContent = firstName + "'s Income Reports";
       }
     }
 
@@ -2438,19 +2445,36 @@
       const todayStr = today.toISOString().split('T')[0];
       const currentMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
       
-      document.getElementById('date').value = todayStr;
-      document.getElementById('incomeDate').value = todayStr;
-      document.getElementById('budgetMonth').value = currentMonth;
-      document.getElementById('reminderDueDate').value = todayStr;
+      // Only set default dates if fields are empty
+      if (!document.getElementById('date').value) {
+        document.getElementById('date').value = todayStr;
+      }
+      if (!document.getElementById('incomeDate').value) {
+        document.getElementById('incomeDate').value = todayStr;
+      }
+      if (!document.getElementById('budgetMonth').value) {
+        document.getElementById('budgetMonth').value = currentMonth;
+      }
+      if (!document.getElementById('reminderDueDate').value) {
+        document.getElementById('reminderDueDate').value = todayStr;
+      }
       
       const fromDate = new Date(); 
       fromDate.setDate(fromDate.getDate() - 30);
       const defaultFrom = fromDate.toISOString().split('T')[0];
       
-      document.getElementById('expenseFromDate').value = defaultFrom;
-      document.getElementById('expenseToDate').value = todayStr;
-      document.getElementById('incomeFromDate').value = defaultFrom;
-      document.getElementById('incomeToDate').value = todayStr;
+      if (!document.getElementById('expenseFromDate').value) {
+        document.getElementById('expenseFromDate').value = defaultFrom;
+      }
+      if (!document.getElementById('expenseToDate').value) {
+        document.getElementById('expenseToDate').value = todayStr;
+      }
+      if (!document.getElementById('incomeFromDate').value) {
+        document.getElementById('incomeFromDate').value = defaultFrom;
+      }
+      if (!document.getElementById('incomeToDate').value) {
+        document.getElementById('incomeToDate').value = todayStr;
+      }
     }
     
     function setDefaultTargetDate() {
@@ -2708,11 +2732,11 @@
           await db.collection('expenses').add(expenseData);
           showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
           
-          // Clear form
+          // Clear form but keep the date for adding another entry
           document.getElementById('amount').value = ''; 
           document.getElementById('description').value = '';
           document.getElementById('category').value = 'Groceries'; 
-          document.getElementById('date').value = new Date().toISOString().split('T')[0];
+          // Don't reset date - keep the selected date for convenience
         }
         
         // Refresh reports
@@ -2751,6 +2775,7 @@
       document.getElementById('amount').value = ''; 
       document.getElementById('description').value = '';
       document.getElementById('category').value = 'Groceries'; 
+      // Reset to today's date when canceling edit
       document.getElementById('date').value = new Date().toISOString().split('T')[0];
       document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Expense';
       document.getElementById('addBtn').innerHTML = '<i class="fas fa-plus"></i> Add Expense';
@@ -2805,11 +2830,11 @@
           await db.collection('income').add(incomeData);
           showMessage(`💰 Recorded ${formatCurrency(amount)} from ${source}`, 'success');
           
-          // Clear form
+          // Clear form but keep the date for adding another entry
           document.getElementById('incomeAmount').value = ''; 
           document.getElementById('incomeNotes').value = '';
           document.getElementById('incomeSource').value = 'Salary'; 
-          document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+          // Don't reset date - keep the selected date for convenience
         }
         
         // Refresh reports
@@ -2848,6 +2873,7 @@
       document.getElementById('incomeAmount').value = ''; 
       document.getElementById('incomeNotes').value = '';
       document.getElementById('incomeSource').value = 'Salary'; 
+      // Reset to today's date when canceling edit
       document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
       document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
@@ -2889,6 +2915,8 @@
           document.getElementById('budgetAmount').value = ''; 
           document.getElementById('budgetNotes').value = '';
           document.getElementById('budgetCategory').value = ''; 
+          // Reset to current month when adding new budget
+          document.getElementById('budgetMonth').value = new Date().toISOString().slice(0, 7);
         }
       } catch (error) { showError('Operation failed: ' + error.message); } 
       finally { btn.disabled = false; btn.innerHTML = originalText; }
@@ -3173,6 +3201,7 @@
           document.getElementById('reminderTitle').value = ''; 
           document.getElementById('reminderAmount').value = '';
           document.getElementById('reminderCategory').value = 'Rent'; 
+          // Reset to today's date when adding new reminder
           document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
         }
       } catch (error) { showError('Operation failed: ' + error.message); } 
