@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Angulo's Expense & Income Tracker PRO</title>
+  <title>Expense & Income Tracker PRO - Multi-User</title>
   <style>
     /* ===== DARK/LIGHT MODE CSS VARIABLES ===== */
     :root {
@@ -74,8 +74,8 @@
       --reminder-color: #d8b4fe;
     }
 
-    /* ===== LOGIN PAGE STYLES ===== */
-    .login-overlay {
+    /* ===== AUTH PAGES STYLES ===== */
+    .auth-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -90,7 +90,7 @@
       transition: background 0.3s ease;
     }
     
-    .login-container {
+    .auth-container {
       background: var(--modal-bg);
       border-radius: 24px;
       padding: 40px;
@@ -101,11 +101,11 @@
       transition: background 0.3s ease;
     }
     
-    .login-header {
+    .auth-header {
       margin-bottom: 30px;
     }
     
-    .login-header h2 {
+    .auth-header h2 {
       color: var(--primary);
       font-size: 2rem;
       margin-bottom: 10px;
@@ -116,23 +116,52 @@
       transition: color 0.3s ease;
     }
     
-    .login-header p {
+    .auth-header p {
       color: var(--gray);
       font-size: 1rem;
       transition: color 0.3s ease;
     }
     
-    .login-form {
+    .auth-tabs {
       display: flex;
+      margin-bottom: 25px;
+      background: var(--light);
+      border-radius: 12px;
+      padding: 4px;
+    }
+    
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      color: var(--gray);
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    
+    .auth-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .auth-form {
+      display: none;
       flex-direction: column;
       gap: 20px;
     }
     
-    .login-input-group {
+    .auth-form.active {
+      display: flex;
+    }
+    
+    .auth-input-group {
       position: relative;
     }
     
-    .login-input-group label {
+    .auth-input-group label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
@@ -141,7 +170,7 @@
       transition: color 0.3s ease;
     }
     
-    .login-input-group input {
+    .auth-input-group input {
       width: 100%;
       padding: 15px 20px;
       border: 2px solid var(--border);
@@ -152,13 +181,13 @@
       color: var(--text-color);
     }
     
-    .login-input-group input:focus {
+    .auth-input-group input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
     
-    .login-btn {
+    .auth-btn {
       background: var(--gradient-1);
       color: white;
       border: none;
@@ -175,12 +204,12 @@
       margin-top: 10px;
     }
     
-    .login-btn:hover {
+    .auth-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
     
-    .login-error {
+    .auth-error {
       background: #fee2e2;
       color: #dc3545;
       padding: 12px;
@@ -192,19 +221,26 @@
       font-size: 0.9rem;
     }
     
-    .login-error.show {
+    .auth-error.show {
       display: flex;
     }
     
-    .login-footer {
+    .auth-footer {
       margin-top: 25px;
       color: var(--gray);
       font-size: 0.9rem;
       transition: color 0.3s ease;
     }
     
-    .login-footer strong {
+    .auth-footer a {
       color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .auth-footer a:hover {
+      text-decoration: underline;
     }
 
     /* Theme Toggle Switch */
@@ -676,7 +712,7 @@
     /* Category Badges */
     .category-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; transition: all 0.3s; }
     .category-badge:hover { transform: scale(1.05); }
-    /* Existing Category Colors */
+    /* Category Colors - RESTORED FULL LIST */
     .category-yaka { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
     .category-water { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     .category-groceries { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
@@ -701,8 +737,7 @@
     .category-freelance { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
     .category-investment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     .category-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
-    
-    /* NEW EXPANDED CATEGORIES */
+    .category-other { background: var(--gray); color: white; }
     .category-mortgage { background: linear-gradient(135deg, #8b4513, #a0522d); color: white; }
     .category-insurance { background: linear-gradient(135deg, #4169e1, #1e90ff); color: white; }
     .category-taxes { background: linear-gradient(135deg, #dc143c, #ff6347); color: white; }
@@ -724,76 +759,45 @@
     .category-hobbies { background: linear-gradient(135deg, #da70d6, #ee82ee); color: white; }
     .category-subscriptions { background: linear-gradient(135deg, #6a5acd, #7b68ee); color: white; }
     .category-bank-fees { background: linear-gradient(135deg, #bdb76b, #f0e68c); color: var(--dark); }
-    .category-investment-fees { background: linear-gradient(135deg, #2f4f4f, #708090); color: white; }
-    .category-legal-fees { background: linear-gradient(135deg, #800000, #b22222); color: white; }
-    .category-accounting { background: linear-gradient(135deg, #696969, #808080); color: white; }
     .category-business-expenses { background: linear-gradient(135deg, #008080, #20b2aa); color: white; }
     .category-office-supplies { background: linear-gradient(135deg, #d2691e, #cd853f); color: white; }
     .category-pet-care { background: linear-gradient(135deg, #a52a2a, #dc143c); color: white; }
-    .category-gardening { background: linear-gradient(135deg, #228b22, #7cfc00); color: white; }
-    .category-home-decor { background: linear-gradient(135deg, #ffdead, #f5deb3); color: var(--dark); }
     .category-electronics { background: linear-gradient(135deg, #00008b, #0000cd); color: white; }
     .category-software { background: linear-gradient(135deg, #191970, #4169e1); color: white; }
     .category-books { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-magazines { background: linear-gradient(135deg, #ff0000, #dc143c); color: white; }
-    .category-newspapers { background: linear-gradient(135deg, #2f4f4f, #696969); color: white; }
     .category-alcohol { background: linear-gradient(135deg, #800080, #9932cc); color: white; }
-    .category-tobacco { background: linear-gradient(135deg, #8b0000, #b22222); color: white; }
-    .category-lottery { background: linear-gradient(135deg, #ffd700, #ff8c00); color: var(--dark); }
-    .category-gambling { background: linear-gradient(135deg, #b22222, #dc143c); color: white; }
     .category-fast-food { background: linear-gradient(135deg, #ff6347, #ff4500); color: white; }
     .category-coffee { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
     .category-restaurants { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-takeout { background: linear-gradient(135deg, #ff8c00, #ffa500); color: white; }
-    .category-delivery { background: linear-gradient(135deg, #32cd32, #90ee90); color: var(--dark); }
     .category-parking { background: linear-gradient(135deg, #808080, #a9a9a9); color: white; }
-    .category-tolls { background: linear-gradient(135deg, #ffd700, #ffff00); color: var(--dark); }
     .category-public-transport { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
     .category-taxi { background: linear-gradient(135deg, #ffff00, #ffd700); color: var(--dark); }
-    .category-ride-share { background: linear-gradient(135deg, #00ced1, #48d1cc); color: var(--dark); }
-    .category-bike-share { background: linear-gradient(135deg, #32cd32, #7cfc00); color: var(--dark); }
-    .category-car-rental { background: linear-gradient(135deg, #4682b4, #5f9ea0); color: white; }
     .category-hotel { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-airbnb { background: linear-gradient(135deg, #ff0000, #dc143c); color: white; }
-    .category-camping { background: linear-gradient(135deg, #228b22, #32cd32); color: white; }
     .category-sports { background: linear-gradient(135deg, #4169e1, #1e90ff); color: white; }
     .category-fitness { background: linear-gradient(135deg, #ff4500, #ff8c00); color: white; }
-    .category-yoga { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-martial-arts { background: linear-gradient(135deg, #8b0000, #b22222); color: white; }
-    .category-dance { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
     .category-music { background: linear-gradient(135deg, #ff8c00, #ffa500); color: white; }
     .category-movies { background: linear-gradient(135deg, #00008b, #0000cd); color: white; }
     .category-concerts { background: linear-gradient(135deg, #ff0000, #dc143c); color: white; }
-    .category-theater { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
     .category-museums { background: linear-gradient(135deg, #2f4f4f, #696969); color: white; }
-    .category-zoo { background: linear-gradient(135deg, #228b22, #32cd32); color: white; }
     .category-amusement-parks { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
     .category-events { background: linear-gradient(135deg, #ffd700, #ffff00); color: var(--dark); }
     .category-parties { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
     .category-wedding { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-baby-shower { background: linear-gradient(135deg, #87ceeb, #00bfff); color: var(--dark); }
-    .category-funeral { background: linear-gradient(135deg, #2f4f4f, #696969); color: white; }
     .category-medical-bills { background: linear-gradient(135deg, #dc143c, #ff6347); color: white; }
     .category-dental { background: linear-gradient(135deg, #f0ffff, #e0ffff); color: var(--dark); }
     .category-vision { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
     .category-pharmacy { background: linear-gradient(135deg, #32cd32, #90ee90); color: var(--dark); }
     .category-therapy { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-counseling { background: linear-gradient(135deg, #4169e1, #1e90ff); color: white; }
     .category-massage { background: linear-gradient(135deg, #ffdead, #f5deb3); color: var(--dark); }
     .category-spa { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
     .category-salon { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
     .category-barber { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-manicure { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-pedicure { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-tattoo { background: linear-gradient(135deg, #000000, #696969); color: white; }
-    .category-piercing { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
     .category-cosmetics { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
     .category-skincare { background: linear-gradient(135deg, #ffe4e1, #ffdab9); color: var(--dark); }
     .category-haircare { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
     .category-fragrances { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
     .category-utilities { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
     .category-allowances { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
-    .category-other { background: var(--gray); color: white; }
 
     /* Progress Bar for Budget */
     .budget-progress {
@@ -976,6 +980,35 @@
       transform: translateY(-2px);
     }
 
+    /* User Profile */
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gradient-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .user-email {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       body { padding: 10px; }
@@ -1008,6 +1041,10 @@
       .quick-actions {
         justify-content: center;
       }
+      .user-profile {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
     }
   </style>
   
@@ -1022,9 +1059,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-  <!-- Login Page -->
-  <div class="login-overlay" id="loginPage">
-    <div class="login-container">
+  <!-- Authentication Page -->
+  <div class="auth-overlay" id="authPage">
+    <div class="auth-container">
       <div class="theme-toggle" onclick="toggleTheme()">
         <span id="themeLabel">Light Mode</span>
         <label class="theme-switch">
@@ -1033,35 +1070,73 @@
         </label>
       </div>
       
-      <div class="login-header">
-        <h2><i class="fas fa-wallet"></i> Angulo's Expense & Income Tracker PRO</h2>
-        <p>Secure login required to access your financial dashboard</p>
+      <div class="auth-header">
+        <h2><i class="fas fa-wallet"></i> Expense & Income Tracker PRO</h2>
+        <p>Secure your financial journey with our multi-user platform</p>
       </div>
       
-      <div class="login-form" id="loginForm">
-        <div class="login-input-group">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
+        <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+      </div>
+      
+      <!-- Login Form -->
+      <div class="auth-form active" id="loginForm">
+        <div class="auth-input-group">
           <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
           <input type="email" id="loginEmail" placeholder="Enter your email" required>
         </div>
         
-        <div class="login-input-group">
+        <div class="auth-input-group">
           <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
           <input type="password" id="loginPassword" placeholder="Enter your password" required>
         </div>
         
-        <button class="login-btn" id="loginBtn">
+        <button class="auth-btn" id="loginBtn">
           <i class="fas fa-sign-in-alt"></i> Login to Dashboard
         </button>
         
-        <div class="login-error" id="loginError">
+        <div class="auth-error" id="loginError">
           <i class="fas fa-exclamation-circle"></i>
           <span>Invalid email or password. Please try again.</span>
         </div>
       </div>
       
-      <div class="login-footer">
-        <p><strong>Note:</strong> Only authorized users can access this dashboard.</p>
-        <p style="margin-top: 10px; font-size: 0.8rem;">Authorized email: pius.angulo2@gmail.com</p>
+      <!-- Sign Up Form -->
+      <div class="auth-form" id="signupForm">
+        <div class="auth-input-group">
+          <label for="signupName"><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="signupName" placeholder="Enter your full name" required>
+        </div>
+        
+        <div class="auth-input-group">
+          <label for="signupEmail"><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required>
+        </div>
+        
+        <div class="auth-input-group">
+          <label for="signupPassword"><i class="fas fa-lock"></i> Password (min. 6 characters)</label>
+          <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+        </div>
+        
+        <div class="auth-input-group">
+          <label for="signupConfirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+          <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+        </div>
+        
+        <button class="auth-btn" id="signupBtn">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        
+        <div class="auth-error" id="signupError">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>Please check your information and try again.</span>
+        </div>
+      </div>
+      
+      <div class="auth-footer">
+        <p>By using this platform, you agree to our <a onclick="showTerms()">Terms of Service</a> and <a onclick="showPrivacy()">Privacy Policy</a>.</p>
+        <p style="margin-top: 10px;">Need help? <a onclick="showContact()">Contact Support</a></p>
       </div>
     </div>
   </div>
@@ -1070,8 +1145,12 @@
   <div class="container" id="mainApp">
     <div class="header">
       <div class="header-top">
-        <h1><i class="fas fa-wallet"></i><span>Angulo's Expense & Income Tracker PRO</span></h1>
-        <div style="display: flex; align-items: center;">
+        <h1><i class="fas fa-wallet"></i><span>Expense & Income Tracker PRO</span></h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div class="user-profile" id="userProfile">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-email" id="userEmail">user@example.com</div>
+          </div>
           <div class="status-indicator" id="statusIndicator">
             <div class="status-dot connecting" id="statusDot"></div>
             <span id="statusText">Initializing...</span>
@@ -1084,7 +1163,7 @@
           </div>
         </div>
       </div>
-      <p>Tap on balance cards to reveal amounts • Track, analyze, and visualize your finances</p>
+      <p>Tap on balance cards to reveal amounts • Multi-user secure platform • Track, analyze, and visualize your finances</p>
     </div>
 
     <div class="dashboard">
@@ -1187,8 +1266,9 @@
               <div class="form-group">
                 <label><i class="fas fa-tags"></i> Category</label>
                 <select id="category" required>
-                  <option value="Yaka">⚡ Yaka (Electricity)</option>
-                  <option value="Water">💧 Water Bill</option>
+                  <!-- RESTORED FULL CATEGORY LIST -->
+                  <option value="Yaka">💡 Yaka (Electricity)</option>
+                  <option value="Water">🚰 Water Bill</option>
                   <option value="Groceries" selected>🛒 Groceries</option>
                   <option value="Food">🍲 Food & Dining</option>
                   <option value="Fuel">⛽ Fuel</option>
@@ -1197,105 +1277,74 @@
                   <option value="Airtime">📱 Airtime</option>
                   <option value="Rent">🏠 Rent</option>
                   <option value="Laundry">👕 Laundry</option>
-                  <option value="Clothing">👔 Clothing</option>
-                  <option value="School Fees">📚 School Fees</option>
+                  <option value="Clothing">👚 Clothing</option>
+                  <option value="School Fees">🎓 School Fees</option>
                   <option value="Medical">🏥 Medical</option>
                   <option value="Savings">💰 Savings</option>
-                  <option value="Debt">💳 Debt Payment</option>
-                  <option value="Giving">🤲 Giving</option>
+                  <option value="Debt">💳 Debt Repayment</option>
+                  <option value="Giving">🎁 Giving/Donations</option>
                   <option value="Entertainment">🎬 Entertainment</option>
-                  <option value="Payments">💸 Payments</option>
-                  <option value="Purchases">🛍️ Purchases</option>
                   <option value="General">📦 General</option>
-                  <!-- NEW CATEGORIES -->
-                  <option value="Mortgage">🏡 Mortgage</option>
+                  <option value="Mortgage">🏠 Mortgage</option>
                   <option value="Insurance">🛡️ Insurance</option>
-                  <option value="Taxes">💼 Taxes</option>
-                  <option value="Home Maintenance">🔧 Home Maintenance</option>
-                  <option value="Car Payment">🚘 Car Payment</option>
-                  <option value="Car Insurance">🚗 Car Insurance</option>
+                  <option value="Taxes">💰 Taxes</option>
+                  <option value="Home Maintenance">🔨 Home Maintenance</option>
+                  <option value="Car Payment">🚗 Car Payment</option>
                   <option value="Health Insurance">🏥 Health Insurance</option>
                   <option value="Gym Membership">💪 Gym Membership</option>
                   <option value="Streaming Services">📺 Streaming Services</option>
-                  <option value="Mobile Data">📶 Mobile Data</option>
-                  <option value="Household Supplies">🏠 Household Supplies</option>
-                  <option value="Personal Care">🧴 Personal Care</option>
+                  <option value="Mobile Data">📱 Mobile Data</option>
+                  <option value="Household Supplies">🧹 Household Supplies</option>
+                  <option value="Personal Care">💅 Personal Care</option>
                   <option value="Childcare">👶 Childcare</option>
                   <option value="Education">🎓 Education</option>
                   <option value="Gifts">🎁 Gifts</option>
-                  <option value="Donations">🤝 Donations</option>
+                  <option value="Donations">❤️ Donations</option>
                   <option value="Travel">✈️ Travel</option>
                   <option value="Vacation">🏖️ Vacation</option>
                   <option value="Hobbies">🎨 Hobbies</option>
-                  <option value="Subscriptions">📋 Subscriptions</option>
+                  <option value="Subscriptions">📱 Subscriptions</option>
                   <option value="Bank Fees">🏦 Bank Fees</option>
-                  <option value="Investment Fees">📈 Investment Fees</option>
-                  <option value="Legal Fees">⚖️ Legal Fees</option>
-                  <option value="Accounting">📊 Accounting</option>
                   <option value="Business Expenses">💼 Business Expenses</option>
-                  <option value="Office Supplies">🖋️ Office Supplies</option>
+                  <option value="Office Supplies">📎 Office Supplies</option>
                   <option value="Pet Care">🐾 Pet Care</option>
-                  <option value="Gardening">🌿 Gardening</option>
-                  <option value="Home Decor">🏠 Home Decor</option>
-                  <option value="Electronics">📱 Electronics</option>
-                  <option value="Software">💻 Software</option>
+                  <option value="Electronics">💻 Electronics</option>
+                  <option value="Software">🖥️ Software</option>
                   <option value="Books">📚 Books</option>
-                  <option value="Magazines">📰 Magazines</option>
-                  <option value="Newspapers">🗞️ Newspapers</option>
                   <option value="Alcohol">🍷 Alcohol</option>
-                  <option value="Tobacco">🚬 Tobacco</option>
-                  <option value="Lottery">🎫 Lottery</option>
-                  <option value="Gambling">🎰 Gambling</option>
                   <option value="Fast Food">🍔 Fast Food</option>
                   <option value="Coffee">☕ Coffee</option>
                   <option value="Restaurants">🍽️ Restaurants</option>
-                  <option value="Takeout">🥡 Takeout</option>
-                  <option value="Delivery">🚚 Delivery</option>
                   <option value="Parking">🅿️ Parking</option>
-                  <option value="Tolls">🛣️ Tolls</option>
                   <option value="Public Transport">🚌 Public Transport</option>
                   <option value="Taxi">🚕 Taxi</option>
-                  <option value="Ride Share">🚗 Ride Share</option>
-                  <option value="Bike Share">🚲 Bike Share</option>
-                  <option value="Car Rental">🚙 Car Rental</option>
                   <option value="Hotel">🏨 Hotel</option>
-                  <option value="Airbnb">🏠 Airbnb</option>
-                  <option value="Camping">⛺ Camping</option>
                   <option value="Sports">⚽ Sports</option>
                   <option value="Fitness">💪 Fitness</option>
-                  <option value="Yoga">🧘 Yoga</option>
-                  <option value="Martial Arts">🥋 Martial Arts</option>
-                  <option value="Dance">💃 Dance</option>
                   <option value="Music">🎵 Music</option>
                   <option value="Movies">🎬 Movies</option>
                   <option value="Concerts">🎤 Concerts</option>
-                  <option value="Theater">🎭 Theater</option>
                   <option value="Museums">🏛️ Museums</option>
-                  <option value="Zoo">🐒 Zoo</option>
                   <option value="Amusement Parks">🎢 Amusement Parks</option>
                   <option value="Events">🎪 Events</option>
                   <option value="Parties">🎉 Parties</option>
                   <option value="Wedding">💒 Wedding</option>
-                  <option value="Baby Shower">👶 Baby Shower</option>
-                  <option value="Funeral">⚰️ Funeral</option>
                   <option value="Medical Bills">🏥 Medical Bills</option>
                   <option value="Dental">🦷 Dental</option>
-                  <option value="Vision">👓 Vision</option>
+                  <option value="Vision">👁️ Vision</option>
                   <option value="Pharmacy">💊 Pharmacy</option>
                   <option value="Therapy">🧠 Therapy</option>
-                  <option value="Counseling">💬 Counseling</option>
                   <option value="Massage">💆 Massage</option>
-                  <option value="Spa">💅 Spa</option>
+                  <option value="Spa">🌿 Spa</option>
                   <option value="Salon">💇 Salon</option>
-                  <option value="Barber">💈 Barber</option>
-                  <option value="Manicure">💅 Manicure</option>
-                  <option value="Pedicure">🦶 Pedicure</option>
-                  <option value="Tattoo">🖋️ Tattoo</option>
-                  <option value="Piercing">📌 Piercing</option>
+                  <option value="Barber">✂️ Barber</option>
                   <option value="Cosmetics">💄 Cosmetics</option>
                   <option value="Skincare">🧴 Skincare</option>
                   <option value="Haircare">💇 Haircare</option>
-                  <option value="Fragrances">🌹 Fragrances</option>
+                  <option value="Fragrances">🌸 Fragrances</option>
+                  <option value="Utilities">⚡ Utilities</option>
+                  <option value="Allowances">💰 Allowances</option>
+                  <option value="Other">📦 Other</option>
                 </select>
               </div>
               <div class="form-group">
@@ -1308,7 +1357,7 @@
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-primary" id="addBtn" disabled><i class="fas fa-plus"></i> Add Expense</button>
+              <button class="btn btn-primary" id="addBtn" onclick="handleExpenseSubmit()" disabled><i class="fas fa-plus"></i> Add Expense</button>
               <button class="btn btn-cancel" id="cancelExpenseBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -1328,10 +1377,29 @@
               <div class="form-group">
                 <label><i class="fas fa-briefcase"></i> Source</label>
                 <select id="incomeSource" required>
+                  <!-- RESTORED FULL INCOME SOURCES -->
                   <option value="Salary" selected>💼 Salary</option>
                   <option value="Freelance">💻 Freelance/Side-Hustle</option>
                   <option value="Investment">📈 Investment/Dividends</option>
-                  <option value="Allowances">🎁 Allowances/Reimbursement</option>
+                  <option value="Business">🏢 Business</option>
+                  <option value="Gift">🎁 Gift</option>
+                  <option value="Rental Income">🏠 Rental Income</option>
+                  <option value="Bonus">💰 Bonus</option>
+                  <option value="Commission">📊 Commission</option>
+                  <option value="Dividends">📈 Dividends</option>
+                  <option value="Interest">💰 Interest Income</option>
+                  <option value="Royalties">📚 Royalties</option>
+                  <option value="Pension">👴 Pension</option>
+                  <option value="Social Security">🏛️ Social Security</option>
+                  <option value="Child Support">👶 Child Support</option>
+                  <option value="Alimony">💔 Alimony</option>
+                  <option value="Scholarship">🎓 Scholarship</option>
+                  <option value="Grant">🏫 Grant</option>
+                  <option value="Rebate">🔄 Rebate</option>
+                  <option value="Refund">💸 Refund</option>
+                  <option value="Lottery">🎰 Lottery/Winnings</option>
+                  <option value="Inheritance">📜 Inheritance</option>
+                  <option value="Sale">🏷️ Sale of Items</option>
                   <option value="Other">📦 Other</option>
                 </select>
               </div>
@@ -1345,7 +1413,7 @@
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-success" id="addIncomeBtn" disabled><i class="fas fa-arrow-alt-circle-up"></i> Record Income</button>
+              <button class="btn btn-success" id="addIncomeBtn" onclick="handleIncomeSubmit()" disabled><i class="fas fa-arrow-alt-circle-up"></i> Record Income</button>
               <button class="btn btn-cancel" id="cancelIncomeBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -1377,25 +1445,8 @@
                   <option value="Entertainment">🎬 Entertainment</option>
                   <option value="Utilities">⚡ Utilities</option>
                   <option value="Rent">🏠 Rent</option>
-                  <option value="Mortgage">🏡 Mortgage</option>
-                  <option value="Insurance">🛡️ Insurance</option>
-                  <option value="Medical">🏥 Medical</option>
-                  <option value="Education">🎓 Education</option>
-                  <option value="Savings">💰 Savings</option>
-                  <option value="Debt">💳 Debt</option>
-                  <option value="Clothing">👔 Clothing</option>
-                  <option value="Personal Care">🧴 Personal Care</option>
-                  <option value="Gifts">🎁 Gifts</option>
+                  <option value="Shopping">🛍️ Shopping</option>
                   <option value="Travel">✈️ Travel</option>
-                  <option value="Home Maintenance">🔧 Home Maintenance</option>
-                  <option value="Car Expenses">🚗 Car Expenses</option>
-                  <option value="Subscriptions">📋 Subscriptions</option>
-                  <option value="Childcare">👶 Childcare</option>
-                  <option value="Pet Care">🐾 Pet Care</option>
-                  <option value="Business">💼 Business</option>
-                  <option value="Investments">📈 Investments</option>
-                  <option value="Taxes">💼 Taxes</option>
-                  <option value="Donations">🤝 Donations</option>
                 </select>
               </div>
               <div class="form-group">
@@ -1404,7 +1455,7 @@
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-budget" id="addBudgetBtn" disabled><i class="fas fa-plus"></i> Set Budget</button>
+              <button class="btn btn-budget" id="addBudgetBtn" onclick="handleBudgetSubmit()" disabled><i class="fas fa-plus"></i> Set Budget</button>
               <button class="btn btn-cancel" id="cancelBudgetBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -1437,42 +1488,13 @@
                   <option value="Utilities">⚡ Utilities</option>
                   <option value="Loan">💳 Loan Payment</option>
                   <option value="Subscription">📱 Subscription</option>
-                  <option value="Other">📦 Other</option>
-                  <!-- NEW REMINDER CATEGORIES -->
-                  <option value="Mortgage">🏡 Mortgage</option>
-                  <option value="Car Payment">🚘 Car Payment</option>
                   <option value="Insurance">🛡️ Insurance</option>
-                  <option value="Credit Card">💳 Credit Card</option>
-                  <option value="School Fees">📚 School Fees</option>
-                  <option value="Taxes">💼 Taxes</option>
-                  <option value="Internet">🌐 Internet</option>
-                  <option value="Mobile">📱 Mobile Bill</option>
-                  <option value="TV">📺 TV/Cable</option>
-                  <option value="Gym">💪 Gym Membership</option>
-                  <option value="Streaming">📺 Streaming Services</option>
-                  <option value="Medical">🏥 Medical Bills</option>
-                  <option value="Dental">🦷 Dental</option>
-                  <option value="Vision">👓 Vision</option>
-                  <option value="Water">💧 Water Bill</option>
-                  <option value="Electricity">⚡ Electricity (Yaka)</option>
-                  <option value="Gas">🔥 Gas Bill</option>
-                  <option value="Trash">🗑️ Trash Collection</option>
-                  <option value="Homeowners Association">🏘️ HOA Fees</option>
-                  <option value="Property Tax">🏠 Property Tax</option>
-                  <option value="Car Insurance">🚗 Car Insurance</option>
-                  <option value="Health Insurance">🏥 Health Insurance</option>
-                  <option value="Life Insurance">🛡️ Life Insurance</option>
-                  <option value="Investment">📈 Investment Payment</option>
-                  <option value="Savings">💰 Savings Contribution</option>
-                  <option value="Retirement">👵 Retirement Fund</option>
-                  <option value="College Fund">🎓 College Fund</option>
-                  <option value="Alimony">💔 Alimony</option>
-                  <option value="Child Support">👶 Child Support</option>
+                  <option value="Other">📦 Other</option>
                 </select>
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-primary" id="addReminderBtn" disabled><i class="fas fa-bell"></i> Add Reminder</button>
+              <button class="btn btn-primary" id="addReminderBtn" onclick="handleReminderSubmit()" disabled><i class="fas fa-bell"></i> Add Reminder</button>
               <button class="btn btn-cancel" id="cancelReminderBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -1500,6 +1522,9 @@
         <button class="quick-action-btn" onclick="showYearlyOverview()">
           <i class="fas fa-chart-bar"></i> Yearly Overview
         </button>
+        <button class="quick-action-btn" onclick="showDebtTracker()">
+          <i class="fas fa-credit-card"></i> Debt Tracker
+        </button>
       </div>
 
       <div class="report-section" id="expenseReportSection">
@@ -1509,6 +1534,7 @@
           <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
           <button class="btn btn-report" onclick="generateReport('week', 'expense', this)"><i class="fas fa-calendar-week"></i> This Week</button>
           <button class="btn btn-report" onclick="generateReport('month', 'expense', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
+          <button class="btn btn-report" onclick="generateReport('lastMonth', 'expense', this)"><i class="fas fa-calendar-alt"></i> Last Month</button>
           <button class="btn btn-report" onclick="generateReport('year', 'expense', this)"><i class="fas fa-calendar"></i> This Year</button>
           <button class="btn btn-report" onclick="showCustomRange('expense', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
         </div>
@@ -1535,6 +1561,7 @@
           <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
           <button class="btn btn-report" onclick="generateReport('week', 'income', this)"><i class="fas fa-calendar-week"></i> This Week</button>
           <button class="btn btn-report" onclick="generateReport('month', 'income', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
+          <button class="btn btn-report" onclick="generateReport('lastMonth', 'income', this)"><i class="fas fa-calendar-alt"></i> Last Month</button>
           <button class="btn btn-report" onclick="generateReport('year', 'income', this)"><i class="fas fa-calendar"></i> This Year</button>
           <button class="btn btn-report" onclick="showCustomRange('income', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
         </div>
@@ -1554,198 +1581,6 @@
         </div>
       </div>
 
-      <!-- NEW: Specific Category Expense Report -->
-      <div class="report-section" id="categoryExpenseReportSection">
-        <h3 class="form-title" style="color: var(--warning);"><i class="fas fa-filter"></i> Specific Expense Category Report</h3>
-        
-        <div class="specific-report-filter">
-          <div class="filter-grid">
-            <div class="form-group">
-              <label><i class="fas fa-tags"></i> Expense Category</label>
-              <select id="specificExpenseCategory" required>
-                <option value="Yaka">⚡ Yaka (Electricity)</option>
-                <option value="Water">💧 Water Bill</option>
-                <option value="Groceries" selected>🛒 Groceries</option>
-                <option value="Food">🍲 Food & Dining</option>
-                <option value="Fuel">⛽ Fuel</option>
-                <option value="Transport">🚗 Transport</option>
-                <option value="Internet">🌐 Internet</option>
-                <option value="Airtime">📱 Airtime</option>
-                <option value="Rent">🏠 Rent</option>
-                <option value="Laundry">👕 Laundry</option>
-                <option value="Clothing">👔 Clothing</option>
-                <option value="School Fees">📚 School Fees</option>
-                <option value="Medical">🏥 Medical</option>
-                <option value="Savings">💰 Savings</option>
-                <option value="Debt">💳 Debt Payment</option>
-                <option value="Giving">🤲 Giving</option>
-                <option value="Entertainment">🎬 Entertainment</option>
-                <option value="Payments">💸 Payments</option>
-                <option value="Purchases">🛍️ Purchases</option>
-                <option value="General">📦 General</option>
-                <!-- NEW CATEGORIES -->
-                <option value="Mortgage">🏡 Mortgage</option>
-                <option value="Insurance">🛡️ Insurance</option>
-                <option value="Taxes">💼 Taxes</option>
-                <option value="Home Maintenance">🔧 Home Maintenance</option>
-                <option value="Car Payment">🚘 Car Payment</option>
-                <option value="Car Insurance">🚗 Car Insurance</option>
-                <option value="Health Insurance">🏥 Health Insurance</option>
-                <option value="Gym Membership">💪 Gym Membership</option>
-                <option value="Streaming Services">📺 Streaming Services</option>
-                <option value="Mobile Data">📶 Mobile Data</option>
-                <option value="Household Supplies">🏠 Household Supplies</option>
-                <option value="Personal Care">🧴 Personal Care</option>
-                <option value="Childcare">👶 Childcare</option>
-                <option value="Education">🎓 Education</option>
-                <option value="Gifts">🎁 Gifts</option>
-                <option value="Donations">🤝 Donations</option>
-                <option value="Travel">✈️ Travel</option>
-                <option value="Vacation">🏖️ Vacation</option>
-                <option value="Hobbies">🎨 Hobbies</option>
-                <option value="Subscriptions">📋 Subscriptions</option>
-                <option value="Bank Fees">🏦 Bank Fees</option>
-                <option value="Investment Fees">📈 Investment Fees</option>
-                <option value="Legal Fees">⚖️ Legal Fees</option>
-                <option value="Accounting">📊 Accounting</option>
-                <option value="Business Expenses">💼 Business Expenses</option>
-                <option value="Office Supplies">🖋️ Office Supplies</option>
-                <option value="Pet Care">🐾 Pet Care</option>
-                <option value="Gardening">🌿 Gardening</option>
-                <option value="Home Decor">🏠 Home Decor</option>
-                <option value="Electronics">📱 Electronics</option>
-                <option value="Software">💻 Software</option>
-                <option value="Books">📚 Books</option>
-                <option value="Magazines">📰 Magazines</option>
-                <option value="Newspapers">🗞️ Newspapers</option>
-                <option value="Alcohol">🍷 Alcohol</option>
-                <option value="Tobacco">🚬 Tobacco</option>
-                <option value="Lottery">🎫 Lottery</option>
-                <option value="Gambling">🎰 Gambling</option>
-                <option value="Fast Food">🍔 Fast Food</option>
-                <option value="Coffee">☕ Coffee</option>
-                <option value="Restaurants">🍽️ Restaurants</option>
-                <option value="Takeout">🥡 Takeout</option>
-                <option value="Delivery">🚚 Delivery</option>
-                <option value="Parking">🅿️ Parking</option>
-                <option value="Tolls">🛣️ Tolls</option>
-                <option value="Public Transport">🚌 Public Transport</option>
-                <option value="Taxi">🚕 Taxi</option>
-                <option value="Ride Share">🚗 Ride Share</option>
-                <option value="Bike Share">🚲 Bike Share</option>
-                <option value="Car Rental">🚙 Car Rental</option>
-                <option value="Hotel">🏨 Hotel</option>
-                <option value="Airbnb">🏠 Airbnb</option>
-                <option value="Camping">⛺ Camping</option>
-                <option value="Sports">⚽ Sports</option>
-                <option value="Fitness">💪 Fitness</option>
-                <option value="Yoga">🧘 Yoga</option>
-                <option value="Martial Arts">🥋 Martial Arts</option>
-                <option value="Dance">💃 Dance</option>
-                <option value="Music">🎵 Music</option>
-                <option value="Movies">🎬 Movies</option>
-                <option value="Concerts">🎤 Concerts</option>
-                <option value="Theater">🎭 Theater</option>
-                <option value="Museums">🏛️ Museums</option>
-                <option value="Zoo">🐒 Zoo</option>
-                <option value="Amusement Parks">🎢 Amusement Parks</option>
-                <option value="Events">🎪 Events</option>
-                <option value="Parties">🎉 Parties</option>
-                <option value="Wedding">💒 Wedding</option>
-                <option value="Baby Shower">👶 Baby Shower</option>
-                <option value="Funeral">⚰️ Funeral</option>
-                <option value="Medical Bills">🏥 Medical Bills</option>
-                <option value="Dental">🦷 Dental</option>
-                <option value="Vision">👓 Vision</option>
-                <option value="Pharmacy">💊 Pharmacy</option>
-                <option value="Therapy">🧠 Therapy</option>
-                <option value="Counseling">💬 Counseling</option>
-                <option value="Massage">💆 Massage</option>
-                <option value="Spa">💅 Spa</option>
-                <option value="Salon">💇 Salon</option>
-                <option value="Barber">💈 Barber</option>
-                <option value="Manicure">💅 Manicure</option>
-                <option value="Pedicure">🦶 Pedicure</option>
-                <option value="Tattoo">🖋️ Tattoo</option>
-                <option value="Piercing">📌 Piercing</option>
-                <option value="Cosmetics">💄 Cosmetics</option>
-                <option value="Skincare">🧴 Skincare</option>
-                <option value="Haircare">💇 Haircare</option>
-                <option value="Fragrances">🌹 Fragrances</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label><i class="fas fa-calendar"></i> From Date</label>
-              <input type="date" id="categoryFromDate" required>
-            </div>
-            <div class="form-group">
-              <label><i class="fas fa-calendar"></i> To Date</label>
-              <input type="date" id="categoryToDate" required>
-            </div>
-          </div>
-          
-          <div class="filter-actions">
-            <button class="btn btn-primary" onclick="generateCategoryExpenseReport()">
-              <i class="fas fa-chart-pie"></i> Generate Category Report
-            </button>
-            <button class="btn btn-warning" onclick="downloadCategoryExpensePDF()" id="categoryExpensePDFBtn" style="display: none;">
-              <i class="fas fa-file-pdf"></i> Download Category PDF
-            </button>
-            <button class="btn" style="background: var(--gray); color: white;" onclick="resetCategoryExpenseForm()">
-              <i class="fas fa-redo"></i> Reset
-            </button>
-          </div>
-        </div>
-
-        <div class="report-results" id="categoryExpenseReportResults">
-          <div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>
-        </div>
-      </div>
-
-      <!-- NEW: Specific Source Income Report -->
-      <div class="report-section" id="sourceIncomeReportSection">
-        <h3 class="form-title" style="color: var(--info);"><i class="fas fa-money-bill-wave"></i> Specific Income Source Report</h3>
-        
-        <div class="specific-report-filter">
-          <div class="filter-grid">
-            <div class="form-group">
-              <label><i class="fas fa-briefcase"></i> Income Source</label>
-              <select id="specificIncomeSource" required>
-                <option value="Salary" selected>💼 Salary</option>
-                <option value="Freelance">💻 Freelance/Side-Hustle</option>
-                <option value="Investment">📈 Investment/Dividends</option>
-                <option value="Allowances">🎁 Allowances/Reimbursement</option>
-                <option value="Other">📦 Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label><i class="fas fa-calendar"></i> From Date</label>
-              <input type="date" id="sourceFromDate" required>
-            </div>
-            <div class="form-group">
-              <label><i class="fas fa-calendar"></i> To Date</label>
-              <input type="date" id="sourceToDate" required>
-            </div>
-          </div>
-          
-          <div class="filter-actions">
-            <button class="btn btn-success" onclick="generateSourceIncomeReport()">
-              <i class="fas fa-chart-line"></i> Generate Source Report
-            </button>
-            <button class="btn btn-info" onclick="downloadSourceIncomePDF()" id="sourceIncomePDFBtn" style="display: none;">
-              <i class="fas fa-file-pdf"></i> Download Source PDF
-            </button>
-            <button class="btn" style="background: var(--gray); color: white;" onclick="resetSourceIncomeForm()">
-              <i class="fas fa-redo"></i> Reset
-            </button>
-          </div>
-        </div>
-
-        <div class="report-results" id="sourceIncomeReportResults">
-          <div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>
-        </div>
-      </div>
-      
       <!-- NEW: Budgets List -->
       <div class="budgets-list" id="budgetsListSection">
         <div class="list-header" onclick="toggleList('budgetsListSection')">
@@ -1849,7 +1684,7 @@
 
     <div class="footer">
       <div class="footer-content">
-        <div class="copyright"><i class="fas fa-copyright"></i><span>Copyright @2025 Pius Angulo</span></div>
+        <div class="copyright"><i class="fas fa-copyright"></i><span>Copyright @2025 Expense Tracker PRO - Multi-User Platform</span></div>
         <div class="footer-links">
           <a href="javascript:void(0)" onclick="showAbout()"><i class="fas fa-info-circle"></i> About</a>
           <a href="javascript:void(0)" onclick="showPrivacy()"><i class="fas fa-shield-alt"></i> Privacy</a>
@@ -1875,33 +1710,32 @@
 
   <div class="modal-overlay" id="aboutModal">
     <div class="modal">
-      <h3><i class="fas fa-info-circle"></i> About Angulo's Expense & Income Tracker PRO</h3>
-      <p>A modern expense and income tracking application designed specifically for Ugandan Shillings (UGX).</p>
+      <h3><i class="fas fa-info-circle"></i> About Expense & Income Tracker PRO</h3>
+      <p>A modern multi-user expense and income tracking application designed for secure financial management.</p>
       <div style="margin-top: 15px;">
-        <p><strong>New Features:</strong></p>
+        <p><strong>Advanced Features:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
+          <li>✅ Multi-User Support with Individual Data Isolation</li>
           <li>✅ Monthly Budget Tracking with Progress Bars</li>
           <li>✅ Payment Reminders with Due Dates</li>
           <li>✅ Savings Goals Tracking</li>
-          <li>✅ Search and Filter for All Lists</li>
+          <li>✅ Advanced Search and Filter for All Lists</li>
           <li>✅ CSV Export for Reports</li>
           <li>✅ Quick Actions for Common Tasks</li>
           <li>✅ Enhanced Dashboard with More Stats</li>
           <li>✅ Data Export (JSON Backup)</li>
           <li>✅ Yearly Financial Overview</li>
           <li>✅ Savings Calculator</li>
+          <li>✅ Debt Tracker</li>
+          <li>✅ Dark/Light Mode Toggle</li>
+          <li>✅ Real-time Firebase Sync</li>
         </ul>
-        <p style="margin-top: 15px;"><strong>Existing Features:</strong></p>
+        <p style="margin-top: 15px;"><strong>Security Features:</strong></p>
         <ul style="margin-left: 20px; margin-top: 10px;">
-          <li>Track expenses and Income in UGX</li>
-          <li>Edit and Delete records</li>
-          <li>Tap-to-reveal balance privacy</li>
-          <li>Beautiful charts and visualizations</li>
-          <li>Full Financial Reports (Income & Expense)</li>
-          <li>Specific Category/Source Reports</li>
-          <li>PDF report generation</li>
-          <li>Real-time Firebase sync</li>
-          <li>Dark/Light Mode toggle</li>
+          <li>🔐 Individual user accounts with secure authentication</li>
+          <li>🔐 Data isolation between users</li>
+          <li>🔐 Tap-to-reveal balance privacy</li>
+          <li>🔐 Secure Firebase backend</li>
         </ul>
       </div>
       <div class="modal-actions">
@@ -1966,8 +1800,47 @@
     </div>
   </div>
 
+  <!-- NEW: Debt Tracker Modal -->
+  <div class="modal-overlay" id="debtTrackerModal">
+    <div class="modal">
+      <h3><i class="fas fa-credit-card"></i> Debt Tracker</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label><i class="fas fa-sticky-note"></i> Debt Name</label>
+          <input type="text" id="debtName" placeholder="e.g. Credit Card, Personal Loan" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-money-bill-wave"></i> Total Amount (UGX)</label>
+          <input type="number" id="debtTotalAmount" placeholder="e.g. 1000000" min="0" step="1000" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-money-bill-wave"></i> Amount Paid (UGX)</label>
+          <input type="number" id="debtPaidAmount" placeholder="e.g. 200000" min="0" step="1000" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-calendar"></i> Due Date</label>
+          <input type="date" id="debtDueDate" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-percentage"></i> Interest Rate (%)</label>
+          <input type="number" id="debtInterestRate" placeholder="e.g. 12" min="0" max="100" step="0.1" value="0">
+        </div>
+      </div>
+      <div id="debtCalculationResult" style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px; display: none;">
+        <h4 style="color: var(--warning); margin-bottom: 10px;">Debt Status</h4>
+        <div id="debtResultDetails"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" style="background: var(--gray); color: white;" onclick="document.getElementById('debtTrackerModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
+        <button class="btn btn-warning" onclick="calculateDebt()"><i class="fas fa-calculator"></i> Calculate</button>
+        <button class="btn btn-danger" onclick="saveDebt()"><i class="fas fa-save"></i> Save Debt</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ===== JAVASCRIPT =====
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCNPXQvIPRVsJ5QTT5uBqAl9Jq8VuSW_yc",
       authDomain: "expense-tracker-1f7e2.firebaseapp.com",
@@ -1977,6 +1850,7 @@
       appId: "1:102435814972:web:82dbaf733a411e549bcd39"
     };
 
+    // Global variables
     let db = null;
     let auth = null;
     let currentUser = null;
@@ -1987,7 +1861,7 @@
     let isEditingBudget = false, editingBudgetId = null;
     let isEditingReminder = false, editingReminderId = null;
     let currentReportPeriod = { expense: 'today', income: 'today' };
-    let currentReportData = { expense: null, income: null, categoryExpense: null, sourceIncome: null };
+    let currentReportData = { expense: null, income: null };
     let pieChart = null, barChart = null, previousStats = {};
     let revealedBalances = { 
       today: false, week: false, month: false, year: false, 
@@ -1995,11 +1869,22 @@
       monthlyBudget: false, savingsGoal: false 
     };
     
+    // Real-time listeners
+    let expensesListener = null;
+    let incomeListener = null;
+    let budgetsListener = null;
+    let remindersListener = null;
+    
     // New data structures
     let monthlyBudget = 0;
     let savingsGoal = { amount: 0, targetDate: '', currentSavings: 0 };
     let reminders = [];
     let budgets = [];
+    let debts = [];
+    
+    // Store real-time data
+    let allExpenses = [];
+    let allIncome = [];
 
     // Theme Management
     let currentTheme = 'light';
@@ -2058,61 +1943,295 @@
       setupEventListeners();
       checkLoginState();
       initTheme();
-      setDefaultSpecificReportDates();
+      setDefaultDates();
       setDefaultTargetDate();
     });
 
     function initFirebase() {
-      if (typeof firebase === 'undefined') { showLoginError('Firebase SDK not loaded'); return; }
+      if (typeof firebase === 'undefined') { 
+        showAuthError('Firebase SDK not loaded. Please check your internet connection.'); 
+        return; 
+      }
       try {
-        const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
         auth = firebase.auth();
         setupAuthListeners();
-      } catch (error) { showLoginError('Firebase initialization failed: ' + error.message); }
+        console.log('Firebase initialized successfully');
+      } catch (error) { 
+        console.error('Firebase initialization error:', error);
+        showAuthError('Firebase initialization failed: ' + error.message); 
+      }
     }
 
     function setupAuthListeners() {
       auth.onAuthStateChanged((user) => {
-        if (user && user.email === 'pius.angulo2@gmail.com') {
+        if (user) {
           currentUser = user;
           showMainApp();
           initAppAfterLogin();
+          
+          // Update last login time in users collection
+          if (db) {
+            db.collection('users').doc(user.uid).set({
+              uid: user.uid,
+              email: user.email,
+              name: user.displayName || user.email.split('@')[0],
+              lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+              lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).catch(error => {
+              console.error("Error updating user document:", error);
+            });
+          }
         } else {
           currentUser = null;
-          showLoginPage();
+          showAuthPage();
+          cleanupListeners();
         }
       });
     }
 
+    function cleanupListeners() {
+      if (expensesListener) {
+        expensesListener();
+        expensesListener = null;
+      }
+      if (incomeListener) {
+        incomeListener();
+        incomeListener = null;
+      }
+      if (budgetsListener) {
+        budgetsListener();
+        budgetsListener = null;
+      }
+      if (remindersListener) {
+        remindersListener();
+        remindersListener = null;
+      }
+      allExpenses = [];
+      allIncome = [];
+      budgets = [];
+      reminders = [];
+    }
+
     function checkLoginState() {
-      const user = auth.currentUser;
-      if (user && user.email === 'pius.angulo2@gmail.com') {
+      const user = auth ? auth.currentUser : null;
+      if (user) {
         showMainApp();
         initAppAfterLogin();
       } else {
-        showLoginPage();
+        showAuthPage();
       }
     }
 
-    function showLoginPage() {
-      document.getElementById('loginPage').style.display = 'flex';
+    function showAuthPage() {
+      document.getElementById('authPage').style.display = 'flex';
       document.getElementById('mainApp').style.display = 'none';
     }
 
     function showMainApp() {
-      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('authPage').style.display = 'none';
       document.getElementById('mainApp').style.display = 'block';
+      updateUserProfile();
+    }
+
+    function updateUserProfile() {
+      if (currentUser) {
+        document.getElementById('userEmail').textContent = currentUser.email;
+        const firstName = currentUser.email.split('@')[0];
+        const initial = firstName.charAt(0).toUpperCase();
+        document.getElementById('userAvatar').textContent = initial;
+        document.getElementById('userAvatar').title = currentUser.email;
+      }
     }
 
     function initAppAfterLogin() {
       setDefaultDates();
-      setDefaultSpecificReportDates();
       setDefaultTargetDate();
       loadRevealedState();
       loadSavingsGoal();
       setupEventListeners();
       testFirestoreConnection();
+      setupRealtimeListeners();
+    }
+
+    function setupRealtimeListeners() {
+      if (!currentUser || !db) return;
+      
+      // Setup real-time listener for expenses
+      expensesListener = db.collection('expenses')
+        .where('userId', '==', currentUser.uid)
+        .onSnapshot((snapshot) => {
+          allExpenses = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            // Convert Firestore timestamp to Date if needed
+            if (data.date && data.date.toDate) {
+              data.date = data.date.toDate().toISOString().split('T')[0];
+            } else if (data.timestamp && data.timestamp.toDate) {
+              data.date = data.timestamp.toDate().toISOString().split('T')[0];
+            }
+            allExpenses.push({ id: doc.id, ...data });
+          });
+          console.log('Expenses updated:', allExpenses.length, 'items');
+          updateDashboardFromRealtimeData();
+          loadExpensesList(allExpenses);
+          
+          if (currentReportPeriod.expense) {
+            generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
+          }
+        }, (error) => {
+          console.error('Expenses listener error:', error);
+          showError('Failed to sync expenses: ' + error.message);
+          updateStatus('offline', 'Sync error');
+        });
+
+      // Setup real-time listener for income
+      incomeListener = db.collection('income')
+        .where('userId', '==', currentUser.uid)
+        .onSnapshot((snapshot) => {
+          allIncome = [];
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.date && data.date.toDate) {
+              data.date = data.date.toDate().toISOString().split('T')[0];
+            } else if (data.timestamp && data.timestamp.toDate) {
+              data.date = data.timestamp.toDate().toISOString().split('T')[0];
+            }
+            allIncome.push({ id: doc.id, ...data });
+          });
+          console.log('Income updated:', allIncome.length, 'items');
+          updateDashboardFromRealtimeData();
+          loadIncomeList(allIncome);
+          
+          if (currentReportPeriod.income) {
+            generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
+          }
+        }, (error) => {
+          console.error('Income listener error:', error);
+          showError('Failed to sync income: ' + error.message);
+          updateStatus('offline', 'Sync error');
+        });
+
+      // Setup real-time listener for budgets
+      budgetsListener = db.collection('budgets')
+        .where('userId', '==', currentUser.uid)
+        .onSnapshot((snapshot) => {
+          budgets = [];
+          snapshot.forEach(doc => budgets.push({ id: doc.id, ...doc.data() }));
+          loadBudgets();
+        }, (error) => {
+          console.error('Budgets listener error:', error);
+        });
+
+      // Setup real-time listener for reminders
+      remindersListener = db.collection('reminders')
+        .where('userId', '==', currentUser.uid)
+        .onSnapshot((snapshot) => {
+          reminders = [];
+          snapshot.forEach(doc => reminders.push({ id: doc.id, ...doc.data() }));
+          displayReminders();
+        }, (error) => {
+          console.error('Reminders listener error:', error);
+        });
+    }
+
+    function updateDashboardFromRealtimeData() {
+      if (!currentUser) return;
+      
+      try {
+        const now = new Date(), todayStr = now.toISOString().split('T')[0];
+        const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
+        const categories = {}, weeklyData = Array(7).fill(0);
+        
+        // Process expenses
+        allExpenses.forEach(expense => {
+          let expenseDate;
+          if (expense.date) {
+            const [year, month, day] = expense.date.split('-').map(Number);
+            expenseDate = new Date(year, month - 1, day);
+          } else if (expense.timestamp && expense.timestamp.toDate) {
+            expenseDate = expense.timestamp.toDate();
+          } else {
+            expenseDate = new Date();
+          }
+          
+          const expenseAmount = parseFloat(expense.amount) || 0;
+          stats.totalExpense += expenseAmount;
+          
+          // Check if it's today
+          if (expense.date === todayStr) {
+            stats.today += expenseAmount;
+          }
+          
+          // Check if it's within this week
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          if (expenseDate >= weekAgo) {
+            stats.week += expenseAmount;
+          }
+          
+          // Check if it's this month
+          const expenseMonth = expenseDate.getMonth();
+          const expenseYear = expenseDate.getFullYear();
+          const currentMonth = now.getMonth();
+          const currentYear = now.getFullYear();
+          
+          if (expenseMonth === currentMonth && expenseYear === currentYear) {
+            stats.month += expenseAmount;
+          }
+          
+          // Check if it's this year
+          if (expenseYear === currentYear) {
+            stats.year += expenseAmount;
+          }
+          
+          // Category breakdown
+          const category = expense.category || 'Other';
+          categories[category] = (categories[category] || 0) + expenseAmount;
+          
+          // Weekly data
+          const dayOfWeek = expenseDate.getDay();
+          weeklyData[dayOfWeek] += expenseAmount;
+        });
+        
+        // Process income
+        allIncome.forEach(inc => { 
+          stats.totalIncome += parseFloat(inc.amount) || 0; 
+        });
+        
+        stats.availableBalance = stats.totalIncome - stats.totalExpense;
+        
+        updateStatsUI(stats); 
+        updateCharts(categories, weeklyData);
+        
+        // Update savings goal with current savings
+        if (savingsGoal.amount > 0) {
+          savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
+          updateSavingsGoalUI();
+        }
+        
+        updateStatus('online', 'Connected ✓');
+      } catch (error) { 
+        console.error('Dashboard update error:', error);
+        console.error('Error details:', error.stack);
+        updateStatus('offline', 'Update error');
+      }
+    }
+
+    // ===== AUTH FUNCTIONS =====
+    function showAuthTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+      
+      if (tab === 'login') {
+        document.querySelector('.auth-tab:nth-child(1)').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+      } else {
+        document.querySelector('.auth-tab:nth-child(2)').classList.add('active');
+        document.getElementById('signupForm').classList.add('active');
+      }
     }
 
     async function handleLogin() {
@@ -2122,7 +2241,7 @@
       const errorDiv = document.getElementById('loginError');
 
       if (!email || !password) {
-        showLoginError('Please enter both email and password');
+        showAuthError('Please enter both email and password', 'login');
         return;
       }
 
@@ -2131,23 +2250,86 @@
 
       try {
         await auth.signInWithEmailAndPassword(email, password);
-        // Auth state listener will handle the rest
+        showMessage('✅ Login successful!', 'success');
       } catch (error) {
         console.error('Login error:', error);
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-          showLoginError('Invalid email or password. Please try again.');
+          showAuthError('Invalid email or password. Please try again.', 'login');
         } else if (error.code === 'auth/invalid-email') {
-          showLoginError('Invalid email format.');
+          showAuthError('Invalid email format.', 'login');
+        } else if (error.code === 'auth/too-many-requests') {
+          showAuthError('Too many failed attempts. Please try again later.', 'login');
+        } else if (error.code === 'auth/invalid-credential') {
+          showAuthError('Invalid credentials. Please check your email and password.', 'login');
         } else {
-          showLoginError('Login failed: ' + error.message);
+          showAuthError('Login failed: ' + error.message, 'login');
         }
         loginBtn.disabled = false;
         loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Dashboard';
       }
     }
 
-    function showLoginError(message) {
-      const errorDiv = document.getElementById('loginError');
+    async function handleSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      const signupBtn = document.getElementById('signupBtn');
+      const errorDiv = document.getElementById('signupError');
+
+      if (!name || !email || !password || !confirmPassword) {
+        showAuthError('Please fill in all fields', 'signup');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAuthError('Password must be at least 6 characters long', 'signup');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAuthError('Passwords do not match', 'signup');
+        return;
+      }
+
+      signupBtn.disabled = true;
+      signupBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        
+        await userCredential.user.updateProfile({
+          displayName: name
+        });
+        
+        // Create user document with proper permissions
+        await db.collection('users').doc(userCredential.user.uid).set({
+          uid: userCredential.user.uid,
+          name: name,
+          email: email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showMessage('✅ Account created successfully!', 'success');
+      } catch (error) {
+        console.error('Signup error:', error);
+        if (error.code === 'auth/email-already-in-use') {
+          showAuthError('Email already in use. Please login instead.', 'signup');
+        } else if (error.code === 'auth/invalid-email') {
+          showAuthError('Invalid email format.', 'signup');
+        } else if (error.code === 'auth/weak-password') {
+          showAuthError('Password is too weak. Please use a stronger password.', 'signup');
+        } else {
+          showAuthError('Signup failed: ' + error.message, 'signup');
+        }
+        signupBtn.disabled = false;
+        signupBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+      }
+    }
+
+    function showAuthError(message, formType) {
+      const errorDiv = document.getElementById(formType + 'Error');
       errorDiv.querySelector('span').textContent = message;
       errorDiv.classList.add('show');
       setTimeout(() => errorDiv.classList.remove('show'), 5000);
@@ -2155,32 +2337,46 @@
 
     async function logout() {
       try {
+        cleanupListeners();
         await auth.signOut();
         showMessage('Logged out successfully', 'success');
+        showAuthPage();
       } catch (error) {
         console.error('Logout error:', error);
       }
     }
 
+    // ===== FIREBASE DATA FUNCTIONS =====
+    // Helper function to add user data to document
+    function addUserData(data) {
+      return {
+        ...data,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date().toISOString()
+      };
+    }
+
     async function testFirestoreConnection() {
       try {
-        // Test connection without user filter
-        await db.collection('expenses').limit(1).get();
-        await db.collection('income').limit(1).get();
-        await db.collection('budgets').limit(1).get();
-        await db.collection('reminders').limit(1).get();
+        // Test with a simple query
+        await db.collection('expenses').where('userId', '==', currentUser.uid).limit(1).get();
         isFirestoreReady = true;
         updateStatus('online', 'Connected ✓');
         showMessage('✅ Successfully connected to Firebase!', 'success');
         setupApp();
-        loadDashboard();
+        
+        updateDashboardFromRealtimeData();
         loadBudgets();
         loadReminders();
+        
         setTimeout(() => {
           generateReport('today', 'expense', document.querySelector('#expenseReportControls .btn.active'));
           generateReport('today', 'income', document.querySelector('#incomeReportControls .btn.active'));
         }, 1000);
       } catch (error) {
+        console.error('Firestore connection error:', error);
         updateStatus('offline', 'Connection failed');
         showError('Could not connect to database: ' + error.message);
       }
@@ -2188,18 +2384,20 @@
 
     function setupEventListeners() {
       document.getElementById('loginBtn')?.addEventListener('click', handleLogin);
+      document.getElementById('signupBtn')?.addEventListener('click', handleSignup);
+      
       document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleLogin();
       });
       
-      // Theme toggle event listeners
+      document.getElementById('signupConfirmPassword')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSignup();
+      });
+      
       document.getElementById('themeToggle')?.addEventListener('change', toggleTheme);
       document.getElementById('themeToggleHeader')?.addEventListener('change', toggleTheme);
       
-      document.getElementById('addBtn')?.addEventListener('click', handleExpenseSubmit);
-      document.getElementById('addIncomeBtn')?.addEventListener('click', handleIncomeSubmit);
-      document.getElementById('addBudgetBtn')?.addEventListener('click', handleBudgetSubmit);
-      document.getElementById('addReminderBtn')?.addEventListener('click', handleReminderSubmit);
+      // FIXED: Added direct onclick handlers for form submissions
       document.getElementById('cancelDelete')?.addEventListener('click', hideDeleteModal);
       document.getElementById('confirmDelete')?.addEventListener('click', deleteItem);
       document.getElementById('cancelExpenseBtn')?.addEventListener('click', cancelEditExpense);
@@ -2207,60 +2405,52 @@
       document.getElementById('cancelBudgetBtn')?.addEventListener('click', cancelEditBudget);
       document.getElementById('cancelReminderBtn')?.addEventListener('click', cancelEditReminder);
       
-      document.addEventListener('keypress', (e) => {
-        if (e.target.id === 'description' && e.key === 'Enter') handleExpenseSubmit();
-        if (e.target.id === 'incomeNotes' && e.key === 'Enter') handleIncomeSubmit();
-        if (e.target.id === 'budgetNotes' && e.key === 'Enter') handleBudgetSubmit();
-        if (e.target.id === 'reminderTitle' && e.key === 'Enter') handleReminderSubmit();
+      // FIXED: Add Enter key listeners for form submissions
+      document.getElementById('amount')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleExpenseSubmit();
+      });
+      
+      document.getElementById('incomeAmount')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleIncomeSubmit();
+      });
+      
+      document.getElementById('budgetAmount')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleBudgetSubmit();
+      });
+      
+      document.getElementById('reminderTitle')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleReminderSubmit();
       });
     }
     
-    // Toggle Collapse Function for Forms
     function toggleForm(sectionId) {
       const section = document.getElementById(sectionId);
       section.classList.toggle('collapsed');
     }
     
-    // Toggle Collapse Function for Lists (New)
     function toggleList(sectionId) {
       const section = document.getElementById(sectionId);
       section.classList.toggle('collapsed');
     }
 
     function setDefaultDates() {
-      const today = new Date().toISOString().split('T')[0];
-      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const currentMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
       
-      document.getElementById('date').value = today;
-      document.getElementById('incomeDate').value = today;
+      document.getElementById('date').value = todayStr;
+      document.getElementById('incomeDate').value = todayStr;
       document.getElementById('budgetMonth').value = currentMonth;
-      document.getElementById('reminderDueDate').value = today;
+      document.getElementById('reminderDueDate').value = todayStr;
       
-      const fromDate = new Date(); fromDate.setDate(fromDate.getDate() - 30);
+      const fromDate = new Date(); 
+      fromDate.setDate(fromDate.getDate() - 30);
       const defaultFrom = fromDate.toISOString().split('T')[0];
       
-      // Expense custom range defaults
       document.getElementById('expenseFromDate').value = defaultFrom;
-      document.getElementById('expenseToDate').value = today;
-      
-      // Income custom range defaults
+      document.getElementById('expenseToDate').value = todayStr;
       document.getElementById('incomeFromDate').value = defaultFrom;
-      document.getElementById('incomeToDate').value = today;
-    }
-    
-    function setDefaultSpecificReportDates() {
-      const today = new Date().toISOString().split('T')[0];
-      const firstDayOfMonth = new Date();
-      firstDayOfMonth.setDate(1);
-      const firstDayStr = firstDayOfMonth.toISOString().split('T')[0];
-      
-      // Set default dates for category expense report
-      document.getElementById('categoryFromDate').value = firstDayStr;
-      document.getElementById('categoryToDate').value = today;
-      
-      // Set default dates for source income report
-      document.getElementById('sourceFromDate').value = firstDayStr;
-      document.getElementById('sourceToDate').value = today;
+      document.getElementById('incomeToDate').value = todayStr;
     }
     
     function setDefaultTargetDate() {
@@ -2270,8 +2460,9 @@
     }
 
     function showAbout() { document.getElementById('aboutModal').style.display = 'flex'; }
-    function showPrivacy() { alert('Privacy Policy: Your expense data is stored securely in Firebase.'); }
-    function showContact() { alert('Contact: For support or inquiries, please contact Pius Angulo.'); }
+    function showPrivacy() { alert('Privacy Policy: Your data is stored securely in Firebase and isolated per user. We do not share your data with third parties.'); }
+    function showTerms() { alert('Terms of Service: By using this platform, you agree to use it for personal financial tracking only.'); }
+    function showContact() { alert('Contact: For support or inquiries, please contact support@expensetracker.com'); }
     
     function showSavingsCalculator() { 
       document.getElementById('savingsCalculatorModal').style.display = 'flex'; 
@@ -2280,6 +2471,10 @@
     function showYearlyOverview() { 
       document.getElementById('yearlyOverviewModal').style.display = 'flex';
       loadYearlyOverview();
+    }
+    
+    function showDebtTracker() {
+      document.getElementById('debtTrackerModal').style.display = 'flex';
     }
     
     function showQuickAddExpense() {
@@ -2297,7 +2492,7 @@
     }
 
     function loadRevealedState() {
-      const savedState = localStorage.getItem('revealedBalances');
+      const savedState = localStorage.getItem('revealedBalances_' + currentUser.uid);
       if (savedState) {
         revealedBalances = JSON.parse(savedState);
         Object.keys(revealedBalances).forEach(period => {
@@ -2311,7 +2506,7 @@
     }
     
     function loadSavingsGoal() {
-      const savedGoal = localStorage.getItem('savingsGoal');
+      const savedGoal = localStorage.getItem('savingsGoal_' + currentUser.uid);
       if (savedGoal) {
         savingsGoal = JSON.parse(savedGoal);
         updateSavingsGoalUI();
@@ -2319,7 +2514,7 @@
     }
     
     function saveSavingsGoal() {
-      localStorage.setItem('savingsGoal', JSON.stringify(savingsGoal));
+      localStorage.setItem('savingsGoal_' + currentUser.uid, JSON.stringify(savingsGoal));
     }
     
     function updateSavingsGoalUI() {
@@ -2337,7 +2532,9 @@
       }
     }
     
-    function saveRevealedState() { localStorage.setItem('revealedBalances', JSON.stringify(revealedBalances)); }
+    function saveRevealedState() { 
+      localStorage.setItem('revealedBalances_' + currentUser.uid, JSON.stringify(revealedBalances)); 
+    }
     
     function toggleBalance(period) {
       const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
@@ -2401,18 +2598,56 @@
     function showError(message) { showMessage('❌ ' + message, 'error'); }
 
     function formatCurrency(amount) { 
-      return 'UGX ' + parseInt(amount).toLocaleString('en-UG'); 
+      return 'UGX ' + parseInt(amount || 0).toLocaleString('en-UG'); 
     }
 
+    // FIXED: Improved date range calculation to properly handle months and years
     function getDateRange(period) {
-      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const today = new Date(); 
+      today.setHours(0, 0, 0, 0);
       let startDate, endDate, periodLabel;
+      
       switch(period) {
-        case 'today': startDate = new Date(today); endDate = new Date(today); endDate.setHours(23, 59, 59, 999); periodLabel = 'Today'; break;
-        case 'yesterday': startDate = new Date(today); startDate.setDate(startDate.getDate() - 1); endDate = new Date(startDate); endDate.setHours(23, 59, 59, 999); periodLabel = 'Yesterday'; break;
-        case 'week': startDate = new Date(today); const day = startDate.getDay(); const diff = startDate.getDate() - day + (day === 0 ? -6 : 1); startDate.setDate(diff); endDate = new Date(startDate); endDate.setDate(endDate.getDate() + 6); endDate.setHours(23, 59, 59, 999); periodLabel = 'This Week'; break;
-        case 'month': startDate = new Date(today.getFullYear(), today.getMonth(), 1); endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); endDate.setHours(23, 59, 59, 999); periodLabel = 'This Month'; break;
-        case 'year': startDate = new Date(today.getFullYear(), 0, 1); endDate = new Date(today.getFullYear(), 11, 31); endDate.setHours(23, 59, 59, 999); periodLabel = 'This Year'; break;
+        case 'today': 
+          startDate = new Date(today); 
+          endDate = new Date(today); 
+          endDate.setHours(23, 59, 59, 999); 
+          periodLabel = 'Today'; 
+          break;
+        case 'yesterday': 
+          startDate = new Date(today); 
+          startDate.setDate(startDate.getDate() - 1); 
+          endDate = new Date(startDate); 
+          endDate.setHours(23, 59, 59, 999); 
+          periodLabel = 'Yesterday'; 
+          break;
+        case 'week': 
+          startDate = new Date(today); 
+          startDate.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+          endDate = new Date(startDate); 
+          endDate.setDate(endDate.getDate() + 6); 
+          endDate.setHours(23, 59, 59, 999); 
+          periodLabel = 'This Week'; 
+          break;
+        case 'month': 
+          startDate = new Date(today.getFullYear(), today.getMonth(), 1); 
+          endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); 
+          endDate.setHours(23, 59, 59, 999); 
+          periodLabel = 'This Month'; 
+          break;
+        case 'lastMonth':
+          const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          startDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+          endDate = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
+          endDate.setHours(23, 59, 59, 999);
+          periodLabel = 'Last Month';
+          break;
+        case 'year': 
+          startDate = new Date(today.getFullYear(), 0, 1); 
+          endDate = new Date(today.getFullYear(), 11, 31); 
+          endDate.setHours(23, 59, 59, 999); 
+          periodLabel = 'This Year'; 
+          break;
         default: return null;
       }
       return { startDate, endDate, periodLabel };
@@ -2427,53 +2662,76 @@
 
     // ===== EXPENSE FUNCTIONS =====
     async function handleExpenseSubmit() {
-      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
-      if (!currentUser) { showError('Please login first'); return; }
+      if (!isFirestoreReady) { 
+        showError('Database not ready. Please wait...'); 
+        return; 
+      }
+      if (!currentUser) { 
+        showError('Please login first'); 
+        return; 
+      }
       
       const amount = document.getElementById('amount').value.trim();
       const category = document.getElementById('category').value;
       const date = document.getElementById('date').value;
       const description = document.getElementById('description').value.trim();
 
-      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid amount'); return; }
-      if (!date) { showError('Please select a date'); return; }
+      if (!amount || parseFloat(amount) <= 0) { 
+        showError('Please enter a valid amount'); 
+        return; 
+      }
+      if (!date) { 
+        showError('Please select a date'); 
+        return; 
+      }
 
       const btn = document.getElementById('addBtn'), originalText = btn.innerHTML;
       try {
-        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        const expenseData = { 
+        btn.disabled = true; 
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        const expenseData = addUserData({ 
           amount: parseFloat(amount), 
           category, 
           date, 
-          description: description || '',
-          userId: currentUser.uid,
-          userEmail: currentUser.email
-        };
+          description: description || ''
+        });
 
         if (isEditingExpense && editingExpenseId) {
+          // Update existing expense
           expenseData.updatedAt = new Date().toISOString();
           await db.collection('expenses').doc(editingExpenseId).update(expenseData);
           showMessage(`✅ Expense updated successfully!`, 'success');
           cancelEditExpense();
         } else {
-          expenseData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-          expenseData.createdAt = new Date().toISOString();
+          // Add new expense
           await db.collection('expenses').add(expenseData);
           showMessage(`✅ Added ${formatCurrency(amount)} for ${category}`, 'success');
+          
+          // Clear form
           document.getElementById('amount').value = ''; 
           document.getElementById('description').value = '';
           document.getElementById('category').value = 'Groceries'; 
           document.getElementById('date').value = new Date().toISOString().split('T')[0];
         }
-        loadDashboard(); 
-        loadBudgets(); // Update budget progress
-        if (currentReportPeriod.expense) generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
-      } catch (error) { showError('Operation failed: ' + error.message); } 
-      finally { btn.disabled = false; btn.innerHTML = originalText; }
+        
+        // Refresh reports
+        if (currentReportPeriod.expense) {
+          generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
+        }
+      } catch (error) { 
+        console.error('Expense submit error:', error);
+        showError('Failed to save expense: ' + error.message); 
+      } 
+      finally { 
+        btn.disabled = false; 
+        btn.innerHTML = originalText; 
+      }
     }
 
     function prepareEditExpense(id, amount, category, date, description) {
-      isEditingExpense = true; editingExpenseId = id;
+      isEditingExpense = true; 
+      editingExpenseId = id;
       document.getElementById('amount').value = amount; 
       document.getElementById('category').value = category;
       document.getElementById('date').value = date; 
@@ -2488,7 +2746,8 @@
     }
 
     function cancelEditExpense() {
-      isEditingExpense = false; editingExpenseId = null;
+      isEditingExpense = false; 
+      editingExpenseId = null;
       document.getElementById('amount').value = ''; 
       document.getElementById('description').value = '';
       document.getElementById('category').value = 'Groceries'; 
@@ -2500,52 +2759,76 @@
 
     // ===== INCOME FUNCTIONS =====
     async function handleIncomeSubmit() {
-      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
-      if (!currentUser) { showError('Please login first'); return; }
+      if (!isFirestoreReady) { 
+        showError('Database not ready. Please wait...'); 
+        return; 
+      }
+      if (!currentUser) { 
+        showError('Please login first'); 
+        return; 
+      }
       
       const amount = document.getElementById('incomeAmount').value.trim();
       const source = document.getElementById('incomeSource').value;
       const date = document.getElementById('incomeDate').value;
       const notes = document.getElementById('incomeNotes').value.trim();
 
-      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid income amount'); return; }
-      if (!date) { showError('Please select an income date'); return; }
+      if (!amount || parseFloat(amount) <= 0) { 
+        showError('Please enter a valid income amount'); 
+        return; 
+      }
+      if (!date) { 
+        showError('Please select an income date'); 
+        return; 
+      }
 
       const btn = document.getElementById('addIncomeBtn'), originalText = btn.innerHTML;
       try {
-        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        const incomeData = { 
+        btn.disabled = true; 
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        const incomeData = addUserData({ 
           amount: parseFloat(amount), 
           source, 
           date, 
-          notes: notes || '',
-          userId: currentUser.uid,
-          userEmail: currentUser.email
-        };
+          notes: notes || ''
+        });
 
         if (isEditingIncome && editingIncomeId) {
+          // Update existing income
           incomeData.updatedAt = new Date().toISOString();
           await db.collection('income').doc(editingIncomeId).update(incomeData);
           showMessage(`✅ Income updated successfully!`, 'success');
           cancelEditIncome();
         } else {
-          incomeData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-          incomeData.createdAt = new Date().toISOString();
+          // Add new income
           await db.collection('income').add(incomeData);
           showMessage(`💰 Recorded ${formatCurrency(amount)} from ${source}`, 'success');
+          
+          // Clear form
           document.getElementById('incomeAmount').value = ''; 
           document.getElementById('incomeNotes').value = '';
           document.getElementById('incomeSource').value = 'Salary'; 
           document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
         }
-        loadDashboard(); 
-        if (currentReportPeriod.income) generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
-      } catch (error) { showError('Operation failed: ' + error.message); } 
-      finally { btn.disabled = false; btn.innerHTML = originalText; }
+        
+        // Refresh reports
+        if (currentReportPeriod.income) {
+          generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
+        }
+      } catch (error) { 
+        console.error('Income submit error:', error);
+        showError('Failed to save income: ' + error.message); 
+      } 
+      finally { 
+        btn.disabled = false; 
+        btn.innerHTML = originalText; 
+      }
     }
 
     function prepareEditIncome(id, amount, source, date, notes) {
-      isEditingIncome = true; editingIncomeId = id;
+      isEditingIncome = true; 
+      editingIncomeId = id;
       document.getElementById('incomeAmount').value = amount; 
       document.getElementById('incomeSource').value = source;
       document.getElementById('incomeDate').value = date; 
@@ -2560,7 +2843,8 @@
     }
 
     function cancelEditIncome() {
-      isEditingIncome = false; editingIncomeId = null;
+      isEditingIncome = false; 
+      editingIncomeId = null;
       document.getElementById('incomeAmount').value = ''; 
       document.getElementById('incomeNotes').value = '';
       document.getElementById('incomeSource').value = 'Salary'; 
@@ -2586,15 +2870,13 @@
       const btn = document.getElementById('addBudgetBtn'), originalText = btn.innerHTML;
       try {
         btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        const budgetData = { 
+        const budgetData = addUserData({ 
           amount: parseFloat(amount), 
           month, 
           category: category || 'All',
           notes: notes || '',
-          userId: currentUser.uid,
-          userEmail: currentUser.email,
-          spent: 0 // Initialize spent amount
-        };
+          spent: 0
+        });
 
         if (isEditingBudget && editingBudgetId) {
           budgetData.updatedAt = new Date().toISOString();
@@ -2602,40 +2884,39 @@
           showMessage(`✅ Budget updated successfully!`, 'success');
           cancelEditBudget();
         } else {
-          budgetData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-          budgetData.createdAt = new Date().toISOString();
           await db.collection('budgets').add(budgetData);
           showMessage(`✅ Budget of ${formatCurrency(amount)} set for ${month}`, 'success');
           document.getElementById('budgetAmount').value = ''; 
           document.getElementById('budgetNotes').value = '';
           document.getElementById('budgetCategory').value = ''; 
         }
-        loadBudgets();
-        updateBudgetStats();
       } catch (error) { showError('Operation failed: ' + error.message); } 
       finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
     
     async function loadBudgets() {
       try {
-        const snapshot = await db.collection('budgets').get();
-        budgets = [];
-        snapshot.forEach(doc => budgets.push({ id: doc.id, ...doc.data() }));
-        
-        // Calculate spent amounts for each budget
-        const expenseSnapshot = await db.collection('expenses').get();
         const now = new Date();
-        const currentMonth = now.toISOString().slice(0, 7); // YYYY-MM
+        const currentMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
         
         budgets.forEach(budget => {
           let spent = 0;
-          expenseSnapshot.forEach(doc => {
-            const expense = doc.data();
-            const expenseMonth = expense.date.slice(0, 7); // Get YYYY-MM from date
+          allExpenses.forEach(expense => {
+            let expenseDate;
+            if (expense.date) {
+              const [year, month, day] = expense.date.split('-').map(Number);
+              expenseDate = new Date(year, month - 1, day);
+            } else if (expense.timestamp && expense.timestamp.toDate) {
+              expenseDate = expense.timestamp.toDate();
+            } else {
+              return;
+            }
+            
+            const expenseMonth = expenseDate.getFullYear() + '-' + String(expenseDate.getMonth() + 1).padStart(2, '0');
             
             if (expenseMonth === budget.month) {
               if (budget.category === 'All' || expense.category === budget.category) {
-                spent += expense.amount;
+                spent += parseFloat(expense.amount) || 0;
               }
             }
           });
@@ -2692,7 +2973,7 @@
               </div>
             </div>
             <div class="item-actions">
-              <button class="action-btn edit" onclick="prepareEditBudget('${budget.id}', ${budget.amount}, '${budget.month}', '${budget.category}', '${budget.notes.replace(/'/g, "\\'")}')">
+              <button class="action-btn edit" onclick="prepareEditBudget('${budget.id}', ${budget.amount}, '${budget.month}', '${budget.category}', '${budget.notes ? budget.notes.replace(/'/g, "\\'") : ''}')">
                 <i class="fas fa-edit"></i>
               </button>
               <button class="action-btn delete" onclick="confirmDeleteModal('${budget.id}', 'budgets', 'Budget for ${monthName} - ${formatCurrency(budget.amount)}')">
@@ -2708,7 +2989,8 @@
     }
     
     function updateBudgetStats() {
-      const currentMonth = new Date().toISOString().slice(0, 7);
+      const today = new Date();
+      const currentMonth = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
       const currentBudget = budgets.find(b => b.month === currentMonth && b.category === 'All');
       
       if (currentBudget) {
@@ -2726,7 +3008,6 @@
         document.getElementById('monthlyBudgetStatus').style.color = 'var(--budget-color)';
       }
       
-      // Update revealed state
       if (revealedBalances.monthlyBudget) {
         document.getElementById('monthlyBudgetValue').classList.remove('hidden');
       } else {
@@ -2739,7 +3020,7 @@
       document.getElementById('budgetAmount').value = amount; 
       document.getElementById('budgetMonth').value = month;
       document.getElementById('budgetCategory').value = category; 
-      document.getElementById('budgetNotes').value = notes;
+      document.getElementById('budgetNotes').value = notes || '';
       document.getElementById('budgetFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Budget';
       document.getElementById('addBudgetBtn').innerHTML = '<i class="fas fa-save"></i> Update Budget';
       document.getElementById('cancelBudgetBtn').style.display = 'inline-flex';
@@ -2761,57 +3042,8 @@
     }
     
     // ===== REMINDER FUNCTIONS =====
-    async function handleReminderSubmit() {
-      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
-      if (!currentUser) { showError('Please login first'); return; }
-      
-      const title = document.getElementById('reminderTitle').value.trim();
-      const amount = document.getElementById('reminderAmount').value.trim();
-      const dueDate = document.getElementById('reminderDueDate').value;
-      const category = document.getElementById('reminderCategory').value;
-
-      if (!title) { showError('Please enter a reminder title'); return; }
-      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid amount'); return; }
-      if (!dueDate) { showError('Please select a due date'); return; }
-
-      const btn = document.getElementById('addReminderBtn'), originalText = btn.innerHTML;
-      try {
-        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        const reminderData = { 
-          title,
-          amount: parseFloat(amount), 
-          dueDate, 
-          category,
-          completed: false,
-          userId: currentUser.uid,
-          userEmail: currentUser.email
-        };
-
-        if (isEditingReminder && editingReminderId) {
-          reminderData.updatedAt = new Date().toISOString();
-          await db.collection('reminders').doc(editingReminderId).update(reminderData);
-          showMessage(`✅ Reminder updated successfully!`, 'success');
-          cancelEditReminder();
-        } else {
-          reminderData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-          reminderData.createdAt = new Date().toISOString();
-          await db.collection('reminders').add(reminderData);
-          showMessage(`🔔 Reminder "${title}" added`, 'success');
-          document.getElementById('reminderTitle').value = ''; 
-          document.getElementById('reminderAmount').value = '';
-          document.getElementById('reminderCategory').value = 'Rent'; 
-          document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
-        }
-        loadReminders();
-      } catch (error) { showError('Operation failed: ' + error.message); } 
-      finally { btn.disabled = false; btn.innerHTML = originalText; }
-    }
-    
     async function loadReminders() {
       try {
-        const snapshot = await db.collection('reminders').get();
-        reminders = [];
-        snapshot.forEach(doc => reminders.push({ id: doc.id, ...doc.data() }));
         displayReminders();
       } catch (error) {
         console.error('Error loading reminders:', error);
@@ -2862,8 +3094,8 @@
                 <span class="reminder-due ${statusClass}">${statusText}</span>
               </div>
               <div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
-                <span class="category-badge category-${reminder.category.toLowerCase().replace(' ', '-')}">
-                  <i class="fas fa-tag"></i> ${reminder.category}
+                <span class="category-badge category-${(reminder.category || 'other').toLowerCase().replace(' ', '-')}">
+                  <i class="fas fa-tag"></i> ${reminder.category || 'Other'}
                 </span>
                 <span style="font-size: 0.9rem; color: var(--gray);">
                   Due: ${dueDate.toLocaleDateString('en-UG')} ${!reminder.completed && daysUntil > 0 ? `(${daysUntil} days)` : ''}
@@ -2879,7 +3111,7 @@
                   <i class="fas fa-check"></i>
                 </button>
               ` : ''}
-              <button class="action-btn edit" onclick="prepareEditReminder('${reminder.id}', '${reminder.title.replace(/'/g, "\\'")}', ${reminder.amount}, '${reminder.dueDate}', '${reminder.category}')">
+              <button class="action-btn edit" onclick="prepareEditReminder('${reminder.id}', '${reminder.title.replace(/'/g, "\\'")}', ${reminder.amount}, '${reminder.dueDate}', '${reminder.category || 'Other'}')">
                 <i class="fas fa-edit"></i>
               </button>
               <button class="action-btn delete" onclick="confirmDeleteModal('${reminder.id}', 'reminders', 'Reminder: ${reminder.title} - ${formatCurrency(reminder.amount)}')">
@@ -2897,14 +3129,54 @@
       try {
         await db.collection('reminders').doc(id).update({
           completed: true,
-          completedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         showMessage('✅ Reminder marked as completed!', 'success');
-        loadReminders();
       } catch (error) {
         showError('Failed to mark reminder as complete: ' + error.message);
       }
+    }
+    
+    async function handleReminderSubmit() {
+      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
+      if (!currentUser) { showError('Please login first'); return; }
+      
+      const title = document.getElementById('reminderTitle').value.trim();
+      const amount = document.getElementById('reminderAmount').value.trim();
+      const dueDate = document.getElementById('reminderDueDate').value;
+      const category = document.getElementById('reminderCategory').value;
+
+      if (!title) { showError('Please enter a reminder title'); return; }
+      if (!amount || parseFloat(amount) <= 0) { showError('Please enter a valid amount'); return; }
+      if (!dueDate) { showError('Please select a due date'); return; }
+
+      const btn = document.getElementById('addReminderBtn'), originalText = btn.innerHTML;
+      try {
+        btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        const reminderData = addUserData({ 
+          title: title,
+          amount: parseFloat(amount), 
+          dueDate: dueDate,
+          category: category,
+          completed: false
+        });
+
+        if (isEditingReminder && editingReminderId) {
+          reminderData.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('reminders').doc(editingReminderId).update(reminderData);
+          showMessage(`✅ Reminder updated successfully!`, 'success');
+          cancelEditReminder();
+        } else {
+          await db.collection('reminders').add(reminderData);
+          showMessage(`🔔 Reminder "${title}" added!`, 'success');
+          document.getElementById('reminderTitle').value = ''; 
+          document.getElementById('reminderAmount').value = '';
+          document.getElementById('reminderCategory').value = 'Rent'; 
+          document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
+        }
+      } catch (error) { showError('Operation failed: ' + error.message); } 
+      finally { btn.disabled = false; btn.innerHTML = originalText; }
     }
     
     function prepareEditReminder(id, title, amount, dueDate, category) {
@@ -2950,8 +3222,8 @@
       const expenseItems = document.querySelectorAll('#expensesList .expense-item');
       
       expenseItems.forEach(item => {
-        const itemCategory = item.querySelector('.category-badge').textContent.trim();
-        const itemDate = item.querySelector('strong').textContent;
+        const itemCategory = item.querySelector('.category-badge')?.textContent.trim() || '';
+        const itemDate = item.querySelector('strong')?.textContent || '';
         const itemMonth = getMonthFromDate(itemDate);
         
         const categoryMatch = !category || itemCategory.includes(category);
@@ -2977,8 +3249,8 @@
       const incomeItems = document.querySelectorAll('#incomeList .expense-item');
       
       incomeItems.forEach(item => {
-        const itemSource = item.querySelector('.category-badge').textContent.trim();
-        const itemDate = item.querySelector('strong').textContent;
+        const itemSource = item.querySelector('.category-badge')?.textContent.trim() || '';
+        const itemDate = item.querySelector('strong')?.textContent || '';
         const itemMonth = getMonthFromDate(itemDate);
         
         const sourceMatch = !source || itemSource.includes(source);
@@ -3003,7 +3275,7 @@
       const budgetItems = document.querySelectorAll('#budgetsList .budget-item');
       
       budgetItems.forEach(item => {
-        const itemMonth = item.querySelector('.category-badge').textContent;
+        const itemMonth = item.querySelector('.category-badge')?.textContent || '';
         const itemMonthFormatted = formatMonthForFilter(itemMonth);
         
         item.style.display = !month || itemMonthFormatted === month ? 'flex' : 'none';
@@ -3049,7 +3321,6 @@
     }
     
     function getMonthFromDate(dateStr) {
-      // Convert "Mar 25" to month name
       const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const monthPart = dateStr.split(' ')[0];
       const monthIndex = monthNames.indexOf(monthPart);
@@ -3057,7 +3328,6 @@
     }
     
     function formatMonthForFilter(monthText) {
-      // Convert "March 2024" to "Mar"
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       
@@ -3091,7 +3361,6 @@
       
       currentReportPeriod[reportType] = period;
       
-      // Update active button state
       const controlContainer = buttonElement.closest('.report-controls');
       if (controlContainer) {
         controlContainer.querySelectorAll('.btn-report').forEach(b => b.classList.remove('active'));
@@ -3107,6 +3376,7 @@
       catch (error) { showError(`Failed to generate ${reportType} report: ` + error.message); }
     }
 
+    // FIXED: Improved date comparison logic for old data
     async function fetchAndDisplayReport(startDate, endDate, periodLabel, reportType) {
       const resultsContainer = document.getElementById(`${reportType}ReportResults`);
       const actionsContainer = document.getElementById(`${reportType}ReportActions`);
@@ -3114,10 +3384,6 @@
       actionsContainer.style.display = 'none';
       
       try {
-        // Get all data without filtering by userEmail
-        const expenseSnapshot = await db.collection('expenses').get();
-        const incomeSnapshot = await db.collection('income').get();
-        
         let totalAmount = 0, count = 0, breakdown = {}, items = [];
         let summaryTitle = reportType === 'expense' ? 'Expense Breakdown' : 'Income Sources';
         let amountLabel = reportType === 'expense' ? 'Total Expenses' : 'Total Income';
@@ -3125,26 +3391,84 @@
         let breakdownColor = reportType === 'expense' ? 'var(--danger)' : 'var(--success)';
 
         if (reportType === 'expense') {
-          expenseSnapshot.forEach(doc => {
-            const expense = doc.data(), expenseDate = new Date(expense.date); expenseDate.setHours(0, 0, 0, 0);
-            // Filter by date only
+          allExpenses.forEach(expense => {
+            let expenseDate;
+            // FIXED: Handle multiple date formats for old data
+            if (expense.date) {
+              // Check if date is already a Date object or a string
+              if (expense.date instanceof Date) {
+                expenseDate = expense.date;
+              } else if (typeof expense.date === 'string') {
+                // Handle old date formats (YYYY-MM-DD or DD/MM/YYYY)
+                if (expense.date.includes('/')) {
+                  // DD/MM/YYYY format
+                  const [day, month, year] = expense.date.split('/');
+                  expenseDate = new Date(year, month - 1, day);
+                } else {
+                  // YYYY-MM-DD format
+                  const [year, month, day] = expense.date.split('-');
+                  expenseDate = new Date(year, month - 1, day);
+                }
+              }
+            } else if (expense.timestamp && expense.timestamp.toDate) {
+              expenseDate = expense.timestamp.toDate();
+            } else {
+              return;
+            }
+            
+            // Compare dates correctly
             if (expenseDate >= startDate && expenseDate <= endDate) {
-              totalAmount += expense.amount; count++;
-              breakdown[expense.category] = (breakdown[expense.category] || 0) + expense.amount;
-              items.push({ id: doc.id, ...expense });
+              const expenseAmount = parseFloat(expense.amount) || 0;
+              totalAmount += expenseAmount;
+              count++;
+              const category = expense.category || 'Other';
+              breakdown[category] = (breakdown[category] || 0) + expenseAmount;
+              items.push({ id: expense.id, ...expense });
             }
           });
-          items.sort((a, b) => new Date(b.date) - new Date(a.date));
-        } else { // income
-          incomeSnapshot.forEach(doc => {
-              const income = doc.data(), incomeDate = new Date(income.date); incomeDate.setHours(0, 0, 0, 0);
-              if (incomeDate >= startDate && incomeDate <= endDate) {
-                  totalAmount += income.amount; count++;
-                  breakdown[income.source] = (breakdown[income.source] || 0) + income.amount;
-                  items.push({ id: doc.id, ...income });
-              }
+          
+          items.sort((a, b) => {
+            const dateA = getDateFromExpense(a);
+            const dateB = getDateFromExpense(b);
+            return dateB - dateA;
           });
-          items.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else {
+          allIncome.forEach(income => {
+            let incomeDate;
+            // FIXED: Handle multiple date formats for old data
+            if (income.date) {
+              if (income.date instanceof Date) {
+                incomeDate = income.date;
+              } else if (typeof income.date === 'string') {
+                if (income.date.includes('/')) {
+                  const [day, month, year] = income.date.split('/');
+                  incomeDate = new Date(year, month - 1, day);
+                } else {
+                  const [year, month, day] = income.date.split('-');
+                  incomeDate = new Date(year, month - 1, day);
+                }
+              }
+            } else if (income.timestamp && income.timestamp.toDate) {
+              incomeDate = income.timestamp.toDate();
+            } else {
+              return;
+            }
+            
+            if (incomeDate >= startDate && incomeDate <= endDate) {
+              const incomeAmount = parseFloat(income.amount) || 0;
+              totalAmount += incomeAmount;
+              count++;
+              const source = income.source || 'Other';
+              breakdown[source] = (breakdown[source] || 0) + incomeAmount;
+              items.push({ id: income.id, ...income });
+            }
+          });
+          
+          items.sort((a, b) => {
+            const dateA = getDateFromExpense(a);
+            const dateB = getDateFromExpense(b);
+            return dateB - dateA;
+          });
         }
 
         const sortedBreakdown = Object.entries(breakdown).sort((a, b) => b[1] - a[1]);
@@ -3171,10 +3495,11 @@
           
           html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Details</h5>`;
           items.forEach(item => { 
-            const name = reportType === 'expense' ? item.category : item.source;
+            const name = reportType === 'expense' ? (item.category || 'Other') : (item.source || 'Other');
             const description = reportType === 'expense' ? item.description : item.notes;
             const amountClass = reportType === 'expense' ? 'expense-amount' : 'income-amount';
-            html += `<div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;"><div class="item-content"><span style="font-weight:600; font-size:0.9rem;">${new Date(item.date).toLocaleDateString('en-UG')}</span><span style="margin-left:10px; color:var(--gray); font-size:0.85rem;">${name}</span></div><div class="expense-amount ${amountClass}" style="font-size:1rem; color:${breakdownColor}; -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div></div>`; 
+            const displayDate = getFormattedDate(item);
+            html += `<div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;"><div class="item-content"><span style="font-weight:600; font-size:0.9rem;">${displayDate}</span><span style="margin-left:10px; color:var(--gray); font-size:0.85rem;">${name}</span></div><div class="expense-amount ${amountClass}" style="font-size:1rem; color:${breakdownColor}; -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div></div>`; 
           });
           html += `</div>`;
 
@@ -3185,9 +3510,36 @@
         resultsContainer.innerHTML = html; 
         if (count > 0) actionsContainer.style.display = 'flex';
         showMessage(`📊 ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report generated for ${periodLabel}`, 'success');
-      } catch (error) { showError('Failed to generate report: ' + error.message); }
+      } catch (error) { 
+        console.error('Report generation error:', error);
+        showError('Failed to generate report: ' + error.message); 
+      }
     }
 
+    // Helper function to get date from expense/income item
+    function getDateFromExpense(item) {
+      if (item.date) {
+        if (item.date instanceof Date) return item.date;
+        if (typeof item.date === 'string') {
+          if (item.date.includes('/')) {
+            const [day, month, year] = item.date.split('/');
+            return new Date(year, month - 1, day);
+          } else {
+            const [year, month, day] = item.date.split('-');
+            return new Date(year, month - 1, day);
+          }
+        }
+      } else if (item.timestamp && item.timestamp.toDate) {
+        return item.timestamp.toDate();
+      }
+      return new Date(0);
+    }
+
+    // Helper function to format date for display
+    function getFormattedDate(item) {
+      const date = getDateFromExpense(item);
+      return date.toLocaleDateString('en-UG');
+    }
 
     function showCustomRange(reportType, buttonElement) { 
       const controlContainer = buttonElement.closest('.report-controls');
@@ -3215,275 +3567,6 @@
       await fetchAndDisplayReport(startDate, endDate, `Custom Range (${startDate.toLocaleDateString('en-UG')} - ${endDate.toLocaleDateString('en-UG')})`, reportType);
     }
 
-    // ===== SPECIFIC CATEGORY EXPENSE REPORT =====
-    async function generateCategoryExpenseReport() {
-      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
-      
-      const category = document.getElementById('specificExpenseCategory').value;
-      const fromDate = document.getElementById('categoryFromDate').value;
-      const toDate = document.getElementById('categoryToDate').value;
-      
-      if (!category) { showError('Please select an expense category'); return; }
-      if (!fromDate || !toDate) { showError('Please select both from and to dates'); return; }
-      if (new Date(fromDate) > new Date(toDate)) { showError('From date cannot be after to date'); return; }
-      
-      const startDate = new Date(fromDate); startDate.setHours(0,0,0,0);
-      const endDate = new Date(toDate); endDate.setHours(23,59,59,999);
-      
-      const resultsContainer = document.getElementById('categoryExpenseReportResults');
-      resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating category expense report...</p></div>';
-      
-      try {
-        const expenseSnapshot = await db.collection('expenses').get();
-        
-        let totalAmount = 0, count = 0, items = [];
-        let dailyBreakdown = {};
-        
-        expenseSnapshot.forEach(doc => {
-          const expense = doc.data();
-          const expenseDate = new Date(expense.date); expenseDate.setHours(0,0,0,0);
-          
-          // Filter by category and date range
-          if (expense.category === category && expenseDate >= startDate && expenseDate <= endDate) {
-            totalAmount += expense.amount;
-            count++;
-            items.push({ id: doc.id, ...expense });
-            
-            // Group by date for daily breakdown
-            const dateKey = expense.date;
-            dailyBreakdown[dateKey] = (dailyBreakdown[dateKey] || 0) + expense.amount;
-          }
-        });
-        
-        items.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        // Prepare data for storage
-        currentReportData.categoryExpense = {
-          category,
-          startDate,
-          endDate,
-          totalAmount,
-          count,
-          items,
-          dailyBreakdown,
-          periodLabel: `${category} Expenses (${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')})`
-        };
-        
-        // Generate HTML for display
-        let html = `
-          <h4 style="color: var(--warning); margin-bottom: 15px; font-size: 1.2rem;">
-            <i class="fas fa-filter"></i> ${category} Expense Report
-          </h4>
-          <p style="color: var(--gray); margin-bottom: 20px;">
-            <i class="fas fa-calendar"></i> ${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')}
-          </p>
-          
-          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr;">
-            <div class="report-summary-item" style="border: 1px solid var(--warning);">
-              <div class="label" style="color: var(--warning);">Total ${category} Expenses</div>
-              <div class="value" style="color: var(--warning);">${formatCurrency(totalAmount)}</div>
-            </div>
-            <div class="report-summary-item">
-              <div class="label">Total Transactions</div>
-              <div class="value">${count}</div>
-            </div>
-            <div class="report-summary-item">
-              <div class="label">Average per Transaction</div>
-              <div class="value">${count > 0 ? formatCurrency(totalAmount / count) : formatCurrency(0)}</div>
-            </div>
-          </div>
-        `;
-        
-        if (Object.keys(dailyBreakdown).length > 0) {
-          html += `<div class="category-breakdown"><h5 style="color: var(--warning); margin-bottom: 15px; display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-line"></i> Daily Breakdown</h5>`;
-          
-          // Sort dates descending
-          const sortedDates = Object.keys(dailyBreakdown).sort((a, b) => new Date(b) - new Date(a));
-          
-          sortedDates.forEach(date => {
-            const amount = dailyBreakdown[date];
-            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
-            
-            html += `
-              <div class="category-item">
-                <div class="category-name">${new Date(date).toLocaleDateString('en-UG', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
-                <div class="category-bar">
-                  <div class="category-fill" style="width: ${percentage}%; background: linear-gradient(90deg, var(--warning), #ffc107);"></div>
-                </div>
-                <div class="category-amount" style="color: var(--warning);">${formatCurrency(amount)}</div>
-                <div class="category-percentage">${percentage}%</div>
-              </div>
-            `;
-          });
-          
-          html += `</div>`;
-        }
-        
-        if (items.length > 0) {
-          html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">Transaction Details</h5>`;
-          
-          items.forEach(item => {
-            html += `
-              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;">
-                <div class="item-content">
-                  <span style="font-weight:600; font-size:0.9rem;">${new Date(item.date).toLocaleDateString('en-UG')}</span>
-                  <div style="font-size:0.85rem; color:var(--gray); margin-top:5px;">${item.description || 'No description'}</div>
-                </div>
-                <div class="expense-amount" style="color: var(--warning); -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div>
-              </div>
-            `;
-          });
-          
-          html += `</div>`;
-        } else {
-          html += `<div class="empty-state"><h4>No ${category} expenses found for the selected period</h4></div>`;
-        }
-        
-        resultsContainer.innerHTML = html;
-        document.getElementById('categoryExpensePDFBtn').style.display = 'inline-flex';
-        showMessage(`✅ ${category} expense report generated successfully!`, 'success');
-        
-      } catch (error) {
-        showError('Failed to generate category expense report: ' + error.message);
-      }
-    }
-
-    // ===== SPECIFIC SOURCE INCOME REPORT =====
-    async function generateSourceIncomeReport() {
-      if (!isFirestoreReady) { showError('Please connect to Firebase first'); return; }
-      
-      const source = document.getElementById('specificIncomeSource').value;
-      const fromDate = document.getElementById('sourceFromDate').value;
-      const toDate = document.getElementById('sourceToDate').value;
-      
-      if (!source) { showError('Please select an income source'); return; }
-      if (!fromDate || !toDate) { showError('Please select both from and to dates'); return; }
-      if (new Date(fromDate) > new Date(toDate)) { showError('From date cannot be after to date'); return; }
-      
-      const startDate = new Date(fromDate); startDate.setHours(0,0,0,0);
-      const endDate = new Date(toDate); endDate.setHours(23,59,59,999);
-      
-      const resultsContainer = document.getElementById('sourceIncomeReportResults');
-      resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating source income report...</p></div>';
-      
-      try {
-        const incomeSnapshot = await db.collection('income').get();
-        
-        let totalAmount = 0, count = 0, items = [];
-        let monthlyBreakdown = {};
-        
-        incomeSnapshot.forEach(doc => {
-          const income = doc.data();
-          const incomeDate = new Date(income.date); incomeDate.setHours(0,0,0,0);
-          
-          // Filter by source and date range
-          if (income.source === source && incomeDate >= startDate && incomeDate <= endDate) {
-            totalAmount += income.amount;
-            count++;
-            items.push({ id: doc.id, ...income });
-            
-            // Group by month for monthly breakdown
-            const monthKey = new Date(income.date).toLocaleDateString('en-UG', { month: 'long', year: 'numeric' });
-            monthlyBreakdown[monthKey] = (monthlyBreakdown[monthKey] || 0) + income.amount;
-          }
-        });
-        
-        items.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        // Prepare data for storage
-        currentReportData.sourceIncome = {
-          source,
-          startDate,
-          endDate,
-          totalAmount,
-          count,
-          items,
-          monthlyBreakdown,
-          periodLabel: `${source} Income (${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')})`
-        };
-        
-        // Generate HTML for display
-        let html = `
-          <h4 style="color: var(--info); margin-bottom: 15px; font-size: 1.2rem;">
-            <i class="fas fa-money-bill-wave"></i> ${source} Income Report
-          </h4>
-          <p style="color: var(--gray); margin-bottom: 20px;">
-            <i class="fas fa-calendar"></i> ${new Date(startDate).toLocaleDateString('en-UG')} - ${new Date(endDate).toLocaleDateString('en-UG')}
-          </p>
-          
-          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr;">
-            <div class="report-summary-item" style="border: 1px solid var(--info);">
-              <div class="label" style="color: var(--info);">Total ${source} Income</div>
-              <div class="value" style="color: var(--info);">${formatCurrency(totalAmount)}</div>
-            </div>
-            <div class="report-summary-item">
-              <div class="label">Total Transactions</div>
-              <div class="value">${count}</div>
-            </div>
-            <div class="report-summary-item">
-              <div class="label">Average per Transaction</div>
-              <div class="value">${count > 0 ? formatCurrency(totalAmount / count) : formatCurrency(0)}</div>
-            </div>
-          </div>
-        `;
-        
-        if (Object.keys(monthlyBreakdown).length > 0) {
-          html += `<div class="category-breakdown"><h5 style="color: var(--info); margin-bottom: 15px; display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-bar"></i> Monthly Breakdown</h5>`;
-          
-          // Sort months by date
-          const sortedMonths = Object.keys(monthlyBreakdown).sort((a, b) => {
-            return new Date(b.split(' ')[1], new Date(`${a} 1`).getMonth()) - 
-                   new Date(a.split(' ')[1], new Date(`${b} 1`).getMonth());
-          });
-          
-          sortedMonths.forEach(month => {
-            const amount = monthlyBreakdown[month];
-            const percentage = totalAmount > 0 ? Math.round((amount / totalAmount) * 100) : 0;
-            
-            html += `
-              <div class="category-item">
-                <div class="category-name">${month}</div>
-                <div class="category-bar">
-                  <div class="category-fill" style="width: ${percentage}%; background: linear-gradient(90deg, var(--info), #17a2b8);"></div>
-                </div>
-                <div class="category-amount" style="color: var(--info);">${formatCurrency(amount)}</div>
-                <div class="category-percentage">${percentage}%</div>
-              </div>
-            `;
-          });
-          
-          html += `</div>`;
-        }
-        
-        if (items.length > 0) {
-          html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">Transaction Details</h5>`;
-          
-          items.forEach(item => {
-            html += `
-              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;">
-                <div class="item-content">
-                  <span style="font-weight:600; font-size:0.9rem;">${new Date(item.date).toLocaleDateString('en-UG')}</span>
-                  <div style="font-size:0.85rem; color:var(--gray); margin-top:5px;">${item.notes || 'No notes'}</div>
-                </div>
-                <div class="expense-amount income-amount" style="color: var(--info); -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div>
-              </div>
-            `;
-          });
-          
-          html += `</div>`;
-        } else {
-          html += `<div class="empty-state"><h4>No ${source} income found for the selected period</h4></div>`;
-        }
-        
-        resultsContainer.innerHTML = html;
-        document.getElementById('sourceIncomePDFBtn').style.display = 'inline-flex';
-        showMessage(`✅ ${source} income report generated successfully!`, 'success');
-        
-      } catch (error) {
-        showError('Failed to generate source income report: ' + error.message);
-      }
-    }
-
     // ===== EXPORT FUNCTIONS =====
     function exportCSV(reportType) {
       const reportData = currentReportData[reportType];
@@ -3494,20 +3577,17 @@
         const isExpense = reportType === 'expense';
         const headers = isExpense ? ['Date', 'Category', 'Description', 'Amount (UGX)'] : ['Date', 'Source', 'Notes', 'Amount (UGX)'];
         
-        // Add headers
         csvContent += headers.join(',') + '\n';
         
-        // Add data rows
         reportData.items.forEach(item => {
-          const date = new Date(item.date).toLocaleDateString('en-UG');
-          const name = isExpense ? item.category : item.source;
-          const description = isExpense ? item.description || '' : item.notes || '';
-          const amount = item.amount;
+          const date = getFormattedDate(item);
+          const name = isExpense ? (item.category || 'Other') : (item.source || 'Other');
+          const description = isExpense ? (item.description || '') : (item.notes || '');
+          const amount = item.amount || 0;
           
           csvContent += `"${date}","${name}","${description.replace(/"/g, '""')}",${amount}\n`;
         });
         
-        // Create download link
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
@@ -3530,35 +3610,24 @@
       try {
         showMessage('📊 Preparing data export...', 'info');
         
-        // Fetch all data
-        const expenseSnapshot = await db.collection('expenses').get();
-        const incomeSnapshot = await db.collection('income').get();
-        const budgetSnapshot = await db.collection('budgets').get();
-        const reminderSnapshot = await db.collection('reminders').get();
-        
         const exportData = {
           exportDate: new Date().toISOString(),
-          expenses: [],
-          income: [],
-          budgets: [],
-          reminders: [],
+          userEmail: currentUser.email,
+          userId: currentUser.uid,
+          expenses: allExpenses,
+          income: allIncome,
+          budgets: budgets,
+          reminders: reminders,
           metadata: {
-            totalExpenses: expenseSnapshot.size,
-            totalIncome: incomeSnapshot.size,
-            totalBudgets: budgetSnapshot.size,
-            totalReminders: reminderSnapshot.size
+            totalExpenses: allExpenses.length,
+            totalIncome: allIncome.length,
+            totalBudgets: budgets.length,
+            totalReminders: reminders.length
           }
         };
         
-        expenseSnapshot.forEach(doc => exportData.expenses.push({ id: doc.id, ...doc.data() }));
-        incomeSnapshot.forEach(doc => exportData.income.push({ id: doc.id, ...doc.data() }));
-        budgetSnapshot.forEach(doc => exportData.budgets.push({ id: doc.id, ...doc.data() }));
-        reminderSnapshot.forEach(doc => exportData.reminders.push({ id: doc.id, ...doc.data() }));
-        
-        // Convert to JSON string
         const jsonString = JSON.stringify(exportData, null, 2);
         
-        // Create download link
         const blob = new Blob([jsonString], { type: 'application/json' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
@@ -3590,12 +3659,10 @@
       const today = new Date();
       const months = Math.max(1, Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24 * 30.44)));
       
-      // Simple calculation without compounding for now
       const totalSavings = monthlySavings * months;
       const monthlyGrowth = growthRate / 12 / 100;
       let futureValue = 0;
       
-      // Calculate with monthly contributions and growth
       for (let i = 0; i < months; i++) {
         futureValue = (futureValue + monthlySavings) * (1 + monthlyGrowth);
       }
@@ -3637,7 +3704,6 @@
       
       resultDiv.style.display = 'block';
       
-      // Store calculation for potential goal setting
       window.calculatedGoal = {
         amount: goalAmount,
         targetDate: targetDate.toISOString().split('T')[0],
@@ -3655,7 +3721,7 @@
       savingsGoal = {
         amount: window.calculatedGoal.amount,
         targetDate: window.calculatedGoal.targetDate,
-        currentSavings: 0 // Start with 0 savings
+        currentSavings: 0
       };
       
       saveSavingsGoal();
@@ -3672,44 +3738,70 @@
       container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>';
       
       try {
-        const expenseSnapshot = await db.collection('expenses').get();
-        const incomeSnapshot = await db.collection('income').get();
-        
         const monthlyExpenses = Array(12).fill(0);
         const monthlyIncome = Array(12).fill(0);
         const categories = {};
         
-        // Process expenses
-        expenseSnapshot.forEach(doc => {
-          const expense = doc.data();
-          const expenseDate = new Date(expense.date);
+        allExpenses.forEach(expense => {
+          let expenseDate;
+          if (expense.date) {
+            if (expense.date instanceof Date) {
+              expenseDate = expense.date;
+            } else if (typeof expense.date === 'string') {
+              if (expense.date.includes('/')) {
+                const [day, month, year] = expense.date.split('/');
+                expenseDate = new Date(year, month - 1, day);
+              } else {
+                const [year, month, day] = expense.date.split('-');
+                expenseDate = new Date(year, month - 1, day);
+              }
+            }
+          } else if (expense.timestamp && expense.timestamp.toDate) {
+            expenseDate = expense.timestamp.toDate();
+          } else {
+            return;
+          }
           
           if (expenseDate.getFullYear() == year) {
             const month = expenseDate.getMonth();
-            monthlyExpenses[month] += expense.amount;
+            monthlyExpenses[month] += parseFloat(expense.amount) || 0;
             
-            categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
+            const category = expense.category || 'Other';
+            categories[category] = (categories[category] || 0) + (parseFloat(expense.amount) || 0);
           }
         });
         
-        // Process income
-        incomeSnapshot.forEach(doc => {
-          const income = doc.data();
-          const incomeDate = new Date(income.date);
+        allIncome.forEach(income => {
+          let incomeDate;
+          if (income.date) {
+            if (income.date instanceof Date) {
+              incomeDate = income.date;
+            } else if (typeof income.date === 'string') {
+              if (income.date.includes('/')) {
+                const [day, month, year] = income.date.split('/');
+                incomeDate = new Date(year, month - 1, day);
+              } else {
+                const [year, month, day] = income.date.split('-');
+                incomeDate = new Date(year, month - 1, day);
+              }
+            }
+          } else if (income.timestamp && income.timestamp.toDate) {
+            incomeDate = income.timestamp.toDate();
+          } else {
+            return;
+          }
           
           if (incomeDate.getFullYear() == year) {
             const month = incomeDate.getMonth();
-            monthlyIncome[month] += income.amount;
+            monthlyIncome[month] += parseFloat(income.amount) || 0;
           }
         });
         
-        // Calculate totals
         const totalExpenses = monthlyExpenses.reduce((a, b) => a + b, 0);
         const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
         const netSavings = totalIncome - totalExpenses;
         const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100).toFixed(1) : 0;
         
-        // Generate HTML
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         
         let html = `
@@ -3736,10 +3828,11 @@
           <div style="margin-bottom: 25px;">
         `;
         
-        // Monthly chart
         monthNames.forEach((month, index) => {
-          const expenseHeight = monthlyExpenses[index] > 0 ? Math.min(100, (monthlyExpenses[index] / Math.max(...monthlyExpenses)) * 100) : 0;
-          const incomeHeight = monthlyIncome[index] > 0 ? Math.min(100, (monthlyIncome[index] / Math.max(...monthlyIncome)) * 100) : 0;
+          const maxExpense = Math.max(...monthlyExpenses) || 1;
+          const maxIncome = Math.max(...monthlyIncome) || 1;
+          const expenseHeight = monthlyExpenses[index] > 0 ? Math.min(100, (monthlyExpenses[index] / maxExpense) * 100) : 0;
+          const incomeHeight = monthlyIncome[index] > 0 ? Math.min(100, (monthlyIncome[index] / maxIncome) * 100) : 0;
           
           html += `
             <div style="margin-bottom: 15px;">
@@ -3760,7 +3853,6 @@
         
         html += `</div>`;
         
-        // Category breakdown
         if (Object.keys(categories).length > 0) {
           const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]).slice(0, 8);
           
@@ -3806,7 +3898,6 @@
         
         let yPos = 35;
         
-        // Add summary
         doc.setFontSize(12);
         doc.text('Generated on: ' + new Date().toLocaleDateString('en-UG'), 20, yPos);
         yPos += 15;
@@ -3822,46 +3913,89 @@
       }
     }
 
-    // ===== DASHBOARD FUNCTIONS =====
-    async function loadDashboard() {
-      try {
-        // Get all data without filtering by userEmail for backward compatibility
-        const expenseSnapshot = await db.collection('expenses').get();
-        const incomeSnapshot = await db.collection('income').get();
-        const now = new Date(), todayStr = now.toISOString().split('T')[0];
-        const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
-        const categories = {}, weeklyData = Array(7).fill(0);
-        
-        expenseSnapshot.forEach(doc => {
-          const expense = doc.data(), expenseDate = new Date(expense.date);
-          stats.totalExpense += expense.amount;
-          if (expense.date === todayStr) stats.today += expense.amount;
-          const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
-          if (expenseDate > weekAgo) stats.week += expense.amount;
-          if (expenseDate.getMonth() === now.getMonth() && expenseDate.getFullYear() === now.getFullYear()) stats.month += expense.amount;
-          if (expenseDate.getFullYear() === now.getFullYear()) stats.year += expense.amount;
-          categories[expense.category] = (categories[expense.category] || 0) + expense.amount;
-          weeklyData[expenseDate.getDay()] += expense.amount;
-        });
-        
-        incomeSnapshot.forEach(doc => { stats.totalIncome += doc.data().amount; });
-        stats.availableBalance = stats.totalIncome - stats.totalExpense;
-        
-        updateStatsUI(stats); 
-        updateCharts(categories, weeklyData); 
-        loadExpensesList(expenseSnapshot); 
-        loadIncomeList(incomeSnapshot);
-        
-        // Update savings goal with current savings (simplified: use available balance as savings)
-        if (savingsGoal.amount > 0) {
-          savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
-          updateSavingsGoalUI();
-        }
-      } catch (error) { 
-        showError('Failed to load dashboard: ' + error.message); 
+    // ===== DEBT TRACKER =====
+    function calculateDebt() {
+      const name = document.getElementById('debtName').value.trim();
+      const totalAmount = parseFloat(document.getElementById('debtTotalAmount').value) || 0;
+      const paidAmount = parseFloat(document.getElementById('debtPaidAmount').value) || 0;
+      const dueDate = new Date(document.getElementById('debtDueDate').value);
+      const interestRate = parseFloat(document.getElementById('debtInterestRate').value) || 0;
+      
+      if (!name || totalAmount <= 0) {
+        showError('Please enter valid debt information');
+        return;
       }
+      
+      const remaining = totalAmount - paidAmount;
+      const today = new Date();
+      const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+      const monthlyInterest = (totalAmount * interestRate) / 12 / 100;
+      const totalInterest = (remaining * interestRate * daysUntilDue) / 36500;
+      const progress = (paidAmount / totalAmount) * 100;
+      
+      const resultDiv = document.getElementById('debtCalculationResult');
+      const detailsDiv = document.getElementById('debtResultDetails');
+      
+      detailsDiv.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Total Debt</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--danger);">${formatCurrency(totalAmount)}</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Amount Paid</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--success);">${formatCurrency(paidAmount)}</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Remaining</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: var(--warning);">${formatCurrency(remaining)}</div>
+          </div>
+          <div style="background: var(--light); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; color: var(--gray);">Progress</div>
+            <div style="font-size: 1.2rem; font-weight: 700; color: ${progress >= 50 ? 'var(--success)' : 'var(--warning)'};">${progress.toFixed(1)}%</div>
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <div style="font-weight: 600; color: var(--warning);">
+            ${remaining > 0 ? `⚠️ ${formatCurrency(remaining)} remaining` : '✅ Debt fully paid!'}
+          </div>
+          ${remaining > 0 ? `
+            <div style="margin-top: 5px; font-size: 0.9rem;">
+              Due in: ${daysUntilDue} days<br>
+              Monthly interest: ${formatCurrency(monthlyInterest)}<br>
+              Total interest payable: ${formatCurrency(totalInterest)}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      resultDiv.style.display = 'block';
+      
+      window.currentDebt = {
+        name,
+        totalAmount,
+        paidAmount,
+        dueDate: dueDate.toISOString().split('T')[0],
+        interestRate,
+        remaining
+      };
+    }
+    
+    function saveDebt() {
+      if (!window.currentDebt) {
+        showError('Please calculate debt first before saving');
+        return;
+      }
+      
+      if (!debts) debts = [];
+      debts.push(window.currentDebt);
+      localStorage.setItem('debts_' + currentUser.uid, JSON.stringify(debts));
+      
+      document.getElementById('debtTrackerModal').style.display = 'none';
+      showMessage('✅ Debt saved successfully!', 'success');
     }
 
+    // ===== DASHBOARD FUNCTIONS =====
     function updateStatsUI(stats) {
       document.getElementById('totalIncomeValue').textContent = formatCurrency(stats.totalIncome);
       document.getElementById('totalExpenseValue').textContent = formatCurrency(stats.totalExpense);
@@ -3882,32 +4016,37 @@
     }
 
     function updateCharts(categories, weeklyData) {
-      const pieCtx = document.getElementById('pieChart').getContext('2d'), 
-            categoryColors = ['#667eea', '#f093fb', '#f5576c', '#4ecdc4', '#ffd166', '#06d6a0', '#a78bfa', '#f97316'];
+      const pieCtx = document.getElementById('pieChart')?.getContext('2d');
+      const barCtx = document.getElementById('barChart')?.getContext('2d');
+      
+      if (!pieCtx || !barCtx) return;
+      
+      const categoryColors = ['#667eea', '#f093fb', '#f5576c', '#4ecdc4', '#ffd166', '#06d6a0', '#a78bfa', '#f97316'];
       
       if (pieChart) pieChart.destroy();
-      pieChart = new Chart(pieCtx, { 
-        type: 'doughnut', 
-        data: { 
-          labels: Object.keys(categories), 
-          datasets: [{ 
-            data: Object.values(categories), 
-            backgroundColor: categoryColors, 
-            borderWidth: 2 
-          }] 
-        }, 
-        options: { 
-          responsive: true, 
-          cutout: '70%',
-          plugins: {
-            legend: {
-              position: 'bottom'
+      if (Object.keys(categories).length > 0) {
+        pieChart = new Chart(pieCtx, { 
+          type: 'doughnut', 
+          data: { 
+            labels: Object.keys(categories), 
+            datasets: [{ 
+              data: Object.values(categories), 
+              backgroundColor: categoryColors, 
+              borderWidth: 2 
+            }] 
+          }, 
+          options: { 
+            responsive: true, 
+            cutout: '70%',
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
             }
-          }
-        } 
-      });
+          } 
+        });
+      }
       
-      const barCtx = document.getElementById('barChart').getContext('2d');
       if (barChart) barChart.destroy();
       barChart = new Chart(barCtx, { 
         type: 'bar', 
@@ -3942,26 +4081,25 @@
       });
     }
 
-    function loadExpensesList(snapshot) {
+    function loadExpensesList(expenses) {
       const container = document.getElementById('expensesList');
-      if (!snapshot || snapshot.empty) { 
+      if (!expenses || expenses.length === 0) { 
         container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No expenses found.</p></div>`; 
         return; 
       }
       
-      let expenses = []; 
-      snapshot.forEach(doc => expenses.push({ id: doc.id, ...doc.data() })); 
-      expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-      
       let html = ''; 
       expenses.slice(0, 30).forEach(expense => {
-        const date = new Date(expense.date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric' });
+        const date = getFormattedDate(expense);
         const descSafe = (expense.description || '').replace(/'/g, "\\'");
+        const category = expense.category || 'Other';
+        const categoryClass = category.toLowerCase().replace(' ', '-').replace('/', '-');
+        
         html += `
           <div class="expense-item">
             <div class="item-content">
-              <span class="category-badge category-${expense.category.toLowerCase().replace(' ', '-')}">
-                <i class="fas fa-tag"></i> ${expense.category}
+              <span class="category-badge category-${categoryClass}">
+                <i class="fas fa-tag"></i> ${category}
               </span>
               <strong>${date}</strong>
               <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
@@ -3970,10 +4108,10 @@
             </div>
             <div class="expense-amount">${formatCurrency(expense.amount)}</div>
             <div class="item-actions">
-              <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', ${expense.amount}, '${expense.category}', '${expense.date}', '${descSafe}')">
+              <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', ${expense.amount}, '${category}', '${expense.date || ''}', '${descSafe}')">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${expense.category} - ${formatCurrency(expense.amount)}')">
+              <button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${category} - ${formatCurrency(expense.amount)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -3983,31 +4121,29 @@
       
       container.innerHTML = html;
       
-      // Populate filter dropdowns
       populateCategoryFilter();
       populateMonthFilter('expense');
     }
     
-    function loadIncomeList(snapshot) {
+    function loadIncomeList(income) {
       const container = document.getElementById('incomeList');
-      if (!snapshot || snapshot.empty) { 
+      if (!income || income.length === 0) { 
         container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No income records found.</p></div>`; 
         return; 
       }
       
-      let income = []; 
-      snapshot.forEach(doc => income.push({ id: doc.id, ...doc.data() })); 
-      income.sort((a, b) => new Date(b.date) - new Date(a.date));
-      
       let html = ''; 
       income.slice(0, 20).forEach(inc => {
-        const date = new Date(inc.date).toLocaleDateString('en-UG', { month: 'short', day: 'numeric' });
+        const date = getFormattedDate(inc);
         const notesSafe = (inc.notes || '').replace(/'/g, "\\'");
+        const source = inc.source || 'Other';
+        const sourceClass = source.toLowerCase().replace('/', '-');
+        
         html += `
           <div class="expense-item">
             <div class="item-content">
-              <span class="category-badge category-${inc.source.toLowerCase().replace('/', '-')}" style="background:var(--success); color:white;">
-                <i class="fas fa-briefcase"></i> ${inc.source}
+              <span class="category-badge category-${sourceClass}" style="background:var(--success); color:white;">
+                <i class="fas fa-briefcase"></i> ${source}
               </span>
               <strong>${date}</strong>
               <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
@@ -4016,10 +4152,10 @@
             </div>
             <div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div>
             <div class="item-actions">
-              <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${inc.source}', '${inc.date}', '${notesSafe}')">
+              <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${source}', '${inc.date || ''}', '${notesSafe}')">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${inc.source} - ${formatCurrency(inc.amount)}')">
+              <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${source} - ${formatCurrency(inc.amount)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -4029,7 +4165,6 @@
       
       container.innerHTML = html;
       
-      // Populate filter dropdowns
       populateSourceFilter();
       populateMonthFilter('income');
     }
@@ -4038,10 +4173,8 @@
       const select = document.getElementById('filterExpenseCategory');
       const categories = new Set();
       
-      // Get unique categories from all expenses
-      document.querySelectorAll('#expensesList .category-badge').forEach(badge => {
-        const category = badge.textContent.replace('⚡', '').replace('💧', '').replace('🛒', '').replace('🍲', '').replace('⛽', '').replace('🚗', '').replace('🌐', '').replace('📱', '').replace('🏠', '').replace('👕', '').replace('👔', '').replace('📚', '').replace('🏥', '').replace('💰', '').replace('💳', '').replace('🤲', '').replace('🎬', '').replace('💸', '').replace('🛍️', '').replace('📦', '').trim();
-        categories.add(category);
+      allExpenses.forEach(expense => {
+        categories.add(expense.category || 'Other');
       });
       
       select.innerHTML = '<option value="">All Categories</option>';
@@ -4054,9 +4187,8 @@
       const select = document.getElementById('filterIncomeSource');
       const sources = new Set();
       
-      document.querySelectorAll('#incomeList .category-badge').forEach(badge => {
-        const source = badge.textContent.replace('💼', '').replace('💻', '').replace('📈', '').replace('🎁', '').replace('📦', '').trim();
-        sources.add(source);
+      allIncome.forEach(income => {
+        sources.add(income.source || 'Other');
       });
       
       select.innerHTML = '<option value="">All Sources</option>';
@@ -4069,12 +4201,11 @@
       const select = document.getElementById(`filter${type.charAt(0).toUpperCase() + type.slice(1)}Month`);
       const months = new Set();
       
-      document.querySelectorAll(`#${type}List strong`).forEach(dateElement => {
-        const dateText = dateElement.textContent;
-        if (dateText) {
-          const month = getMonthFromDate(dateText);
-          if (month) months.add(month);
-        }
+      const items = type === 'expense' ? allExpenses : allIncome;
+      items.forEach(item => {
+        const date = getDateFromExpense(item);
+        const month = date.toLocaleDateString('en-US', { month: 'short' });
+        months.add(month);
       });
       
       select.innerHTML = '<option value="">All Months</option>';
@@ -4106,44 +4237,16 @@
         await db.collection(collectionToDelete).doc(itemToDeleteId).delete();
         showMessage('✅ Item deleted successfully', 'success');
         
-        // Reset editing states if deleting an item being edited
         if (collectionToDelete === 'expenses' && itemToDeleteId === editingExpenseId) cancelEditExpense();
         if (collectionToDelete === 'income' && itemToDeleteId === editingIncomeId) cancelEditIncome();
         if (collectionToDelete === 'budgets' && itemToDeleteId === editingBudgetId) cancelEditBudget();
         if (collectionToDelete === 'reminders' && itemToDeleteId === editingReminderId) cancelEditReminder();
         
         hideDeleteModal(); 
-        
-        // Reload relevant data
-        loadDashboard(); 
-        if (collectionToDelete === 'budgets') loadBudgets();
-        if (collectionToDelete === 'reminders') loadReminders();
-        
-        if (currentReportPeriod.expense && collectionToDelete === 'expenses') {
-          generateReport(currentReportPeriod.expense, 'expense', document.querySelector(`#expenseReportControls button.active`));
-        }
-        if (currentReportPeriod.income && collectionToDelete === 'income') {
-          generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
-        }
       } catch (error) { 
         showError('Failed to delete: ' + error.message); 
         hideDeleteModal(); 
       }
-    }
-
-    // Reset functions for specific reports
-    function resetCategoryExpenseForm() {
-      setDefaultSpecificReportDates();
-      document.getElementById('specificExpenseCategory').value = 'Groceries';
-      document.getElementById('categoryExpenseReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a category and date range to generate a specific expense report</p></div>';
-      document.getElementById('categoryExpensePDFBtn').style.display = 'none';
-    }
-    
-    function resetSourceIncomeForm() {
-      setDefaultSpecificReportDates();
-      document.getElementById('specificIncomeSource').value = 'Salary';
-      document.getElementById('sourceIncomeReportResults').innerHTML = '<div class="loading"><div class="spinner"></div><p>Select a source and date range to generate a specific income report</p></div>';
-      document.getElementById('sourceIncomePDFBtn').style.display = 'none';
     }
 
     // ===== PDF DOWNLOAD FUNCTIONS =====
@@ -4163,7 +4266,7 @@
 
         doc.setFontSize(18); 
         doc.setTextColor(67, 97, 238); 
-        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
+        doc.text(`Expense Tracker PRO - ${title}`, 105, 20, { align: 'center' });
         
         doc.setFontSize(12); 
         doc.setTextColor(0,0,0); 
@@ -4171,7 +4274,6 @@
         
         let yPos = 45; 
         
-        // Summary
         doc.setFontSize(14); 
         doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); 
         doc.text('Summary', 20, yPos); 
@@ -4184,7 +4286,6 @@
         doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
         yPos += 15;
         
-        // Breakdown
         if (reportData.breakdown.length > 0) {
             doc.setFontSize(14); 
             doc.setTextColor(tableColor[0], tableColor[1], tableColor[2]); 
@@ -4206,7 +4307,6 @@
             yPos = doc.lastAutoTable.finalY + 15;
         }
 
-        // Details
         if (reportData.items.length > 0) {
             doc.setFontSize(14); 
             doc.setTextColor(67, 97, 238); 
@@ -4214,13 +4314,14 @@
             yPos += 10;
             
             const detailTable = reportData.items.map(item => {
-                const name = isExpense ? item.category : item.source;
-                const description = isExpense ? item.description || '-' : item.notes || '-';
+                const name = isExpense ? (item.category || 'Other') : (item.source || 'Other');
+                const description = isExpense ? (item.description || '-') : (item.notes || '-');
+                const displayDate = getFormattedDate(item);
                 return [
-                  new Date(item.date).toLocaleDateString('en-UG'), 
+                  displayDate, 
                   name, 
                   description, 
-                  formatCurrency(item.amount)
+                  formatCurrency(item.amount || 0)
                 ];
             });
             
@@ -4239,190 +4340,11 @@
       }
     }
 
-    function downloadCategoryExpensePDF() {
-      const reportData = currentReportData.categoryExpense;
-      if (!reportData) { showError('No category expense report data available to download.'); return; }
-      
-      try {
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF();
-        const title = `${reportData.category} Expense Report`;
-        
-        doc.setFontSize(18); 
-        doc.setTextColor(67, 97, 238); 
-        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
-        
-        doc.setFontSize(12); 
-        doc.setTextColor(0,0,0); 
-        doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
-        
-        let yPos = 45;
-        
-        // Summary
-        doc.setFontSize(14); 
-        doc.setTextColor(255, 193, 7); 
-        doc.text('Summary', 20, yPos); 
-        yPos += 10;
-        
-        doc.setFontSize(11); 
-        doc.setTextColor(0,0,0);
-        doc.text(`Total ${reportData.category} Expenses: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); 
-        yPos += 7;
-        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
-        yPos += 7;
-        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); 
-        yPos += 15;
-        
-        // Daily Breakdown
-        if (Object.keys(reportData.dailyBreakdown).length > 0) {
-          doc.setFontSize(14); 
-          doc.setTextColor(255, 193, 7); 
-          doc.text('Daily Breakdown', 20, yPos); 
-          yPos += 10;
-          
-          const dailyTable = Object.entries(reportData.dailyBreakdown)
-            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
-            .map(([date, amount]) => {
-              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
-              return [new Date(date).toLocaleDateString('en-UG'), formatCurrency(amount), percentage];
-            });
-          
-          doc.autoTable({ 
-            startY: yPos, 
-            head: [['Date', 'Amount', 'Percentage']], 
-            body: dailyTable, 
-            headStyles: { fillColor: [255, 193, 7] } 
-          });
-          
-          yPos = doc.lastAutoTable.finalY + 15;
-        }
-        
-        // Transaction Details
-        if (reportData.items.length > 0) {
-          doc.setFontSize(14); 
-          doc.setTextColor(67, 97, 238); 
-          doc.text('Transaction Details', 20, yPos); 
-          yPos += 10;
-          
-          const detailTable = reportData.items.map(item => {
-            return [
-              new Date(item.date).toLocaleDateString('en-UG'),
-              item.description || '-',
-              formatCurrency(item.amount)
-            ];
-          });
-          
-          doc.autoTable({ 
-            startY: yPos, 
-            head: [['Date', 'Description', 'Amount']], 
-            body: detailTable, 
-            headStyles: { fillColor: [255, 193, 7] } 
-          });
-        }
-        
-        doc.save(`${reportData.category.toLowerCase().replace(' ', '_')}_expense_report_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ Category Expense PDF Downloaded', 'success');
-      } catch (error) { 
-        showError('PDF Error: ' + error.message); 
-      }
-    }
-
-    function downloadSourceIncomePDF() {
-      const reportData = currentReportData.sourceIncome;
-      if (!reportData) { showError('No source income report data available to download.'); return; }
-      
-      try {
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF();
-        const title = `${reportData.source} Income Report`;
-        
-        doc.setFontSize(18); 
-        doc.setTextColor(67, 97, 238); 
-        doc.text(`Angulo's Tracker - ${title}`, 105, 20, { align: 'center' });
-        
-        doc.setFontSize(12); 
-        doc.setTextColor(0,0,0); 
-        doc.text(reportData.periodLabel, 105, 30, { align: 'center' });
-        
-        let yPos = 45;
-        
-        // Summary
-        doc.setFontSize(14); 
-        doc.setTextColor(23, 162, 184); 
-        doc.text('Summary', 20, yPos); 
-        yPos += 10;
-        
-        doc.setFontSize(11); 
-        doc.setTextColor(0,0,0);
-        doc.text(`Total ${reportData.source} Income: ${formatCurrency(reportData.totalAmount)}`, 20, yPos); 
-        yPos += 7;
-        doc.text(`Total Transactions: ${reportData.count}`, 20, yPos); 
-        yPos += 7;
-        doc.text(`Average per Transaction: ${reportData.count > 0 ? formatCurrency(reportData.totalAmount / reportData.count) : formatCurrency(0)}`, 20, yPos); 
-        yPos += 15;
-        
-        // Monthly Breakdown
-        if (Object.keys(reportData.monthlyBreakdown).length > 0) {
-          doc.setFontSize(14); 
-          doc.setTextColor(23, 162, 184); 
-          doc.text('Monthly Breakdown', 20, yPos); 
-          yPos += 10;
-          
-          const monthlyTable = Object.entries(reportData.monthlyBreakdown)
-            .sort((a, b) => {
-              return new Date(b[0].split(' ')[1], new Date(`${a[0]} 1`).getMonth()) - 
-                     new Date(a[0].split(' ')[1], new Date(`${b[0]} 1`).getMonth());
-            })
-            .map(([month, amount]) => {
-              const percentage = reportData.totalAmount > 0 ? ((amount / reportData.totalAmount) * 100).toFixed(1) + '%' : '0%';
-              return [month, formatCurrency(amount), percentage];
-            });
-          
-          doc.autoTable({ 
-            startY: yPos, 
-            head: [['Month', 'Amount', 'Percentage']], 
-            body: monthlyTable, 
-            headStyles: { fillColor: [23, 162, 184] } 
-          });
-          
-          yPos = doc.lastAutoTable.finalY + 15;
-        }
-        
-        // Transaction Details
-        if (reportData.items.length > 0) {
-          doc.setFontSize(14); 
-          doc.setTextColor(67, 97, 238); 
-          doc.text('Transaction Details', 20, yPos); 
-          yPos += 10;
-          
-          const detailTable = reportData.items.map(item => {
-            return [
-              new Date(item.date).toLocaleDateString('en-UG'),
-              item.notes || '-',
-              formatCurrency(item.amount)
-            ];
-          });
-          
-          doc.autoTable({ 
-            startY: yPos, 
-            head: [['Date', 'Notes', 'Amount']], 
-            body: detailTable, 
-            headStyles: { fillColor: [23, 162, 184] } 
-          });
-        }
-        
-        doc.save(`${reportData.source.toLowerCase().replace(' ', '_')}_income_report_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ Source Income PDF Downloaded', 'success');
-      } catch (error) { 
-        showError('PDF Error: ' + error.message); 
-      }
-    }
-
     // Auto-refresh dashboard every 60 seconds
     setInterval(() => { 
       if (isFirestoreReady && !isEditingExpense && !isEditingIncome && currentUser) {
-        loadDashboard(); 
-        loadReminders(); // Also refresh reminders to update due dates
+        updateDashboardFromRealtimeData();
+        loadReminders();
       } 
     }, 60000);
   </script>
