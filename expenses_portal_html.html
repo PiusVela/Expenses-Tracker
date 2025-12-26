@@ -74,12 +74,13 @@
       --reminder-color: #d8b4fe;
     }
 
-    /* ===== UPDATED AUTH PAGES STYLES - MOBILE FIXED ===== */
+    /* ===== UPDATED AUTH PAGES STYLES - MOBILE FIXED FOR CHROME ===== */
     .auth-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
+      /* FIX FOR CHROME: Use 100% instead of 100vh for better compatibility */
       height: 100%;
       background: var(--body-bg);
       display: flex;
@@ -90,6 +91,30 @@
       transition: background 0.3s ease;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      /* Chrome-specific fix */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+    
+    /* Mobile-specific height fix for Chrome */
+    @media (max-width: 768px) {
+      .auth-overlay {
+        /* FIX FOR CHROME: Use flex-start for better mobile Chrome rendering */
+        align-items: flex-start;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        /* Ensure it takes full height on mobile */
+        height: auto;
+        min-height: 100%;
+      }
+      
+      /* Additional Chrome-specific fix for iOS Chrome */
+      @supports (-webkit-touch-callout: none) {
+        .auth-overlay {
+          /* Safari and Chrome on iOS */
+          min-height: -webkit-fill-available;
+        }
+      }
     }
     
     .auth-container {
@@ -109,6 +134,17 @@
       background: var(--card-bg);
     }
     
+    /* FIX FOR MOBILE CHROME: Adjust auth container on mobile */
+    @media (max-width: 768px) {
+      .auth-container {
+        flex-direction: column;
+        min-height: auto;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 20px auto;
+      }
+    }
+    
     /* Left Panel */
     .auth-left-panel {
       flex: 1;
@@ -121,6 +157,14 @@
       position: relative;
       overflow: hidden;
       min-height: 400px;
+    }
+    
+    /* FIX FOR MOBILE CHROME: Adjust left panel height */
+    @media (max-width: 768px) {
+      .auth-left-panel {
+        min-height: 250px;
+        padding: 25px 20px;
+      }
     }
     
     .auth-left-panel::before {
@@ -150,6 +194,17 @@
       font-weight: 300;
     }
     
+    /* FIX FOR MOBILE CHROME: Adjust font sizes for better readability */
+    @media (max-width: 768px) {
+      .auth-left-content h1 {
+        font-size: 1.8rem;
+      }
+      
+      .auth-left-content .tagline {
+        font-size: 1rem;
+      }
+    }
+    
     .features-list {
       list-style: none;
       padding: 0;
@@ -162,6 +217,18 @@
       margin-bottom: 15px;
       font-size: 1rem;
       color: rgba(255, 255, 255, 0.85);
+    }
+    
+    /* FIX FOR MOBILE CHROME: Adjust features list for mobile */
+    @media (max-width: 768px) {
+      .features-list {
+        margin: 15px 0;
+      }
+      
+      .features-list li {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+      }
     }
     
     .features-list li i {
@@ -198,6 +265,15 @@
       -webkit-overflow-scrolling: touch;
     }
     
+    /* FIX FOR MOBILE CHROME: Ensure right panel scrolls properly */
+    @media (max-width: 768px) {
+      .auth-right-panel {
+        padding: 25px 20px;
+        overflow-y: visible;
+        justify-content: flex-start;
+      }
+    }
+    
     .auth-right-content {
       max-width: 400px;
       width: 100%;
@@ -218,6 +294,17 @@
     .auth-welcome p {
       color: var(--text-secondary);
       font-size: 0.9rem;
+    }
+    
+    /* FIX FOR MOBILE CHROME: Adjust auth welcome text */
+    @media (max-width: 768px) {
+      .auth-welcome h2 {
+        font-size: 1.4rem;
+      }
+      
+      .auth-welcome p {
+        font-size: 0.85rem;
+      }
     }
     
     .auth-tabs {
@@ -281,6 +368,8 @@
       background: var(--input-bg);
       color: var(--text-color);
       -webkit-appearance: none;
+      /* FIX FOR CHROME: Prevent zoom on input focus */
+      font-size: 16px !important;
     }
     
     .auth-input-group input:focus {
@@ -305,6 +394,8 @@
       gap: 10px;
       margin-top: 10px;
       width: 100%;
+      /* FIX FOR CHROME: Prevent tap highlight */
+      -webkit-tap-highlight-color: transparent;
     }
     
     .auth-btn:hover {
@@ -504,6 +595,8 @@
       flex-direction: column;
       transition: background 0.3s ease, color 0.3s ease;
       overflow-x: hidden;
+      /* FIX FOR CHROME: Prevent scrolling issues */
+      position: relative;
     }
 
     .container {
@@ -1156,6 +1249,7 @@
       position: relative; 
       overflow: hidden;
       min-height: 44px; /* Better touch target */
+      -webkit-tap-highlight-color: transparent;
     }
     
     .btn:hover::after { 
@@ -1363,6 +1457,7 @@
       font-size: 0.85rem;
       white-space: nowrap;
       flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .btn-report:hover, 
@@ -1583,6 +1678,7 @@
       transition: all 0.2s; 
       font-size: 0.9rem; 
       flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .action-btn.edit { 
@@ -2023,6 +2119,7 @@
       white-space: nowrap;
       flex-shrink: 0;
       min-height: 40px;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .quick-action-btn:hover {
@@ -2158,21 +2255,31 @@
       }
     }
     
-    /* Mobile screens */
+    /* Mobile screens - UPDATED FOR CHROME FIX */
     @media (max-width: 768px) {
       body {
         padding: 0;
+        /* Chrome height fix */
+        height: 100%;
       }
       
       .auth-overlay {
         padding: 10px;
         align-items: flex-start;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        /* Chrome-specific fixes */
+        min-height: 100%;
+        height: auto;
       }
       
       .auth-container {
         margin: 10px auto;
         border-radius: 16px;
         max-width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
       
       .auth-left-panel,
@@ -2619,17 +2726,31 @@
       }
     }
     
-    /* Prevent zoom on input focus for mobile */
+    /* Prevent zoom on input focus for mobile - CHROME FIX */
     @media screen and (max-width: 768px) {
       input, select, textarea {
         font-size: 16px !important;
       }
+      
+      /* Additional Chrome fix for form elements */
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="number"],
+      input[type="date"],
+      input[type="month"],
+      select,
+      textarea {
+        -webkit-appearance: none;
+        border-radius: 10px;
+      }
     }
     
-    /* iOS specific fixes */
+    /* iOS specific fixes - ENHANCED FOR CHROME */
     @supports (-webkit-touch-callout: none) {
       .auth-overlay {
-        height: -webkit-fill-available;
+        /* Safari and Chrome on iOS */
+        min-height: -webkit-fill-available;
       }
       
       body {
@@ -2639,6 +2760,20 @@
       input, select, textarea {
         -webkit-appearance: none;
         border-radius: 10px;
+      }
+    }
+    
+    /* Chrome-specific fixes */
+    @media all and (-webkit-min-device-pixel-ratio:0) and (max-width: 768px) {
+      .auth-overlay {
+        /* Force hardware acceleration for Chrome */
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+      }
+      
+      .auth-container {
+        /* Prevent Chrome rendering issues */
+        will-change: transform;
       }
     }
   </style>
@@ -3362,7 +3497,7 @@
     </div>
   </div>
 
-  <!-- NEW: Yearly Overview Modal -->
+  <!-- NEW: Yearly Overview Modal - UPDATED WITH REPORT FUNCTIONALITY -->
   <div class="modal-overlay" id="yearlyOverviewModal">
     <div class="modal" style="max-width: 800px;">
       <h3><i class="fas fa-chart-bar"></i> Yearly Financial Overview</h3>
@@ -3380,6 +3515,23 @@
       <div class="modal-actions">
         <button class="btn btn-primary" onclick="document.getElementById('yearlyOverviewModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
         <button class="btn btn-success" onclick="downloadYearlyPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+        <button class="btn btn-primary" onclick="downloadYearlyCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+        <button class="btn btn-danger" onclick="generateYearlyReport()"><i class="fas fa-chart-bar"></i> Generate Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Yearly Report Modal -->
+  <div class="modal-overlay" id="yearlyReportModal">
+    <div class="modal" style="max-width: 800px;">
+      <h3><i class="fas fa-chart-bar"></i> Yearly Financial Report</h3>
+      <div id="yearlyReportContent">
+        <div class="loading"><div class="spinner"></div><p>Generating yearly report...</p></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('yearlyReportModal').style.display = 'none'"><i class="fas fa-times"></i> Close</button>
+        <button class="btn btn-success" onclick="downloadYearlyReportPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+        <button class="btn btn-primary" onclick="downloadYearlyReportCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
       </div>
     </div>
   </div>
@@ -3493,6 +3645,9 @@
     // New variables for category reports
     let currentCategoryReportType = null; // 'expense' or 'income'
     
+    // Yearly overview data
+    let yearlyData = null;
+    
     // Real-time listeners
     let expensesListener = null;
     let incomeListener = null;
@@ -3572,7 +3727,25 @@
       
       // Add touch event listeners for better mobile interaction
       setupTouchEvents();
+      
+      // Chrome mobile fix for viewport height
+      fixChromeViewportHeight();
     });
+    
+    // FIX FOR CHROME MOBILE: Fix viewport height issues
+    function fixChromeViewportHeight() {
+      // First we get the viewport height and we multiply it by 1% to get a value for a vh unit
+      let vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      
+      // We listen to the resize event
+      window.addEventListener('resize', () => {
+        // We execute the same script as before
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      });
+    }
     
     function setupTouchEvents() {
       // Prevent double-tap zoom on mobile
@@ -4284,6 +4457,17 @@
       loadYearlyOverview();
     }
     
+    // NEW: Generate Yearly Report
+    function generateYearlyReport() {
+      if (!yearlyData) {
+        showError('Please load yearly overview first');
+        return;
+      }
+      
+      document.getElementById('yearlyReportModal').style.display = 'flex';
+      generateYearlyReportContent();
+    }
+    
     function showDebtTracker() {
       document.getElementById('debtTrackerModal').style.display = 'flex';
     }
@@ -4417,7 +4601,6 @@
           items.forEach(item => {
             const date = getDateFromExpense(item);
             const description = isExpense ? (item.description || '') : (item.notes || '');
-            const otherField = isExpense ? '' : '';
             
             html += `
               <div class="expense-item" style="padding: 10px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
@@ -5721,6 +5904,583 @@
       }
     }
 
+    // ===== YEARLY OVERVIEW FUNCTIONS - ENHANCED WITH REPORT GENERATION =====
+    async function loadYearlyOverview() {
+      const year = document.getElementById('yearSelect').value;
+      const container = document.getElementById('yearlyOverviewContent');
+      
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>';
+      
+      try {
+        const monthlyExpenses = Array(12).fill(0);
+        const monthlyIncome = Array(12).fill(0);
+        const categories = {};
+        const yearlyExpenses = [];
+        const yearlyIncome = [];
+        
+        // Process expenses for the selected year
+        allExpenses.forEach(expense => {
+          const expenseDate = getDateFromExpense(expense);
+          
+          if (expenseDate.getFullYear() == year) {
+            const month = expenseDate.getMonth();
+            const expenseAmount = parseFloat(expense.amount) || 0;
+            monthlyExpenses[month] += expenseAmount;
+            
+            const category = expense.category || 'Other';
+            categories[category] = (categories[category] || 0) + expenseAmount;
+            yearlyExpenses.push({ ...expense, date: expenseDate });
+          }
+        });
+        
+        // Process income for the selected year
+        allIncome.forEach(income => {
+          const incomeDate = getDateFromExpense(income);
+          
+          if (incomeDate.getFullYear() == year) {
+            const month = incomeDate.getMonth();
+            const incomeAmount = parseFloat(income.amount) || 0;
+            monthlyIncome[month] += incomeAmount;
+            yearlyIncome.push({ ...income, date: incomeDate });
+          }
+        });
+        
+        const totalExpenses = monthlyExpenses.reduce((a, b) => a + b, 0);
+        const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
+        const netSavings = totalIncome - totalExpenses;
+        const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100).toFixed(1) : 0;
+        
+        // Store data for report generation
+        yearlyData = {
+          year: year,
+          monthlyExpenses: monthlyExpenses,
+          monthlyIncome: monthlyIncome,
+          totalExpenses: totalExpenses,
+          totalIncome: totalIncome,
+          netSavings: netSavings,
+          savingsRate: savingsRate,
+          categories: categories,
+          expenses: yearlyExpenses,
+          income: yearlyIncome,
+          monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        };
+        
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        let html = `
+          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr 1fr; margin-bottom: 25px;">
+            <div class="report-summary-item" style="border: 1px solid var(--success);">
+              <div class="label" style="color: var(--success);">Total Income</div>
+              <div class="value" style="color: var(--success);">${formatCurrency(totalIncome)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid var(--danger);">
+              <div class="label" style="color: var(--danger);">Total Expenses</div>
+              <div class="value" style="color: var(--danger);">${formatCurrency(totalExpenses)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">
+              <div class="label" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">Net Savings</div>
+              <div class="value" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(netSavings)}</div>
+            </div>
+            <div class="report-summary-item" style="border: 1px solid var(--info);">
+              <div class="label" style="color: var(--info);">Savings Rate</div>
+              <div class="value" style="color: var(--info);">${savingsRate}%</div>
+            </div>
+          </div>
+          
+          <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-line"></i> Monthly Trends</h4>
+          <div style="margin-bottom: 25px;">
+        `;
+        
+        monthNames.forEach((month, index) => {
+          const maxExpense = Math.max(...monthlyExpenses) || 1;
+          const maxIncome = Math.max(...monthlyIncome) || 1;
+          const expenseHeight = monthlyExpenses[index] > 0 ? Math.min(100, (monthlyExpenses[index] / maxExpense) * 100) : 0;
+          const incomeHeight = monthlyIncome[index] > 0 ? Math.min(100, (monthlyIncome[index] / maxIncome) * 100) : 0;
+          
+          html += `
+            <div style="margin-bottom: 15px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="font-weight: 600;">${month}</span>
+                <span style="font-size: 0.9rem;">
+                  <span style="color: var(--success);">${formatCurrency(monthlyIncome[index])}</span> / 
+                  <span style="color: var(--danger);">${formatCurrency(monthlyExpenses[index])}</span>
+                </span>
+              </div>
+              <div style="display: flex; height: 20px; background: var(--light); border-radius: 4px; overflow: hidden;">
+                <div style="width: ${incomeHeight}%; background: linear-gradient(90deg, var(--success), #2ecc71);"></div>
+                <div style="width: ${expenseHeight}%; background: linear-gradient(90deg, var(--danger), #e74c3c);"></div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+        
+        if (Object.keys(categories).length > 0) {
+          const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]).slice(0, 8);
+          
+          html += `
+            <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-pie"></i> Top Expense Categories</h4>
+            <div class="category-breakdown">
+          `;
+          
+          sortedCategories.forEach(([name, amount]) => {
+            const percentage = totalExpenses > 0 ? Math.round((amount / totalExpenses) * 100) : 0;
+            
+            html += `
+              <div class="category-item">
+                <div class="category-name"><span class="category-badge category-${name.toLowerCase().replace(' ', '-')}">${name}</span></div>
+                <div class="category-bar">
+                  <div class="category-fill" style="width: ${percentage}%"></div>
+                </div>
+                <div class="category-amount">${formatCurrency(amount)}</div>
+                <div class="category-percentage">${percentage}%</div>
+              </div>
+            `;
+          });
+          
+          html += `</div>`;
+        }
+        
+        // Add report generation section
+        html += `
+          <div style="margin-top: 30px; padding: 20px; background: var(--light); border-radius: 12px; border: 1px solid var(--border);">
+            <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-file-alt"></i> Generate Detailed Report</h4>
+            <p style="margin-bottom: 15px; color: var(--gray); font-size: 0.9rem;">
+              Generate a comprehensive report for ${year} with detailed breakdown of all transactions, monthly trends, and category analysis.
+            </p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="btn btn-success" onclick="generateYearlyReport()">
+                <i class="fas fa-chart-bar"></i> View Report
+              </button>
+              <button class="btn btn-primary" onclick="downloadYearlyReportPDF()">
+                <i class="fas fa-file-pdf"></i> Download PDF
+              </button>
+              <button class="btn btn-info" onclick="downloadYearlyReportCSV()">
+                <i class="fas fa-file-csv"></i> Export CSV
+              </button>
+            </div>
+          </div>
+        `;
+        
+        container.innerHTML = html;
+        
+      } catch (error) {
+        container.innerHTML = `<div class="empty-state"><h4>Error loading yearly overview</h4><p>${error.message}</p></div>`;
+      }
+    }
+    
+    // Generate detailed yearly report content
+    function generateYearlyReportContent() {
+      if (!yearlyData) {
+        showError('No yearly data available. Please load the yearly overview first.');
+        return;
+      }
+      
+      const container = document.getElementById('yearlyReportContent');
+      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating detailed report...</p></div>';
+      
+      setTimeout(() => {
+        let html = `
+          <div style="margin-bottom: 25px;">
+            <h4 style="color: var(--primary); margin-bottom: 15px; text-align: center;">Yearly Financial Report - ${yearlyData.year}</h4>
+            <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr 1fr; margin-bottom: 20px;">
+              <div class="report-summary-item" style="border: 1px solid var(--success);">
+                <div class="label" style="color: var(--success);">Total Income</div>
+                <div class="value" style="color: var(--success);">${formatCurrency(yearlyData.totalIncome)}</div>
+              </div>
+              <div class="report-summary-item" style="border: 1px solid var(--danger);">
+                <div class="label" style="color: var(--danger);">Total Expenses</div>
+                <div class="value" style="color: var(--danger);">${formatCurrency(yearlyData.totalExpenses)}</div>
+              </div>
+              <div class="report-summary-item" style="border: 1px solid ${yearlyData.netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                <div class="label" style="color: ${yearlyData.netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">Net Savings</div>
+                <div class="value" style="color: ${yearlyData.netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(yearlyData.netSavings)}</div>
+              </div>
+              <div class="report-summary-item" style="border: 1px solid var(--info);">
+                <div class="label" style="color: var(--info);">Savings Rate</div>
+                <div class="value" style="color: var(--info);">${yearlyData.savingsRate}%</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 25px;">
+            <h5 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-chart-line"></i> Monthly Breakdown</h5>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background: var(--light);">
+                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border);">Month</th>
+                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border); color: var(--success);">Income</th>
+                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border); color: var(--danger);">Expenses</th>
+                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border); color: var(--primary);">Net</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        yearlyData.monthNames.forEach((month, index) => {
+          const income = yearlyData.monthlyIncome[index];
+          const expenses = yearlyData.monthlyExpenses[index];
+          const net = income - expenses;
+          
+          html += `
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px; font-weight: 600;">${month}</td>
+              <td style="padding: 10px; text-align: right; color: var(--success);">${formatCurrency(income)}</td>
+              <td style="padding: 10px; text-align: right; color: var(--danger);">${formatCurrency(expenses)}</td>
+              <td style="padding: 10px; text-align: right; color: ${net >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(net)}</td>
+            </tr>
+          `;
+        });
+        
+        html += `
+                </tbody>
+                <tfoot style="background: var(--light); font-weight: 600;">
+                  <tr>
+                    <td style="padding: 10px;">TOTAL</td>
+                    <td style="padding: 10px; text-align: right; color: var(--success);">${formatCurrency(yearlyData.totalIncome)}</td>
+                    <td style="padding: 10px; text-align: right; color: var(--danger);">${formatCurrency(yearlyData.totalExpenses)}</td>
+                    <td style="padding: 10px; text-align: right; color: ${yearlyData.netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(yearlyData.netSavings)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        `;
+        
+        // Add category breakdown if available
+        if (Object.keys(yearlyData.categories).length > 0) {
+          const sortedCategories = Object.entries(yearlyData.categories).sort((a, b) => b[1] - a[1]);
+          
+          html += `
+            <div style="margin-bottom: 25px;">
+              <h5 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-chart-pie"></i> Expense Categories</h5>
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr style="background: var(--light);">
+                      <th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border);">Category</th>
+                      <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border);">Amount</th>
+                      <th style="padding: 10px; text-align: right; border-bottom: 2px solid var(--border);">Percentage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+          `;
+          
+          sortedCategories.forEach(([name, amount]) => {
+            const percentage = yearlyData.totalExpenses > 0 ? ((amount / yearlyData.totalExpenses) * 100).toFixed(1) : 0;
+            
+            html += `
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 10px;">${name}</td>
+                <td style="padding: 10px; text-align: right;">${formatCurrency(amount)}</td>
+                <td style="padding: 10px; text-align: right;">${percentage}%</td>
+              </tr>
+            `;
+          });
+          
+          html += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }
+        
+        // Add transaction summary
+        html += `
+          <div style="margin-bottom: 25px;">
+            <h5 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-list-alt"></i> Transaction Summary</h5>
+            <div class="report-summary" style="grid-template-columns: 1fr 1fr; margin-bottom: 15px;">
+              <div class="report-summary-item">
+                <div class="label">Total Expense Transactions</div>
+                <div class="value">${yearlyData.expenses.length}</div>
+              </div>
+              <div class="report-summary-item">
+                <div class="label">Total Income Transactions</div>
+                <div class="value">${yearlyData.income.length}</div>
+              </div>
+            </div>
+            <p style="color: var(--gray); font-size: 0.9rem;">
+              Report generated on: ${new Date().toLocaleDateString('en-UG', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </p>
+          </div>
+        `;
+        
+        container.innerHTML = html;
+      }, 500);
+    }
+    
+    // Download yearly report as PDF
+    function downloadYearlyReportPDF() {
+      if (!yearlyData) {
+        showError('No yearly data available. Please load the yearly overview first.');
+        return;
+      }
+      
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Title
+        doc.setFontSize(18);
+        doc.setTextColor(67, 97, 238);
+        doc.text(`Yearly Financial Report - ${yearlyData.year}`, 105, 20, { align: 'center' });
+        
+        // Summary
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Financial Summary', 20, 40);
+        
+        doc.setFontSize(11);
+        doc.text(`Total Income: ${formatCurrency(yearlyData.totalIncome)}`, 20, 50);
+        doc.text(`Total Expenses: ${formatCurrency(yearlyData.totalExpenses)}`, 20, 57);
+        doc.text(`Net Savings: ${formatCurrency(yearlyData.netSavings)}`, 20, 64);
+        doc.text(`Savings Rate: ${yearlyData.savingsRate}%`, 20, 71);
+        
+        let yPos = 85;
+        
+        // Monthly Breakdown Table
+        doc.setFontSize(14);
+        doc.text('Monthly Breakdown', 20, yPos);
+        yPos += 10;
+        
+        const monthlyTable = yearlyData.monthNames.map((month, index) => [
+          month,
+          formatCurrency(yearlyData.monthlyIncome[index]),
+          formatCurrency(yearlyData.monthlyExpenses[index]),
+          formatCurrency(yearlyData.monthlyIncome[index] - yearlyData.monthlyExpenses[index])
+        ]);
+        
+        doc.autoTable({
+          startY: yPos,
+          head: [['Month', 'Income', 'Expenses', 'Net']],
+          body: monthlyTable,
+          headStyles: { fillColor: [67, 97, 238] },
+          margin: { top: 10 }
+        });
+        
+        yPos = doc.lastAutoTable.finalY + 15;
+        
+        // Category Breakdown if available
+        if (Object.keys(yearlyData.categories).length > 0) {
+          doc.setFontSize(14);
+          doc.text('Expense Categories', 20, yPos);
+          yPos += 10;
+          
+          const sortedCategories = Object.entries(yearlyData.categories).sort((a, b) => b[1] - a[1]);
+          const categoryTable = sortedCategories.map(([name, amount]) => [
+            name,
+            formatCurrency(amount),
+            yearlyData.totalExpenses > 0 ? ((amount / yearlyData.totalExpenses) * 100).toFixed(1) + '%' : '0%'
+          ]);
+          
+          doc.autoTable({
+            startY: yPos,
+            head: [['Category', 'Amount', 'Percentage']],
+            body: categoryTable,
+            headStyles: { fillColor: [220, 53, 69] }
+          });
+          
+          yPos = doc.lastAutoTable.finalY + 15;
+        }
+        
+        // Transaction Summary
+        doc.setFontSize(14);
+        doc.text('Transaction Summary', 20, yPos);
+        yPos += 10;
+        
+        doc.setFontSize(11);
+        doc.text(`Total Expense Transactions: ${yearlyData.expenses.length}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Total Income Transactions: ${yearlyData.income.length}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Report Generated: ${new Date().toLocaleDateString('en-UG')}`, 20, yPos);
+        
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(128, 128, 128);
+        doc.text('Generated by Financial Tracker PRO', 105, 280, { align: 'center' });
+        
+        doc.save(`yearly_report_${yearlyData.year}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Yearly report PDF downloaded!', 'success');
+      } catch (error) {
+        showError('PDF download failed: ' + error.message);
+      }
+    }
+    
+    // Download yearly report as CSV
+    function downloadYearlyReportCSV() {
+      if (!yearlyData) {
+        showError('No yearly data available. Please load the yearly overview first.');
+        return;
+      }
+      
+      try {
+        // Create CSV content for monthly data
+        let csvContent = 'Yearly Financial Report\n\n';
+        csvContent += `Year:,${yearlyData.year}\n`;
+        csvContent += `Total Income:,${formatCurrency(yearlyData.totalIncome)}\n`;
+        csvContent += `Total Expenses:,${formatCurrency(yearlyData.totalExpenses)}\n`;
+        csvContent += `Net Savings:,${formatCurrency(yearlyData.netSavings)}\n`;
+        csvContent += `Savings Rate:,${yearlyData.savingsRate}%\n\n`;
+        
+        // Monthly breakdown
+        csvContent += 'Monthly Breakdown\n';
+        csvContent += 'Month,Income,Expenses,Net\n';
+        
+        yearlyData.monthNames.forEach((month, index) => {
+          const income = yearlyData.monthlyIncome[index];
+          const expenses = yearlyData.monthlyExpenses[index];
+          const net = income - expenses;
+          csvContent += `${month},${income},${expenses},${net}\n`;
+        });
+        
+        csvContent += '\n';
+        
+        // Category breakdown if available
+        if (Object.keys(yearlyData.categories).length > 0) {
+          csvContent += 'Expense Categories\n';
+          csvContent += 'Category,Amount,Percentage\n';
+          
+          const sortedCategories = Object.entries(yearlyData.categories).sort((a, b) => b[1] - a[1]);
+          sortedCategories.forEach(([name, amount]) => {
+            const percentage = yearlyData.totalExpenses > 0 ? ((amount / yearlyData.totalExpenses) * 100).toFixed(1) : 0;
+            csvContent += `${name},${amount},${percentage}%\n`;
+          });
+          
+          csvContent += '\n';
+        }
+        
+        // Transaction summary
+        csvContent += 'Transaction Summary\n';
+        csvContent += `Total Expense Transactions:,${yearlyData.expenses.length}\n`;
+        csvContent += `Total Income Transactions:,${yearlyData.income.length}\n`;
+        csvContent += `Report Generated:,${new Date().toLocaleDateString('en-UG')}\n`;
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `yearly_report_${yearlyData.year}_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showMessage('✅ Yearly report CSV exported!', 'success');
+      } catch (error) {
+        showError('CSV export failed: ' + error.message);
+      }
+    }
+    
+    // Legacy yearly PDF download (simplified version)
+    function downloadYearlyPDF() {
+      if (!yearlyData) {
+        showError('No yearly data available. Please load the yearly overview first.');
+        return;
+      }
+      
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.setTextColor(67, 97, 238);
+        doc.text(`Yearly Financial Overview - ${yearlyData.year}`, 105, 20, { align: 'center' });
+        
+        let yPos = 35;
+        
+        doc.setFontSize(12);
+        doc.text('Generated on: ' + new Date().toLocaleDateString('en-UG'), 20, yPos);
+        yPos += 15;
+        
+        // Summary
+        doc.setFontSize(14);
+        doc.text('Financial Summary', 20, yPos);
+        yPos += 10;
+        
+        doc.setFontSize(11);
+        doc.text(`Total Income: ${formatCurrency(yearlyData.totalIncome)}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Total Expenses: ${formatCurrency(yearlyData.totalExpenses)}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Net Savings: ${formatCurrency(yearlyData.netSavings)}`, 20, yPos);
+        yPos += 7;
+        doc.text(`Savings Rate: ${yearlyData.savingsRate}%`, 20, yPos);
+        yPos += 15;
+        
+        // Monthly table
+        doc.setFontSize(14);
+        doc.text('Monthly Breakdown', 20, yPos);
+        yPos += 10;
+        
+        const monthlyTable = yearlyData.monthNames.map((month, index) => [
+          month,
+          formatCurrency(yearlyData.monthlyIncome[index]),
+          formatCurrency(yearlyData.monthlyExpenses[index])
+        ]);
+        
+        doc.autoTable({
+          startY: yPos,
+          head: [['Month', 'Income', 'Expenses']],
+          body: monthlyTable,
+          headStyles: { fillColor: [67, 97, 238] }
+        });
+        
+        doc.save(`yearly_overview_${yearlyData.year}_${new Date().toISOString().split('T')[0]}.pdf`);
+        showMessage('✅ Yearly overview PDF downloaded!', 'success');
+      } catch (error) {
+        showError('PDF download failed: ' + error.message);
+      }
+    }
+    
+    // Legacy yearly CSV download (simplified version)
+    function downloadYearlyCSV() {
+      if (!yearlyData) {
+        showError('No yearly data available. Please load the yearly overview first.');
+        return;
+      }
+      
+      try {
+        let csvContent = 'Yearly Financial Overview\n\n';
+        csvContent += `Year:,${yearlyData.year}\n`;
+        csvContent += `Total Income:,${formatCurrency(yearlyData.totalIncome)}\n`;
+        csvContent += `Total Expenses:,${formatCurrency(yearlyData.totalExpenses)}\n`;
+        csvContent += `Net Savings:,${formatCurrency(yearlyData.netSavings)}\n`;
+        csvContent += `Savings Rate:,${yearlyData.savingsRate}%\n\n`;
+        
+        csvContent += 'Monthly Breakdown\n';
+        csvContent += 'Month,Income,Expenses\n';
+        
+        yearlyData.monthNames.forEach((month, index) => {
+          csvContent += `${month},${yearlyData.monthlyIncome[index]},${yearlyData.monthlyExpenses[index]}\n`;
+        });
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `yearly_overview_${yearlyData.year}_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showMessage('✅ Yearly overview CSV exported!', 'success');
+      } catch (error) {
+        showError('CSV export failed: ' + error.message);
+      }
+    }
+    
     // ===== SAVINGS CALCULATOR =====
     function calculateSavingsGoal() {
       const goalAmount = parseFloat(document.getElementById('goalAmount').value) || 0;
@@ -5807,155 +6567,6 @@
       showMessage('✅ Savings goal set successfully!', 'success');
     }
     
-    // ===== YEARLY OVERVIEW =====
-    async function loadYearlyOverview() {
-      const year = document.getElementById('yearSelect').value;
-      const container = document.getElementById('yearlyOverviewContent');
-      
-      container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>';
-      
-      try {
-        const monthlyExpenses = Array(12).fill(0);
-        const monthlyIncome = Array(12).fill(0);
-        const categories = {};
-        
-        allExpenses.forEach(expense => {
-          const expenseDate = getDateFromExpense(expense);
-          
-          if (expenseDate.getFullYear() == year) {
-            const month = expenseDate.getMonth();
-            monthlyExpenses[month] += parseFloat(expense.amount) || 0;
-            
-            const category = expense.category || 'Other';
-            categories[category] = (categories[category] || 0) + (parseFloat(expense.amount) || 0);
-          }
-        });
-        
-        allIncome.forEach(income => {
-          const incomeDate = getDateFromExpense(income);
-          
-          if (incomeDate.getFullYear() == year) {
-            const month = incomeDate.getMonth();
-            monthlyIncome[month] += parseFloat(income.amount) || 0;
-          }
-        });
-        
-        const totalExpenses = monthlyExpenses.reduce((a, b) => a + b, 0);
-        const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
-        const netSavings = totalIncome - totalExpenses;
-        const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100).toFixed(1) : 0;
-        
-        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
-        let html = `
-          <div class="report-summary" style="grid-template-columns: 1fr 1fr 1fr 1fr; margin-bottom: 25px;">
-            <div class="report-summary-item" style="border: 1px solid var(--success);">
-              <div class="label" style="color: var(--success);">Total Income</div>
-              <div class="value" style="color: var(--success);">${formatCurrency(totalIncome)}</div>
-            </div>
-            <div class="report-summary-item" style="border: 1px solid var(--danger);">
-              <div class="label" style="color: var(--danger);">Total Expenses</div>
-              <div class="value" style="color: var(--danger);">${formatCurrency(totalExpenses)}</div>
-            </div>
-            <div class="report-summary-item" style="border: 1px solid ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">
-              <div class="label" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">Net Savings</div>
-              <div class="value" style="color: ${netSavings >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(netSavings)}</div>
-            </div>
-            <div class="report-summary-item" style="border: 1px solid var(--info);">
-              <div class="label" style="color: var(--info);">Savings Rate</div>
-              <div class="value" style="color: var(--info);">${savingsRate}%</div>
-            </div>
-          </div>
-          
-          <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-line"></i> Monthly Trends</h4>
-          <div style="margin-bottom: 25px;">
-        `;
-        
-        monthNames.forEach((month, index) => {
-          const maxExpense = Math.max(...monthlyExpenses) || 1;
-          const maxIncome = Math.max(...monthlyIncome) || 1;
-          const expenseHeight = monthlyExpenses[index] > 0 ? Math.min(100, (monthlyExpenses[index] / maxExpense) * 100) : 0;
-          const incomeHeight = monthlyIncome[index] > 0 ? Math.min(100, (monthlyIncome[index] / maxIncome) * 100) : 0;
-          
-          html += `
-            <div style="margin-bottom: 15px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                <span style="font-weight: 600;">${month}</span>
-                <span style="font-size: 0.9rem;">
-                  <span style="color: var(--success);">${formatCurrency(monthlyIncome[index])}</span> / 
-                  <span style="color: var(--danger);">${formatCurrency(monthlyExpenses[index])}</span>
-                </span>
-              </div>
-              <div style="display: flex; height: 20px; background: var(--light); border-radius: 4px; overflow: hidden;">
-                <div style="width: ${incomeHeight}%; background: linear-gradient(90deg, var(--success), #2ecc71);"></div>
-                <div style="width: ${expenseHeight}%; background: linear-gradient(90deg, var(--danger), #e74c3c);"></div>
-              </div>
-            </div>
-          `;
-        });
-        
-        html += `</div>`;
-        
-        if (Object.keys(categories).length > 0) {
-          const sortedCategories = Object.entries(categories).sort((a, b) => b[1] - a[1]).slice(0, 8);
-          
-          html += `
-            <h4 style="color: var(--primary); margin-bottom: 15px;"><i class="fas fa-chart-pie"></i> Top Expense Categories</h4>
-            <div class="category-breakdown">
-          `;
-          
-          sortedCategories.forEach(([name, amount]) => {
-            const percentage = totalExpenses > 0 ? Math.round((amount / totalExpenses) * 100) : 0;
-            
-            html += `
-              <div class="category-item">
-                <div class="category-name"><span class="category-badge category-${name.toLowerCase().replace(' ', '-')}">${name}</span></div>
-                <div class="category-bar">
-                  <div class="category-fill" style="width: ${percentage}%"></div>
-                </div>
-                <div class="category-amount">${formatCurrency(amount)}</div>
-                <div class="category-percentage">${percentage}%</div>
-              </div>
-            `;
-          });
-          
-          html += `</div>`;
-        }
-        
-        container.innerHTML = html;
-        
-      } catch (error) {
-        container.innerHTML = `<div class="empty-state"><h4>Error loading yearly overview</h4><p>${error.message}</p></div>`;
-      }
-    }
-    
-    function downloadYearlyPDF() {
-      const year = document.getElementById('yearSelect').value;
-      try {
-        const { jsPDF } = window.jspdf; 
-        const doc = new jsPDF();
-        
-        doc.setFontSize(18); 
-        doc.setTextColor(67, 97, 238); 
-        doc.text(`Yearly Financial Overview - ${year}`, 105, 20, { align: 'center' });
-        
-        let yPos = 35;
-        
-        doc.setFontSize(12);
-        doc.text('Generated on: ' + new Date().toLocaleDateString('en-UG'), 20, yPos);
-        yPos += 15;
-        
-        doc.setFontSize(14);
-        doc.text('Note: This is a simplified yearly overview. For detailed reports, use the specific report features.', 20, yPos, { maxWidth: 170 });
-        yPos += 20;
-        
-        doc.save(`yearly_overview_${year}_${new Date().toISOString().split('T')[0]}.pdf`);
-        showMessage('✅ Yearly overview PDF downloaded!', 'success');
-      } catch (error) {
-        showError('PDF download failed: ' + error.message);
-      }
-    }
-
     // ===== DEBT TRACKER =====
     function calculateDebt() {
       const name = document.getElementById('debtName').value.trim();
@@ -6005,8 +6616,8 @@
           ${remaining > 0 ? `
             <div style="margin-top: 5px; font-size: 0.9rem;">
               Due in: ${daysUntilDue} days<br>
-              Monthly interest: ${formatCurrency(monthlyInterest)}<br>
-              Total interest payable: ${formatCurrency(totalInterest)}
+              Monthly interest: ${formatCurrency(monthlyInterest)}<br
+			   Total interest payable: ${formatCurrency(totalInterest)}
             </div>
           ` : ''}
         </div>
