@@ -474,7 +474,63 @@
 
     /* ===== OPTIMIZED CSS ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    /* ===== iOS CHROME FIXES ===== */
+    /* Fix for iOS Chrome viewport height issues */
+    @supports (-webkit-touch-callout: none) {
+      .auth-overlay {
+        height: -webkit-fill-available;
+        min-height: -webkit-fill-available;
+      }
+      
+      .auth-container {
+        height: auto;
+        max-height: 90vh;
+      }
+    }
+    
+    /* Fix for iOS input zoom and focus issues */
+    @media screen and (max-width: 768px) {
+      input, textarea, select {
+        font-size: 16px !important; /* Prevents iOS zoom on focus */
+      }
+      
+      .auth-input-group input {
+        font-size: 16px !important;
+        transform: translateZ(0); /* Hardware acceleration fix */
+        -webkit-transform: translateZ(0);
+      }
+      
+      /* Prevent double-tap zoom on buttons */
+      .auth-btn, .auth-tab {
+        touch-action: manipulation;
+      }
+    }
+    
+    /* Fix for flexbox issues on iOS Chrome */
+    @supports (-webkit-touch-callout: none) and (not (translate: none)) {
+      .auth-overlay {
+        display: -webkit-flex;
+        -webkit-flex-direction: column;
+      }
+      
+      .auth-container {
+        -webkit-flex-shrink: 0;
+      }
+    }
+    
+    /* Fix for 100vh issue on iOS Chrome */
+    .auth-overlay {
+      height: 100%;
+      min-height: 100vh;
+      /* Fallback for Safari */
+      min-height: -webkit-fill-available;
+    }
+    
+    /* Fix for overflow scrolling on iOS */
+    .auth-container {
+      -webkit-overflow-scrolling: touch;
+    }
+	
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--body-bg);
@@ -2416,6 +2472,7 @@
       initTheme();
       setDefaultDates();
       setDefaultTargetDate();
+	  fixIOSChromeViewport();
     });
 
     function initFirebase() {
@@ -2435,6 +2492,41 @@
         showAuthError('Firebase initialization failed: ' + error.message); 
       }
     }
+
+    // ===== iOS CHROME FIX =====
+    function fixIOSChromeViewport() {
+      // Check if iOS Chrome
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isChrome = /CriOS/.test(navigator.userAgent);
+      
+      if (isIOS && isChrome) {
+        console.log('Applying iOS Chrome fixes');
+        
+        // Fix viewport height
+        const setViewportHeight = () => {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+          
+          // Apply to auth overlay
+          const authOverlay = document.querySelector('.auth-overlay');
+          if (authOverlay) {
+            authOverlay.style.height = `${window.innerHeight}px`;
+          }
+        };
+        
+        // Set on load and resize
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        
+        // Prevent elastic scrolling on the auth page
+        document.addEventListener('touchmove', function(e) {
+          if (e.target.closest('.auth-container')) {
+            e.stopPropagation();
+          }
+        }, { passive: false });
+      }
+    }
+	
 
     function setupAuthListeners() {
       auth.onAuthStateChanged((user) => {
