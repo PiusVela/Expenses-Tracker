@@ -1435,7 +1435,7 @@
       <div class="auth-left-panel">
         <div class="auth-left-content">
           <h1>Financial Tracker PRO</h1>
-          <p class="tagline">Your Life, Your Money, in Harmony</p>
+          <p class="tagline">Your Life,Your Money, in Harmony 💶 Live Fully, Finance Wisely.</p>
           <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px;">
             Financial Tracker PRO helps you create balance and meaning by bringing all aspects of your financial life together in one beautiful, intuitive platform.
           </p>
@@ -2653,136 +2653,162 @@
     }
 
     // FIXED: Improved date extraction function
-    function getDateFromExpense(item) {
-      if (!item) return new Date(0);
-      
-      // Try to get date from different possible fields
-      let dateValue;
-      
-      // Check date field first
-      if (item.date) {
-        if (item.date instanceof Date) {
-          dateValue = item.date;
-        } else if (item.date.toDate) {
-          dateValue = item.date.toDate();
-        } else if (typeof item.date === 'string') {
-          // Parse string date - handle both YYYY-MM-DD and DD/MM/YYYY
-          if (item.date.includes('/')) {
-            const [day, month, year] = item.date.split('/');
-            dateValue = new Date(year, month - 1, day);
-          } else if (item.date.includes('-')) {
-            const [year, month, day] = item.date.split('-');
-            dateValue = new Date(year, month - 1, day);
-          } else {
-            dateValue = new Date(item.date);
-          }
+  function getDateFromExpense(item) {
+  if (!item) return new Date(0);
+  
+  // Try to get date from different possible fields
+  let dateValue;
+  
+  // Check date field first
+  if (item.date) {
+    if (item.date instanceof Date) {
+      dateValue = item.date;
+    } else if (item.date.toDate) {
+      // Firestore Timestamp
+      dateValue = item.date.toDate();
+    } else if (typeof item.date === 'string') {
+      // Parse string date - handle multiple formats
+      if (item.date.includes('/')) {
+        const [day, month, year] = item.date.split('/');
+        dateValue = new Date(year, month - 1, day);
+      } else if (item.date.includes('-')) {
+        // Handle ISO format or YYYY-MM-DD
+        const dateParts = item.date.split('-');
+        if (dateParts[0].length === 4) {
+          // YYYY-MM-DD format
+          const [year, month, day] = dateParts;
+          dateValue = new Date(year, month - 1, day);
+        } else {
+          // DD-MM-YYYY format
+          const [day, month, year] = dateParts;
+          dateValue = new Date(year, month - 1, day);
         }
+      } else {
+        dateValue = new Date(item.date);
       }
-      
-      // If no date field, check timestamp
-      if (!dateValue && item.timestamp) {
-        if (item.timestamp.toDate) {
-          dateValue = item.timestamp.toDate();
-        } else if (item.timestamp instanceof Date) {
-          dateValue = item.timestamp;
-        }
-      }
-      
-      // If still no date, check createdAt
-      if (!dateValue && item.createdAt) {
-        if (item.createdAt.toDate) {
-          dateValue = item.createdAt.toDate();
-        } else if (item.createdAt instanceof Date) {
-          dateValue = item.createdAt;
-        } else if (typeof item.createdAt === 'string') {
-          dateValue = new Date(item.createdAt);
-        }
-      }
-      
-      // Return valid date or epoch
-      return dateValue && !isNaN(dateValue.getTime()) ? dateValue : new Date(0);
     }
+  }
+  
+  // If no date field, check timestamp
+  if (!dateValue && item.timestamp) {
+    if (item.timestamp.toDate) {
+      dateValue = item.timestamp.toDate();
+    } else if (item.timestamp instanceof Date) {
+      dateValue = item.timestamp;
+    }
+  }
+  
+  // If still no date, check createdAt
+  if (!dateValue && item.createdAt) {
+    if (item.createdAt.toDate) {
+      dateValue = item.createdAt.toDate();
+    } else if (item.createdAt instanceof Date) {
+      dateValue = item.createdAt;
+    } else if (typeof item.createdAt === 'string') {
+      dateValue = new Date(item.createdAt);
+    }
+  }
+  
+  // If still no valid date, return epoch
+  if (!dateValue || isNaN(dateValue.getTime())) {
+    return new Date(0);
+  }
+  
+  return dateValue;
+}
 
     function updateDashboardFromRealtimeData() {
-      if (!currentUser) return;
+  if (!currentUser) return;
+  
+  try {
+    const now = new Date();
+    
+    // Create start and end of today in local time
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    
+    // Create start and end of this week (Sunday to Saturday)
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay()); // Start of week (Sunday)
+    weekStart.setHours(0, 0, 0, 0);
+    
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
+    weekEnd.setHours(23, 59, 59, 999);
+    
+    // Create start and end of this month
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    
+    // Create start and end of this year
+    const yearStart = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+    const yearEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+    
+    const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
+    const categories = {}, weeklyData = Array(7).fill(0);
+    
+    // Process expenses
+    allExpenses.forEach(expense => {
+      const expenseDate = getDateFromExpense(expense);
       
-      try {
-        const now = new Date(), todayStr = now.toISOString().split('T')[0];
-        const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
-        const categories = {}, weeklyData = Array(7).fill(0);
-        
-        // Process expenses
-        allExpenses.forEach(expense => {
-          const expenseDate = getDateFromExpense(expense);
-          
-          // Skip if invalid date
-          if (isNaN(expenseDate.getTime())) return;
-          
-          const expenseAmount = parseFloat(expense.amount) || 0;
-          stats.totalExpense += expenseAmount;
-          
-          // Today's date for comparison
-          const expenseDateStr = expenseDate.toISOString().split('T')[0];
-          
-          // Check if it's today
-          if (expenseDateStr === todayStr) {
-            stats.today += expenseAmount;
-          }
-          
-          // Check if it's within this week
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
-          if (expenseDate >= weekAgo) {
-            stats.week += expenseAmount;
-          }
-          
-          // Check if it's this month
-          const expenseMonth = expenseDate.getMonth();
-          const expenseYear = expenseDate.getFullYear();
-          const currentMonth = now.getMonth();
-          const currentYear = now.getFullYear();
-          
-          if (expenseMonth === currentMonth && expenseYear === currentYear) {
-            stats.month += expenseAmount;
-          }
-          
-          // Check if it's this year
-          if (expenseYear === currentYear) {
-            stats.year += expenseAmount;
-          }
-          
-          // Category breakdown
-          const category = expense.category || 'Other';
-          categories[category] = (categories[category] || 0) + expenseAmount;
-          
-          // Weekly data
-          const dayOfWeek = expenseDate.getDay();
-          weeklyData[dayOfWeek] += expenseAmount;
-        });
-        
-        // Process income
-        allIncome.forEach(inc => { 
-          stats.totalIncome += parseFloat(inc.amount) || 0; 
-        });
-        
-        stats.availableBalance = stats.totalIncome - stats.totalExpense;
-        
-        updateStatsUI(stats); 
-        updateCharts(categories, weeklyData);
-        
-        // Update savings goal with current savings
-        if (savingsGoal.amount > 0) {
-          savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
-          updateSavingsGoalUI();
-        }
-        
-        updateStatus('online', 'Connected ✓');
-      } catch (error) { 
-        console.error('Dashboard update error:', error);
-        console.error('Error details:', error.stack);
-        updateStatus('offline', 'Update error');
+      // Skip if invalid date
+      if (isNaN(expenseDate.getTime())) return;
+      
+      const expenseAmount = parseFloat(expense.amount) || 0;
+      stats.totalExpense += expenseAmount;
+      
+      // Check if it's today
+      if (expenseDate >= todayStart && expenseDate <= todayEnd) {
+        stats.today += expenseAmount;
       }
+      
+      // Check if it's within this week
+      if (expenseDate >= weekStart && expenseDate <= weekEnd) {
+        stats.week += expenseAmount;
+      }
+      
+      // Check if it's this month
+      if (expenseDate >= monthStart && expenseDate <= monthEnd) {
+        stats.month += expenseAmount;
+      }
+      
+      // Check if it's this year
+      if (expenseDate >= yearStart && expenseDate <= yearEnd) {
+        stats.year += expenseAmount;
+      }
+      
+      // Category breakdown
+      const category = expense.category || 'Other';
+      categories[category] = (categories[category] || 0) + expenseAmount;
+      
+      // Weekly data
+      const dayOfWeek = expenseDate.getDay();
+      weeklyData[dayOfWeek] += expenseAmount;
+    });
+    
+    // Process income
+    allIncome.forEach(inc => { 
+      stats.totalIncome += parseFloat(inc.amount) || 0; 
+    });
+    
+    stats.availableBalance = stats.totalIncome - stats.totalExpense;
+    
+    updateStatsUI(stats); 
+    updateCharts(categories, weeklyData);
+    
+    // Update savings goal with current savings
+    if (savingsGoal.amount > 0) {
+      savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
+      updateSavingsGoalUI();
     }
+    
+    updateStatus('online', 'Connected ✓');
+  } catch (error) { 
+    console.error('Dashboard update error:', error);
+    console.error('Error details:', error.stack);
+    updateStatus('offline', 'Update error');
+  }
+}
 
     // ===== AUTH FUNCTIONS =====
     function showAuthTab(tab) {
@@ -4834,24 +4860,33 @@
     }
 
     // ===== DASHBOARD FUNCTIONS =====
-    function updateStatsUI(stats) {
-      document.getElementById('totalIncomeValue').textContent = formatCurrency(stats.totalIncome);
-      document.getElementById('totalExpenseValue').textContent = formatCurrency(stats.totalExpense);
-      document.getElementById('availableBalanceValue').textContent = formatCurrency(stats.availableBalance);
-      document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
-      document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
-      document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
-      document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
-      
-      const calcChange = (cur, prev) => { 
-        if (!prev || prev === 0) return '--'; 
-        const chg = ((cur - prev) / prev * 100).toFixed(1); 
-        return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; 
-      };
-      
-      document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); 
-      previousStats = stats;
-    }
+   function updateStatsUI(stats) {
+  document.getElementById('totalIncomeValue').textContent = formatCurrency(stats.totalIncome);
+  document.getElementById('totalExpenseValue').textContent = formatCurrency(stats.totalExpense);
+  document.getElementById('availableBalanceValue').textContent = formatCurrency(stats.availableBalance);
+  document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
+  document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
+  document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
+  document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
+  
+  // Debug log to check values
+  console.log('Stats updated:', { 
+    today: stats.today, 
+    week: stats.week, 
+    month: stats.month, 
+    year: stats.year,
+    totalExpense: stats.totalExpense 
+  });
+  
+  const calcChange = (cur, prev) => { 
+    if (!prev || prev === 0) return '--'; 
+    const chg = ((cur - prev) / prev * 100).toFixed(1); 
+    return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; 
+  };
+  
+  document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); 
+  previousStats = stats;
+}
 
     function updateCharts(categories, weeklyData) {
       const pieCtx = document.getElementById('pieChart')?.getContext('2d');
