@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Financial Tracker PRO - Multi-User Platform</title>
   <style>
     /* ===== DARK/LIGHT MODE CSS VARIABLES ===== */
@@ -74,7 +74,7 @@
       --reminder-color: #d8b4fe;
     }
 
-    /* ===== UPDATED AUTH PAGES STYLES ===== */
+    /* ===== UPDATED AUTH PAGES STYLES - MOBILE FIXED ===== */
     .auth-overlay {
       position: fixed;
       top: 0;
@@ -88,18 +88,21 @@
       z-index: 9999;
       padding: 20px;
       transition: background 0.3s ease;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     
     .auth-container {
       display: flex;
       max-width: 1200px;
       width: 100%;
-      height: 700px;
+      min-height: 600px;
       background: white;
       border-radius: 24px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       transition: all 0.3s ease;
+      position: relative;
     }
     
     body.dark-mode .auth-container {
@@ -111,12 +114,13 @@
       flex: 1;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: white;
-      padding: 60px 40px;
+      padding: 40px 30px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       overflow: hidden;
+      min-height: 400px;
     }
     
     .auth-left-panel::before {
@@ -130,7 +134,7 @@
     }
     
     .auth-left-content h1 {
-      font-size: 2.8rem;
+      font-size: 2.2rem;
       font-weight: 700;
       margin-bottom: 10px;
       background: linear-gradient(135deg, #ff9800, #ffb74d);
@@ -140,55 +144,58 @@
     }
     
     .auth-left-content .tagline {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       font-weight: 300;
     }
     
     .features-list {
       list-style: none;
       padding: 0;
-      margin: 30px 0;
+      margin: 20px 0;
     }
     
     .features-list li {
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
-      font-size: 1.1rem;
+      margin-bottom: 15px;
+      font-size: 1rem;
       color: rgba(255, 255, 255, 0.85);
     }
     
     .features-list li i {
       color: #ff9800;
       margin-right: 15px;
-      font-size: 1.2rem;
+      font-size: 1rem;
       background: rgba(255, 152, 0, 0.1);
-      padding: 8px;
+      padding: 6px;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     
     .auth-footer-text {
       color: rgba(255, 255, 255, 0.6);
-      font-size: 0.9rem;
-      margin-top: 40px;
+      font-size: 0.8rem;
+      margin-top: 30px;
     }
     
     /* Right Panel */
     .auth-right-panel {
       flex: 1;
-      padding: 60px 50px;
+      padding: 40px 30px;
       background: var(--card-bg);
       display: flex;
       flex-direction: column;
       justify-content: center;
       transition: background 0.3s ease;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     
     .auth-right-content {
@@ -198,11 +205,11 @@
     }
     
     .auth-welcome {
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     
     .auth-welcome h2 {
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       color: var(--text-color);
       margin-bottom: 10px;
       font-weight: 700;
@@ -210,12 +217,12 @@
     
     .auth-welcome p {
       color: var(--text-secondary);
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
     
     .auth-tabs {
       display: flex;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       background: var(--light);
       border-radius: 12px;
       padding: 4px;
@@ -224,7 +231,7 @@
     
     .auth-tab {
       flex: 1;
-      padding: 14px;
+      padding: 12px;
       border: none;
       background: transparent;
       color: var(--gray);
@@ -232,7 +239,7 @@
       cursor: pointer;
       border-radius: 8px;
       transition: all 0.3s;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
     
     .auth-tab.active {
@@ -243,7 +250,7 @@
     .auth-form {
       display: none;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
     }
     
     .auth-form.active {
@@ -261,18 +268,19 @@
       color: var(--text-color);
       text-align: left;
       transition: color 0.3s ease;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     
     .auth-input-group input {
       width: 100%;
-      padding: 15px 20px;
+      padding: 14px 16px;
       border: 2px solid var(--border);
       border-radius: 12px;
       font-size: 16px;
       transition: all 0.3s;
       background: var(--input-bg);
       color: var(--text-color);
+      -webkit-appearance: none;
     }
     
     .auth-input-group input:focus {
@@ -285,7 +293,7 @@
       background: var(--gradient-1);
       color: white;
       border: none;
-      padding: 16px;
+      padding: 14px;
       border-radius: 12px;
       font-size: 16px;
       font-weight: 600;
@@ -319,7 +327,7 @@
     .auth-divider {
       display: flex;
       align-items: center;
-      margin: 25px 0;
+      margin: 20px 0;
       color: var(--text-secondary);
     }
     
@@ -332,20 +340,20 @@
     }
     
     .auth-divider span {
-      padding: 0 15px;
-      font-size: 0.9rem;
+      padding: 0 12px;
+      font-size: 0.85rem;
     }
     
     .auth-error {
       background: #fee2e2;
       color: #dc3545;
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
-      margin-top: 15px;
+      margin-top: 10px;
       display: none;
       align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
+      gap: 8px;
+      font-size: 0.85rem;
     }
     
     body.dark-mode .auth-error {
@@ -368,7 +376,7 @@
       cursor: pointer;
       display: inline-block;
       margin: 5px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     
     .auth-link:hover {
@@ -378,11 +386,11 @@
     /* Theme Toggle in Auth */
     .auth-theme-toggle {
       position: absolute;
-      top: 30px;
-      right: 30px;
+      top: 20px;
+      right: 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       z-index: 10;
     }
     
@@ -401,8 +409,9 @@
     
     .auth-theme-toggle span {
       color: white;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
+      display: none;
     }
 
     /* Theme Toggle Switch */
@@ -473,73 +482,28 @@
     }
 
     /* ===== OPTIMIZED CSS ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    /* ===== iOS CHROME FIXES ===== */
-    /* Fix for iOS Chrome viewport height issues */
-    @supports (-webkit-touch-callout: none) {
-      .auth-overlay {
-        height: -webkit-fill-available;
-        min-height: -webkit-fill-available;
-      }
-      
-      .auth-container {
-        height: auto;
-        max-height: 90vh;
-      }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
     }
-    
-    /* Fix for iOS input zoom and focus issues */
-    @media screen and (max-width: 768px) {
-      input, textarea, select {
-        font-size: 16px !important; /* Prevents iOS zoom on focus */
-      }
-      
-      .auth-input-group input {
-        font-size: 16px !important;
-        transform: translateZ(0); /* Hardware acceleration fix */
-        -webkit-transform: translateZ(0);
-      }
-      
-      /* Prevent double-tap zoom on buttons */
-      .auth-btn, .auth-tab {
-        touch-action: manipulation;
-      }
-    }
-    
-    /* Fix for flexbox issues on iOS Chrome */
-    @supports (-webkit-touch-callout: none) and (not (translate: none)) {
-      .auth-overlay {
-        display: -webkit-flex;
-        -webkit-flex-direction: column;
-      }
-      
-      .auth-container {
-        -webkit-flex-shrink: 0;
-      }
-    }
-    
-    /* Fix for 100vh issue on iOS Chrome */
-    .auth-overlay {
+
+    html {
       height: 100%;
-      min-height: 100vh;
-      /* Fallback for Safari */
-      min-height: -webkit-fill-available;
+      overflow-x: hidden;
     }
-    
-    /* Fix for overflow scrolling on iOS */
-    .auth-container {
-      -webkit-overflow-scrolling: touch;
-    }
-	
+
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--body-bg);
       min-height: 100vh;
-      padding: 20px;
+      padding: 0;
       color: var(--text-color);
       display: flex;
       flex-direction: column;
       transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
     }
 
     .container {
@@ -553,6 +517,7 @@
       flex: 1;
       display: none; /* Hidden until login */
       transition: background 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
     }
 
     .container::before {
@@ -566,15 +531,23 @@
     .header {
       background: var(--header-gradient);
       color: white;
-      padding: 30px 40px 20px;
+      padding: 20px;
       position: relative;
       overflow: hidden;
     }
+    
     .header::before {
-      content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 200%;
+      content: ''; 
+      position: absolute; 
+      top: -50%; 
+      right: -50%; 
+      width: 100%; 
+      height: 200%;
       background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-      background-size: 20px 20px; opacity: 0.2;
+      background-size: 20px 20px; 
+      opacity: 0.2;
     }
+    
     .header-top { 
       display: flex; 
       justify-content: space-between; 
@@ -582,40 +555,55 @@
       margin-bottom: 10px; 
       position: relative; 
       z-index: 2; 
+      flex-wrap: wrap;
+      gap: 10px;
     }
+    
     .header h1 { 
-      font-size: 2.2rem; 
+      font-size: 1.8rem; 
       display: flex; 
       align-items: center; 
-      gap: 15px; 
+      gap: 10px; 
       font-weight: 700;
-      color: white; /* Make sure it's visible on orange background */
+      color: white;
+      flex-wrap: wrap;
     }
+    
     .header h1 i { 
       background: rgba(255, 255, 255, 0.2); 
-      padding: 12px; 
-      border-radius: 16px; 
+      padding: 10px; 
+      border-radius: 12px; 
       backdrop-filter: blur(10px); 
+      font-size: 1.2rem;
     }
+    
     .header p { 
-      font-size: 1rem; 
+      font-size: 0.9rem; 
       opacity: 0.9; 
       position: relative; 
       z-index: 2; 
+      line-height: 1.4;
     }
 
     .status-indicator {
-      display: flex; align-items: center; gap: 10px; padding: 8px 16px;
-      background: rgba(255, 255, 255, 0.15); border-radius: 24px;
-      font-size: 0.9rem; font-weight: 600; backdrop-filter: blur(20px);
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.15); 
+      border-radius: 20px;
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
     }
     
     .theme-toggle-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-left: 20px;
+      gap: 8px;
+      margin-left: 10px;
     }
     
     .theme-toggle-header .theme-slider {
@@ -626,31 +614,103 @@
       background-color: white;
     }
 
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; }
-    .status-dot.online { background: #10b981; box-shadow: 0 0 10px #10b981; }
-    .status-dot.offline { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
-    .status-dot.connecting { background: var(--warning); box-shadow: 0 0 10px var(--warning); animation: blink 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .status-dot { 
+      width: 8px; 
+      height: 8px; 
+      border-radius: 50%; 
+      animation: pulse 2s infinite; 
+    }
+    
+    .status-dot.online { 
+      background: #10b981; 
+      box-shadow: 0 0 10px #10b981; 
+    }
+    
+    .status-dot.offline { 
+      background: var(--danger); 
+      box-shadow: 0 0 10px var(--danger); 
+    }
+    
+    .status-dot.connecting { 
+      background: var(--warning); 
+      box-shadow: 0 0 10px var(--warning); 
+      animation: blink 1.5s infinite; 
+    }
+    
+    @keyframes pulse { 
+      0%, 100% { 
+        transform: scale(1); 
+        opacity: 1; 
+      } 
+      50% { 
+        transform: scale(1.1); 
+        opacity: 0.8; 
+      } 
+    }
+    
+    @keyframes blink { 
+      0%, 100% { 
+        opacity: 1; 
+      } 
+      50% { 
+        opacity: 0.3; 
+      } 
+    }
 
     .footer {
-      text-align: center; padding: 20px 30px; margin-top: 30px;
-      color: var(--gray); font-size: 0.9rem; border-top: 1px solid var(--border);
-      background: var(--light); border-radius: 0 0 24px 24px;
+      text-align: center; 
+      padding: 15px 20px; 
+      margin-top: 20px;
+      color: var(--gray); 
+      font-size: 0.85rem; 
+      border-top: 1px solid var(--border);
+      background: var(--light); 
+      border-radius: 0 0 24px 24px;
       transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
-    .footer-content { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .copyright { display: flex; align-items: center; gap: 8px; color: var(--primary); font-weight: 600; }
-    .footer-links { display: flex; gap: 15px; margin-left: 20px; }
-    .footer-links a { color: var(--gray); text-decoration: none; transition: color 0.3s; }
-    .footer-links a:hover { color: var(--primary); }
+    
+    .footer-content { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      gap: 10px; 
+      flex-wrap: wrap; 
+    }
+    
+    .copyright { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      color: var(--primary); 
+      font-weight: 600; 
+      font-size: 0.85rem;
+    }
+    
+    .footer-links { 
+      display: flex; 
+      gap: 12px; 
+      margin-left: 15px; 
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .footer-links a { 
+      color: var(--gray); 
+      text-decoration: none; 
+      transition: color 0.3s; 
+      font-size: 0.85rem;
+    }
+    
+    .footer-links a:hover { 
+      color: var(--primary); 
+    }
 
     /* ===== DASHBOARD LAYOUT ===== */
     .dashboard {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 20px;
-      padding: 30px;
+      padding: 20px;
       background: var(--light);
       align-items: start;
       transition: background 0.3s ease;
@@ -660,110 +720,191 @@
     .forms-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-    }
-
-    @media (max-width: 1200px) {
-      .dashboard { grid-template-columns: 1fr; }
+      gap: 15px;
     }
 
     /* Stats Section */
     .stats-section {
       background: var(--card-bg);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 10px 30px var(--shadow);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 25px var(--shadow);
       transition: background 0.3s ease, box-shadow 0.3s ease;
-      min-height: 0; /* FIX: Allow content to determine height */
-      overflow: visible; /* FIX: Show all content */
+      min-height: 0;
+      overflow: visible;
     }
+    
     .stats-section h3 { 
       color: var(--primary); 
-      margin-bottom: 20px; 
-      font-size: 1.4rem; 
+      margin-bottom: 15px; 
+      font-size: 1.3rem; 
       display: flex; 
       align-items: center; 
-      gap: 10px; 
+      gap: 8px; 
     }
 
     /* Cards - FIXED: Improved grid and card sizing */
     .main-stats-grid { 
       display: grid; 
-      grid-template-columns: repeat(2, 1fr); /* FIX: 2 columns for main stats */
-      gap: 15px; 
-      margin-bottom: 25px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px; 
+      margin-bottom: 20px;
     }
     
     .stats-grid { 
       display: grid; 
-      grid-template-columns: repeat(4, 1fr); /* FIX: 4 columns for timeframe stats */
-      gap: 15px; 
-      margin-bottom: 25px; 
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px; 
+      margin-bottom: 20px; 
     }
     
     .stat-card {
       background: var(--card-bg); 
-      border-radius: 16px; 
-      padding: 15px; /* FIX: Reduced padding */
+      border-radius: 12px; 
+      padding: 15px;
       position: relative;
       overflow: hidden; 
       transition: all 0.3s ease; 
       border: 1px solid var(--border);
       cursor: pointer; 
       user-select: none; 
-      min-height: 100px; /* FIX: Reduced min-height */
+      min-height: 90px;
       display: flex; 
       flex-direction: column; 
       justify-content: center;
     }
-    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--shadow); }
-    .stat-card.tapped { animation: tapReveal 0.5s ease; }
-    @keyframes tapReveal { 0% { transform: scale(1); } 50% { transform: scale(0.98); } 100% { transform: scale(1); } }
     
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-1); }
-    #totalIncomeCard::before { background: var(--gradient-income); }
-    #totalExpenseCard::before { background: var(--gradient-2); }
-    #availableBalanceCard::before { background: var(--gradient-balance); }
-    #monthlyBudgetCard::before { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); }
-    #savingsGoalCard::before { background: linear-gradient(135deg, var(--success), #2ecc71); }
-    .stat-card.expense-card:nth-child(1)::before { background: var(--gradient-1); }
-    .stat-card.expense-card:nth-child(2)::before { background: var(--gradient-2); }
-    .stat-card.expense-card:nth-child(3)::before { background: var(--gradient-3); }
-    .stat-card.expense-card:nth-child(4)::before { background: var(--gradient-4); }
+    .stat-card:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 12px 30px var(--shadow); 
+    }
+    
+    .stat-card.tapped { 
+      animation: tapReveal 0.5s ease; 
+    }
+    
+    @keyframes tapReveal { 
+      0% { 
+        transform: scale(1); 
+      } 
+      50% { 
+        transform: scale(0.98); 
+      } 
+      100% { 
+        transform: scale(1); 
+      } 
+    }
+    
+    .stat-card::before { 
+      content: ''; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      height: 4px; 
+      background: var(--gradient-1); 
+    }
+    
+    #totalIncomeCard::before { 
+      background: var(--gradient-income); 
+    }
+    
+    #totalExpenseCard::before { 
+      background: var(--gradient-2); 
+    }
+    
+    #availableBalanceCard::before { 
+      background: var(--gradient-balance); 
+    }
+    
+    #monthlyBudgetCard::before { 
+      background: linear-gradient(135deg, var(--budget-color), #8c7ae6); 
+    }
+    
+    #savingsGoalCard::before { 
+      background: linear-gradient(135deg, var(--success), #2ecc71); 
+    }
+    
+    .stat-card.expense-card:nth-child(1)::before { 
+      background: var(--gradient-1); 
+    }
+    
+    .stat-card.expense-card:nth-child(2)::before { 
+      background: var(--gradient-2); 
+    }
+    
+    .stat-card.expense-card:nth-child(3)::before { 
+      background: var(--gradient-3); 
+    }
+    
+    .stat-card.expense-card:nth-child(4)::before { 
+      background: var(--gradient-4); 
+    }
 
     .stat-label { 
       color: var(--gray); 
-      font-size: 0.8rem; /* FIX: Smaller font */
+      font-size: 0.75rem;
       text-transform: uppercase; 
       letter-spacing: 0.5px; 
-      margin-bottom: 8px; /* FIX: Reduced margin */
+      margin-bottom: 6px;
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
     }
     
     .stat-value {
-      font-size: 1.4rem; /* FIX: Smaller font */
+      font-size: 1.3rem;
       font-weight: 800; 
       color: var(--dark); 
       font-family: 'SF Mono', 'Courier New', monospace;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
       -webkit-background-clip: text; 
       -webkit-text-fill-color: transparent;
-      margin: 3px 0; /* FIX: Reduced margin */
+      margin: 3px 0;
       position: relative; 
       transition: all 0.3s ease;
-      line-height: 1.2; /* FIX: Better line height */
-      word-break: break-word; /* FIX: Allow text to wrap */
+      line-height: 1.2;
+      word-break: break-word;
     }
     
-    #totalIncomeValue { background: var(--gradient-income); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    #totalExpenseValue { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    #availableBalanceValue { background: var(--gradient-balance); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    #monthlyBudgetValue { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    #savingsGoalValue { background: linear-gradient(135deg, var(--success), #2ecc71); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #totalIncomeValue { 
+      background: var(--gradient-income); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
     
-    .stat-value.hidden { filter: blur(8px); -webkit-filter: blur(8px); background: var(--gray); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #totalExpenseValue { 
+      background: var(--gradient-2); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    #availableBalanceValue { 
+      background: var(--gradient-balance); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    #monthlyBudgetValue { 
+      background: linear-gradient(135deg, var(--budget-color), #8c7ae6); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    #savingsGoalValue { 
+      background: linear-gradient(135deg, var(--success), #2ecc71); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    .stat-value.hidden { 
+      filter: blur(8px); 
+      -webkit-filter: blur(8px); 
+      background: var(--gray); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
     .stat-value.hidden::after {
       content: '👁️ Tap to reveal'; 
       position: absolute; 
@@ -774,129 +915,357 @@
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 0.8rem; /* FIX: Smaller font */
+      font-size: 0.75rem;
       color: var(--primary); 
       font-weight: 600;
     }
     
     .stat-tooltip {
-      position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: var(--dark);
-      color: white; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; opacity: 0;
-      transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 100;
+      position: absolute; 
+      top: -30px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      background: var(--dark);
+      color: white; 
+      padding: 5px 10px; 
+      border-radius: 6px; 
+      font-size: 0.7rem; 
+      opacity: 0;
+      transition: opacity 0.3s; 
+      pointer-events: none; 
+      white-space: nowrap; 
+      z-index: 100;
     }
-    .stat-card:hover .stat-tooltip { opacity: 1; }
-    .stat-change { font-size: 0.7rem; color: var(--gray); margin-top: 3px; display: flex; gap: 5px; } /* FIX: Smaller font */
-    .stat-change.positive { color: #10b981; } .stat-change.negative { color: var(--danger); }
+    
+    .stat-card:hover .stat-tooltip { 
+      opacity: 1; 
+    }
+    
+    .stat-change { 
+      font-size: 0.65rem; 
+      color: var(--gray); 
+      margin-top: 3px; 
+      display: flex; 
+      gap: 5px; 
+    }
+    
+    .stat-change.positive { 
+      color: #10b981; 
+    } 
+    
+    .stat-change.negative { 
+      color: var(--danger); 
+    }
 
-    .charts-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-    .chart-container { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px var(--shadow); transition: background 0.3s ease; }
-    .chart-container h4 { color: var(--primary); margin-bottom: 15px; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
+    .charts-section { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 15px; 
+      margin-top: 20px; 
+    }
+    
+    .chart-container { 
+      background: var(--card-bg); 
+      border-radius: 16px; 
+      padding: 15px; 
+      box-shadow: 0 8px 25px var(--shadow); 
+      transition: background 0.3s ease; 
+      min-height: 250px;
+    }
+    
+    .chart-container h4 { 
+      color: var(--primary); 
+      margin-bottom: 12px; 
+      font-size: 1rem; 
+      display: flex; 
+      gap: 8px; 
+      align-items: center; 
+    }
 
-    /* ===== FORMS SECTION (Collapse) ===== */
+    /* ===== FORMS SECTION (Collapse) - MOBILE FIXED ===== */
     .form-section {
       background: var(--form-bg);
-      border-radius: 20px; padding: 25px; border: 1px solid var(--border);
+      border-radius: 16px; 
+      padding: 20px; 
+      border: 1px solid var(--border);
       transition: all 0.3s ease;
+      width: 100%;
+      overflow: hidden;
     }
+    
     .income-form-section {
       background: var(--income-form-bg);
       border: 1px solid var(--success);
     }
+    
     .budget-form-section {
       background: linear-gradient(135deg, #f9f0ff 0%, #e6d4ff 100%);
       border: 1px solid var(--budget-color);
     }
+    
     body.dark-mode .budget-form-section {
       background: linear-gradient(135deg, #2d1b69 0%, #3b2a7a 100%);
     }
     
     /* Header for collapsing */
     .form-header {
-      display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; user-select: none; margin-bottom: 20px;
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      cursor: pointer; 
+      user-select: none; 
+      margin-bottom: 15px;
     }
-    .form-header:hover { opacity: 0.8; }
+    
+    .form-header:hover { 
+      opacity: 0.8; 
+    }
     
     .form-title {
-      color: var(--primary-dark); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0;
+      color: var(--primary-dark); 
+      font-size: 1.2rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 0;
     }
-    .income-form-section .form-title { color: var(--success); }
-    .budget-form-section .form-title { color: var(--budget-color); }
+    
+    .income-form-section .form-title { 
+      color: var(--success); 
+    }
+    
+    .budget-form-section .form-title { 
+      color: var(--budget-color); 
+    }
     
     .toggle-icon {
-      font-size: 1.2rem; color: var(--gray); transition: transform 0.3s ease;
+      font-size: 1rem; 
+      color: var(--gray); 
+      transition: transform 0.3s ease;
     }
     
     /* Collapsible Body */
     .form-body {
-      overflow: hidden; transition: all 0.3s ease;
+      overflow: hidden; 
+      transition: all 0.3s ease;
     }
     
     /* Collapsed State */
-    .form-section.collapsed .form-body { display: none; }
-    .form-section.collapsed .form-header { margin-bottom: 0; }
-    .form-section.collapsed .toggle-icon { transform: rotate(-180deg); }
+    .form-section.collapsed .form-body { 
+      display: none; 
+    }
     
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
-    .form-group { position: relative; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); font-size: 0.95rem; }
-    .form-group i { position: absolute; left: 12px; top: 40px; color: var(--primary); }
-    .income-form-section .form-group i { color: var(--success); }
-    .budget-form-section .form-group i { color: var(--budget-color); }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 12px 12px 12px 40px; border: 2px solid var(--border);
-      border-radius: 12px; font-size: 15px; transition: all 0.3s; background: var(--input-bg);
-      color: var(--text-color);
+    .form-section.collapsed .form-header { 
+      margin-bottom: 0; 
     }
+    
+    .form-section.collapsed .toggle-icon { 
+      transform: rotate(-180deg); 
+    }
+    
+    /* FIXED FORM GRID FOR MOBILE - NO OVERLAPPING */
+    .form-grid { 
+      display: grid; 
+      grid-template-columns: 1fr; /* Always 1 column on mobile */
+      gap: 15px; 
+      margin-bottom: 15px; 
+    }
+    
+    .form-group { 
+      position: relative; 
+      width: 100%;
+    }
+    
+    .form-group label { 
+      display: block; 
+      margin-bottom: 6px; 
+      font-weight: 600; 
+      color: var(--dark); 
+      font-size: 0.9rem; 
+    }
+    
+    .form-group i { 
+      position: absolute; 
+      left: 12px; 
+      top: 38px; 
+      color: var(--primary); 
+      font-size: 0.9rem;
+    }
+    
+    .income-form-section .form-group i { 
+      color: var(--success); 
+    }
+    
+    .budget-form-section .form-group i { 
+      color: var(--budget-color); 
+    }
+    
+    .form-group input, 
+    .form-group select, 
     .form-group textarea {
-      min-height: 100px;
+      width: 100%; 
+      padding: 12px 12px 12px 40px; 
+      border: 2px solid var(--border);
+      border-radius: 10px; 
+      font-size: 14px; 
+      transition: all 0.3s; 
+      background: var(--input-bg);
+      color: var(--text-color);
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 44px; /* Better touch target */
+    }
+    
+    .form-group textarea {
+      min-height: 80px;
       resize: vertical;
+      padding-top: 12px;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-      outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1); 
+    
+    .form-group input:focus, 
+    .form-group select:focus, 
+    .form-group textarea:focus { 
+      outline: none; 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1); 
     }
-    .income-form-section .form-group input:focus { border-color: var(--success); box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2); }
-    .budget-form-section .form-group input:focus { border-color: var(--budget-color); box-shadow: 0 0 0 3px rgba(156, 136, 255, 0.2); }
+    
+    .income-form-section .form-group input:focus { 
+      border-color: var(--success); 
+      box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2); 
+    }
+    
+    .budget-form-section .form-group input:focus { 
+      border-color: var(--budget-color); 
+      box-shadow: 0 0 0 3px rgba(156, 136, 255, 0.2); 
+    }
 
     /* Buttons */
     .btn {
-      padding: 12px 24px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden;
+      padding: 12px 20px; 
+      border: none; 
+      border-radius: 10px; 
+      font-size: 14px; 
+      font-weight: 600;
+      cursor: pointer; 
+      transition: all 0.3s; 
+      display: inline-flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+      position: relative; 
+      overflow: hidden;
+      min-height: 44px; /* Better touch target */
     }
-    .btn:hover::after { width: 300px; height: 300px; }
-    .btn-primary { background: var(--gradient-1); color: white; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 152, 0, 0.3); }
-    .btn-success { background: var(--gradient-income); color: white; }
-    .btn-success:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(78, 205, 196, 0.3); }
-    .btn-budget { background: linear-gradient(135deg, var(--budget-color), #8c7ae6); color: white; }
-    .btn-budget:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(156, 136, 255, 0.3); }
-    .btn-cancel { background: var(--gray); color: white; margin-left: 10px; }
-    .btn-balance { background: var(--light); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; font-size: 0.85rem; }
-    .btn-balance:hover, .btn-balance.active { background: var(--primary); color: white; }
-    .reveal-all-btn { margin-top: 15px; width: 100%; background: linear-gradient(135deg, #ff980022, #f57c0022); color: var(--primary); border: 2px dashed var(--primary); padding: 12px; font-weight: 600; }
-    .reveal-all-btn:hover { background: var(--gradient-1); color: white; border-style: solid; }
-    .btn-actions-container { display: flex; align-items: center; }
+    
+    .btn:hover::after { 
+      width: 300px; 
+      height: 300px; 
+    }
+    
+    .btn-primary { 
+      background: var(--gradient-1); 
+      color: white; 
+    }
+    
+    .btn-primary:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 25px rgba(255, 152, 0, 0.3); 
+    }
+    
+    .btn-success { 
+      background: var(--gradient-income); 
+      color: white; 
+    }
+    
+    .btn-success:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 25px rgba(78, 205, 196, 0.3); 
+    }
+    
+    .btn-budget { 
+      background: linear-gradient(135deg, var(--budget-color), #8c7ae6); 
+      color: white; 
+    }
+    
+    .btn-budget:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 10px 25px rgba(156, 136, 255, 0.3); 
+    }
+    
+    .btn-cancel { 
+      background: var(--gray); 
+      color: white; 
+      margin-left: 10px; 
+    }
+    
+    .btn-balance { 
+      background: var(--light); 
+      color: var(--primary); 
+      border: 2px solid var(--primary); 
+      padding: 8px 14px; 
+      font-size: 0.8rem; 
+    }
+    
+    .btn-balance:hover, 
+    .btn-balance.active { 
+      background: var(--primary); 
+      color: white; 
+    }
+    
+    .reveal-all-btn { 
+      margin-top: 15px; 
+      width: 100%; 
+      background: linear-gradient(135deg, #ff980022, #f57c0022); 
+      color: var(--primary); 
+      border: 2px dashed var(--primary); 
+      padding: 12px; 
+      font-weight: 600; 
+    }
+    
+    .reveal-all-btn:hover { 
+      background: var(--gradient-1); 
+      color: white; 
+      border-style: solid; 
+    }
+    
+    .btn-actions-container { 
+      display: flex; 
+      align-items: center; 
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
     /* ===== REPORTS & LISTS (Updated) ===== */
-    .content { padding: 30px; }
+    .content { 
+      padding: 20px; 
+    }
+    
     .report-section { 
       background: var(--card-bg); 
-      border-radius: 20px; 
-      padding: 25px; 
-      margin: 30px 0; 
+      border-radius: 16px; 
+      padding: 20px; 
+      margin: 20px 0; 
       border: 1px solid var(--border); 
       transition: background 0.3s ease;
-      box-shadow: 0 5px 20px var(--shadow);
+      box-shadow: 0 5px 15px var(--shadow);
     }
-    .report-section h3 { margin-bottom: 20px; } 
+    
+    .report-section h3 { 
+      margin-bottom: 15px; 
+      font-size: 1.3rem;
+    } 
 
     /* New List Header styles for collapse functionality */
-    .expenses-list, .income-list, .reminders-list, .budgets-list { 
+    .expenses-list, 
+    .income-list, 
+    .reminders-list, 
+    .budgets-list { 
       background: var(--card-bg); 
-      border-radius: 20px; 
-      padding: 25px; 
-      margin-top: 30px; 
-      box-shadow: 0 10px 30px var(--shadow); 
+      border-radius: 16px; 
+      padding: 20px; 
+      margin-top: 20px; 
+      box-shadow: 0 8px 25px var(--shadow); 
       transition: background 0.3s ease; 
     }
     
@@ -904,16 +1273,50 @@
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       cursor: pointer;
       user-select: none;
     }
-    .list-header:hover { opacity: 0.8; }
     
-    .expenses-list h3 { color: var(--primary); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
-    .income-list h3 { color: var(--success); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
-    .reminders-list h3 { color: var(--reminder-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
-    .budgets-list h3 { color: var(--budget-color); font-size: 1.4rem; display: flex; align-items: center; gap: 10px; margin: 0; }
+    .list-header:hover { 
+      opacity: 0.8; 
+    }
+    
+    .expenses-list h3 { 
+      color: var(--primary); 
+      font-size: 1.2rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 0; 
+    }
+    
+    .income-list h3 { 
+      color: var(--success); 
+      font-size: 1.2rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 0; 
+    }
+    
+    .reminders-list h3 { 
+      color: var(--reminder-color); 
+      font-size: 1.2rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 0; 
+    }
+    
+    .budgets-list h3 { 
+      color: var(--budget-color); 
+      font-size: 1.2rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin: 0; 
+    }
     
     .expenses-list.collapsed .toggle-icon,
     .income-list.collapsed .toggle-icon,
@@ -921,12 +1324,14 @@
     .budgets-list.collapsed .toggle-icon {
         transform: rotate(-180deg);
     }
+    
     .expenses-list.collapsed .list-body,
     .income-list.collapsed .list-body,
     .reminders-list.collapsed .list-body,
     .budgets-list.collapsed .list-body {
         display: none;
     }
+    
     .expenses-list.collapsed .list-header,
     .income-list.collapsed .list-header,
     .reminders-list.collapsed .list-header,
@@ -942,102 +1347,305 @@
     
     .report-controls { 
       display: flex; 
-      gap: 10px; 
-      margin-bottom: 20px; 
+      gap: 8px; 
+      margin-bottom: 15px; 
       flex-wrap: wrap; 
+      overflow-x: auto;
+      padding-bottom: 5px;
+      -webkit-overflow-scrolling: touch;
     }
+    
     .btn-report { 
       background: var(--light); 
       color: var(--primary); 
       border: 2px solid var(--primary); 
-      padding: 8px 16px;
-      font-size: 0.9rem;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
-    .btn-report:hover, .btn-report.active { 
+    
+    .btn-report:hover, 
+    .btn-report.active { 
       background: var(--primary); 
       color: white; 
       transform: translateY(-2px); 
     }
     
-    #expenseReportSection .btn-report { color: var(--danger); border: 2px solid var(--danger); }
-    #expenseReportSection .btn-report:hover, #expenseReportSection .btn-report.active { background: var(--danger); color: white; }
+    #expenseReportSection .btn-report { 
+      color: var(--danger); 
+      border: 2px solid var(--danger); 
+    }
+    
+    #expenseReportSection .btn-report:hover, 
+    #expenseReportSection .btn-report.active { 
+      background: var(--danger); 
+      color: white; 
+    }
 
-    #incomeReportSection .btn-report { color: var(--success); border: 2px solid var(--success); }
-    #incomeReportSection .btn-report:hover, #incomeReportSection .btn-report.active { background: var(--success); color: white; }
+    #incomeReportSection .btn-report { 
+      color: var(--success); 
+      border: 2px solid var(--success); 
+    }
+    
+    #incomeReportSection .btn-report:hover, 
+    #incomeReportSection .btn-report.active { 
+      background: var(--success); 
+      color: white; 
+    }
     
     .report-period {
         display: grid;
-        grid-template-columns: 1fr 1fr auto;
+        grid-template-columns: 1fr;
         gap: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         padding: 15px;
         background: #fff5e6;
         border-radius: 10px;
         border: 1px solid #ffe0b2;
     }
+    
     body.dark-mode .report-period {
       background: #374151;
       border-color: #4b5563;
     }
-    .report-period label { font-size: 0.85rem; font-weight: 600; color: var(--gray); }
+    
+    .report-period label { 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      color: var(--gray); 
+    }
+    
     .report-period input[type="date"] {
-        padding: 8px;
+        padding: 10px;
         border-radius: 8px;
         border: 1px solid var(--border);
         width: 100%;
-        font-size: 15px;
+        font-size: 14px;
         background: var(--input-bg);
         color: var(--text-color);
+        min-height: 44px;
     }
     
-    .report-results { margin-top: 25px; }
-    .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .report-summary-item { background: var(--light); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
-    .report-summary-item .label { font-size: 0.8rem; color: var(--gray); margin-bottom: 5px; }
-    .report-summary-item .value { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); font-family: 'Courier New', monospace; }
+    .report-results { 
+      margin-top: 20px; 
+    }
     
-    .category-breakdown { margin-top: 20px; }
-    .category-item { display: flex; align-items: center; margin-bottom: 10px; padding: 8px; background: var(--light); border-radius: 6px; }
-    .category-name { flex: 0 0 150px; font-size: 0.85rem; font-weight: 600; }
-    .category-bar { flex: 1; height: 20px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin: 0 15px; }
-    body.dark-mode .category-bar { background: #4b5563; }
-    .category-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 4px; }
-    .category-fill-income { background: linear-gradient(90deg, #43e97b, #38f9d7); }
-    body.dark-mode .category-fill-income { background: linear-gradient(90deg, #34d399, #22d3ee); }
-    .category-amount { flex: 0 0 100px; text-align: right; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 600; }
-    .category-percentage { flex: 0 0 50px; text-align: right; font-size: 0.8rem; color: var(--gray); }
+    .report-summary { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      gap: 12px; 
+      margin-bottom: 20px; 
+    }
+    
+    .report-summary-item { 
+      background: var(--light); 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border); 
+    }
+    
+    .report-summary-item .label { 
+      font-size: 0.75rem; 
+      color: var(--gray); 
+      margin-bottom: 5px; 
+    }
+    
+    .report-summary-item .value { 
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      color: var(--primary-dark); 
+      font-family: 'Courier New', monospace; 
+    }
+    
+    .category-breakdown { 
+      margin-top: 15px; 
+    }
+    
+    .category-item { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 8px; 
+      padding: 8px; 
+      background: var(--light); 
+      border-radius: 6px; 
+      flex-wrap: wrap;
+    }
+    
+    .category-name { 
+      flex: 0 0 120px; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+    }
+    
+    .category-bar { 
+      flex: 1; 
+      height: 16px; 
+      background: #e5e7eb; 
+      border-radius: 4px; 
+      overflow: hidden; 
+      margin: 0 10px; 
+      min-width: 50px;
+    }
+    
+    body.dark-mode .category-bar { 
+      background: #4b5563; 
+    }
+    
+    .category-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, var(--primary), var(--secondary)); 
+      border-radius: 4px; 
+    }
+    
+    .category-fill-income { 
+      background: linear-gradient(90deg, #43e97b, #38f9d7); 
+    }
+    
+    body.dark-mode .category-fill-income { 
+      background: linear-gradient(90deg, #34d399, #22d3ee); 
+    }
+    
+    .category-amount { 
+      flex: 0 0 80px; 
+      text-align: right; 
+      font-family: 'Courier New', monospace; 
+      font-size: 0.85rem; 
+      font-weight: 600; 
+    }
+    
+    .category-percentage { 
+      flex: 0 0 40px; 
+      text-align: right; 
+      font-size: 0.75rem; 
+      color: var(--gray); 
+    }
 
-    .expense-item, .reminder-item, .budget-item { 
-      display: flex; justify-content: space-between; align-items: center; padding: 15px; 
-      border-bottom: 2px solid var(--border); transition: all 0.3s; border-radius: 12px; 
-      margin-bottom: 8px; background: var(--light); 
+    .expense-item, 
+    .reminder-item, 
+    .budget-item { 
+      display: flex; 
+      flex-direction: column;
+      padding: 12px; 
+      border-bottom: 2px solid var(--border); 
+      transition: all 0.3s; 
+      border-radius: 10px; 
+      margin-bottom: 8px; 
+      background: var(--light); 
+      gap: 10px;
     }
-    .expense-item:hover, .reminder-item:hover, .budget-item:hover { 
-      transform: translateX(8px); box-shadow: 0 5px 20px var(--shadow); 
+    
+    .expense-item:hover, 
+    .reminder-item:hover, 
+    .budget-item:hover { 
+      transform: translateX(5px); 
+      box-shadow: 0 5px 15px var(--shadow); 
     }
-    .item-content { flex: 1; }
+    
+    .item-content { 
+      flex: 1; 
+      width: 100%;
+    }
+    
     .expense-amount { 
-      font-weight: 700; font-size: 1.1rem; font-family: 'SF Mono', 'Courier New', monospace; 
-      background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-      min-width: 100px; text-align: right; margin-right: 15px; 
+      font-weight: 700; 
+      font-size: 1.1rem; 
+      font-family: 'SF Mono', 'Courier New', monospace; 
+      background: var(--gradient-1); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      text-align: right; 
+      margin-top: 5px;
     }
-    .income-amount { background: var(--gradient-income); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .item-actions { display: flex; gap: 8px; }
-    .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
-    .action-btn.edit { background: #ffe0b2; color: var(--primary); } 
-    body.dark-mode .action-btn.edit { background: #374151; }
-    .action-btn.edit:hover { background: var(--primary); color: white; }
-    .action-btn.delete { background: #fee2e2; color: var(--danger); } 
-    body.dark-mode .action-btn.delete { background: #374151; }
-    .action-btn.delete:hover { background: var(--danger); color: white; }
-    .action-btn.complete { background: #d4edda; color: var(--success); }
-    body.dark-mode .action-btn.complete { background: #374151; }
-    .action-btn.complete:hover { background: var(--success); color: white; }
+    
+    .income-amount { 
+      background: var(--gradient-income); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    .item-actions { 
+      display: flex; 
+      gap: 8px; 
+      justify-content: flex-end;
+      width: 100%;
+    }
+    
+    .action-btn { 
+      width: 36px; 
+      height: 36px; 
+      border-radius: 8px; 
+      border: none; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+      font-size: 0.9rem; 
+      flex-shrink: 0;
+    }
+    
+    .action-btn.edit { 
+      background: #ffe0b2; 
+      color: var(--primary); 
+    } 
+    
+    body.dark-mode .action-btn.edit { 
+      background: #374151; 
+    }
+    
+    .action-btn.edit:hover { 
+      background: var(--primary); 
+      color: white; 
+    }
+    
+    .action-btn.delete { 
+      background: #fee2e2; 
+      color: var(--danger); 
+    } 
+    
+    body.dark-mode .action-btn.delete { 
+      background: #374151; 
+    }
+    
+    .action-btn.delete:hover { 
+      background: var(--danger); 
+      color: white; 
+    }
+    
+    .action-btn.complete { 
+      background: #d4edda; 
+      color: var(--success); 
+    }
+    
+    body.dark-mode .action-btn.complete { 
+      background: #374151; 
+    }
+    
+    .action-btn.complete:hover { 
+      background: var(--success); 
+      color: white; 
+    }
 
     /* Category Badges */
-    .category-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; transition: all 0.3s; }
-    .category-badge:hover { transform: scale(1.05); }
-    /* Category Colors - RESTORED FULL LIST */
+    .category-badge { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      padding: 6px 10px; 
+      border-radius: 16px; 
+      font-size: 0.75rem; 
+      font-weight: 600; 
+      margin-right: 8px; 
+      transition: all 0.3s; 
+      margin-bottom: 5px;
+    }
+    
+    .category-badge:hover { 
+      transform: scale(1.05); 
+    }
+
+    /* Rest of category colors remain the same */
     .category-yaka { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; }
     .category-water { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     .category-groceries { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
@@ -1063,80 +1671,20 @@
     .category-investment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
     .category-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
     .category-other { background: var(--gray); color: white; }
-    .category-mortgage { background: linear-gradient(135deg, #8b4513, #a0522d); color: white; }
-    .category-insurance { background: linear-gradient(135deg, #4169e1, #1e90ff); color: white; }
-    .category-taxes { background: linear-gradient(135deg, #dc143c, #ff6347); color: white; }
-    .category-home-maintenance { background: linear-gradient(135deg, #deb887, #f4a460); color: var(--dark); }
-    .category-car-payment { background: linear-gradient(135deg, #4682b4, #5f9ea0); color: white; }
-    .category-car-insurance { background: linear-gradient(135deg, #2e8b57, #3cb371); color: white; }
-    .category-health-insurance { background: linear-gradient(135deg, #32cd32, #90ee90); color: var(--dark); }
-    .category-gym-membership { background: linear-gradient(135deg, #ff4500, #ff8c00); color: white; }
-    .category-streaming-services { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-mobile-data { background: linear-gradient(135deg, #00ced1, #20b2aa); color: white; }
-    .category-household-supplies { background: linear-gradient(135deg, #daa520, #ffd700); color: var(--dark); }
-    .category-personal-care { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-childcare { background: linear-gradient(135deg, #ffb6c1, #ffe4e1); color: var(--dark); }
-    .category-education { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
-    .category-gifts { background: linear-gradient(135deg, #ff69b4, #db7093); color: white; }
-    .category-donations { background: linear-gradient(135deg, #228b22, #32cd32); color: white; }
-    .category-travel { background: linear-gradient(135deg, #ffa500, #ff8c00); color: white; }
-    .category-vacation { background: linear-gradient(135deg, #87ceeb, #00bfff); color: var(--dark); }
-    .category-hobbies { background: linear-gradient(135deg, #da70d6, #ee82ee); color: white; }
-    .category-subscriptions { background: linear-gradient(135deg, #6a5acd, #7b68ee); color: white; }
-    .category-bank-fees { background: linear-gradient(135deg, #bdb76b, #f0e68c); color: var(--dark); }
-    .category-business-expenses { background: linear-gradient(135deg, #008080, #20b2aa); color: white; }
-    .category-office-supplies { background: linear-gradient(135deg, #d2691e, #cd853f); color: white; }
-    .category-pet-care { background: linear-gradient(135deg, #a52a2a, #dc143c); color: white; }
-    .category-electronics { background: linear-gradient(135deg, #00008b, #0000cd); color: white; }
-    .category-software { background: linear-gradient(135deg, #191970, #4169e1); color: white; }
-    .category-books { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-alcohol { background: linear-gradient(135deg, #800080, #9932cc); color: white; }
-    .category-fast-food { background: linear-gradient(135deg, #ff6347, #ff4500); color: white; }
-    .category-coffee { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-restaurants { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-parking { background: linear-gradient(135deg, #808080, #a9a9a9); color: white; }
-    .category-public-transport { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
-    .category-taxi { background: linear-gradient(135deg, #ffff00, #ffd700); color: var(--dark); }
-    .category-hotel { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-sports { background: linear-gradient(135deg, #4169e1, #1e90ff); color: white; }
-    .category-fitness { background: linear-gradient(135deg, #ff4500, #ff8c00); color: white; }
-    .category-music { background: linear-gradient(135deg, #ff8c00, #ffa500); color: white; }
-    .category-movies { background: linear-gradient(135deg, #00008b, #0000cd); color: white; }
-    .category-concerts { background: linear-gradient(135deg, #ff0000, #dc143c); color: white; }
-    .category-museums { background: linear-gradient(135deg, #2f4f4f, #696969); color: white; }
-    .category-amusement-parks { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-events { background: linear-gradient(135deg, #ffd700, #ffff00); color: var(--dark); }
-    .category-parties { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-wedding { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-medical-bills { background: linear-gradient(135deg, #dc143c, #ff6347); color: white; }
-    .category-dental { background: linear-gradient(135deg, #f0ffff, #e0ffff); color: var(--dark); }
-    .category-vision { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
-    .category-pharmacy { background: linear-gradient(135deg, #32cd32, #90ee90); color: var(--dark); }
-    .category-therapy { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-massage { background: linear-gradient(135deg, #ffdead, #f5deb3); color: var(--dark); }
-    .category-spa { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-salon { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-barber { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-cosmetics { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
-    .category-skincare { background: linear-gradient(135deg, #ffe4e1, #ffdab9); color: var(--dark); }
-    .category-haircare { background: linear-gradient(135deg, #8b4513, #d2691e); color: white; }
-    .category-fragrances { background: linear-gradient(135deg, #9370db, #8a2be2); color: white; }
-    .category-utilities { background: linear-gradient(135deg, #1e90ff, #00bfff); color: white; }
-    .category-allowances { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
 
     /* Progress Bar for Budget */
     .budget-progress {
-      height: 10px;
+      height: 8px;
       background: var(--border);
-      border-radius: 5px;
+      border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 6px;
     }
     
     .budget-progress-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--budget-color), #8c7ae6);
-      border-radius: 5px;
+      border-radius: 4px;
       transition: width 0.5s ease;
     }
     
@@ -1145,7 +1693,7 @@
     }
     
     .budget-status {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       margin-top: 5px;
       display: flex;
       justify-content: space-between;
@@ -1161,10 +1709,12 @@
 
     /* Reminder Item */
     .reminder-due {
-      font-size: 0.8rem;
-      padding: 3px 8px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
       border-radius: 12px;
       font-weight: 600;
+      display: inline-block;
+      margin-top: 5px;
     }
     
     .reminder-due.today {
@@ -1188,52 +1738,183 @@
     }
 
     /* Messages & Loader */
-    .message { padding: 15px 20px; border-radius: 12px; margin: 15px 0; display: none; align-items: center; gap: 12px; animation: slideIn 0.3s ease; font-size: 0.95rem; }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .message.show { display: flex; }
-    .message.success { background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; border-left: 4px solid #28a745; }
-    .message.error { background: linear-gradient(135deg, #f8d7da, #f5c6cb); color: #721c24; border-left: 4px solid #dc3545; }
-    .message.info { background: linear-gradient(135deg, #d1ecf1, #bee5eb); color: #0c5460; border-left: 4px solid #17a2b8; }
-    .message.warning { background: linear-gradient(135deg, #fff3cd, #ffeaa7); color: #856404; border-left: 4px solid #ffc107; }
-    body.dark-mode .message.success { background: linear-gradient(135deg, #064e3b, #065f46); color: #d1fae5; border-left: 4px solid #10b981; }
-    body.dark-mode .message.error { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fecaca; border-left: 4px solid #ef4444; }
-    body.dark-mode .message.info { background: linear-gradient(135deg, #164e63, #155e75); color: #cffafe; border-left: 4px solid #06b6d4; }
-    body.dark-mode .message.warning { background: linear-gradient(135deg, #78350f, #92400e); color: #fef3c7; border-left: 4px solid #f59e0b; }
+    .message { 
+      padding: 12px 16px; 
+      border-radius: 10px; 
+      margin: 10px 0; 
+      display: none; 
+      align-items: center; 
+      gap: 10px; 
+      animation: slideIn 0.3s ease; 
+      font-size: 0.9rem; 
+    }
     
-    .loading { text-align: center; padding: 40px; color: var(--gray); display: flex; flex-direction: column; align-items: center; gap: 15px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty-state { text-align: center; padding: 40px; color: var(--gray); }
+    @keyframes slideIn { 
+      from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+      } 
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      } 
+    }
+    
+    .message.show { 
+      display: flex; 
+    }
+    
+    .message.success { 
+      background: linear-gradient(135deg, #d4edda, #c3e6cb); 
+      color: #155724; 
+      border-left: 4px solid #28a745; 
+    }
+    
+    .message.error { 
+      background: linear-gradient(135deg, #f8d7da, #f5c6cb); 
+      color: #721c24; 
+      border-left: 4px solid #dc3545; 
+    }
+    
+    .message.info { 
+      background: linear-gradient(135deg, #d1ecf1, #bee5eb); 
+      color: #0c5460; 
+      border-left: 4px solid #17a2b8; 
+    }
+    
+    .message.warning { 
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7); 
+      color: #856404; 
+      border-left: 4px solid #ffc107; 
+    }
+    
+    body.dark-mode .message.success { 
+      background: linear-gradient(135deg, #064e3b, #065f46); 
+      color: #d1fae5; 
+      border-left: 4px solid #10b981; 
+    }
+    
+    body.dark-mode .message.error { 
+      background: linear-gradient(135deg, #7f1d1d, #991b1b); 
+      color: #fecaca; 
+      border-left: 4px solid #ef4444; 
+    }
+    
+    body.dark-mode .message.info { 
+      background: linear-gradient(135deg, #164e63, #155e75); 
+      color: #cffafe; 
+      border-left: 4px solid #06b6d4; 
+    }
+    
+    body.dark-mode .message.warning { 
+      background: linear-gradient(135deg, #78350f, #92400e); 
+      color: #fef3c7; 
+      border-left: 4px solid #f59e0b; 
+    }
+    
+    .loading { 
+      text-align: center; 
+      padding: 30px; 
+      color: var(--gray); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 12px; 
+    }
+    
+    .spinner { 
+      width: 30px; 
+      height: 30px; 
+      border: 3px solid var(--border); 
+      border-top-color: var(--primary); 
+      border-radius: 50%; 
+      animation: spin 1s linear infinite; 
+    }
+    
+    @keyframes spin { 
+      to { 
+        transform: rotate(360deg); 
+      } 
+    }
+    
+    .empty-state { 
+      text-align: center; 
+      padding: 30px; 
+      color: var(--gray); 
+    }
 
     /* Modal */
     .modal-overlay { 
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-      background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; 
-      align-items: center; z-index: 1000; backdrop-filter: blur(5px); 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background: rgba(0, 0, 0, 0.5); 
+      display: none; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 1000; 
+      backdrop-filter: blur(5px); 
+      padding: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
+    
     .modal { 
-      background: var(--modal-bg); border-radius: 20px; padding: 30px; 
-      max-width: 500px; width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2); 
-      animation: modalSlide 0.3s ease; color: var(--text-color); 
-      max-height: 90vh; overflow-y: auto;
+      background: var(--modal-bg); 
+      border-radius: 16px; 
+      padding: 20px; 
+      max-width: 500px; 
+      width: 100%; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+      animation: modalSlide 0.3s ease; 
+      color: var(--text-color); 
+      max-height: 85vh; 
+      overflow-y: auto;
     }
-    @keyframes modalSlide { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-    .modal h3 { margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+    
+    @keyframes modalSlide { 
+      from { 
+        opacity: 0; 
+        transform: translateY(-20px); 
+      } 
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      } 
+    }
+    
+    .modal-actions { 
+      display: flex; 
+      gap: 10px; 
+      justify-content: flex-end; 
+      margin-top: 20px; 
+      flex-wrap: wrap;
+    }
+    
+    .modal h3 { 
+      margin-bottom: 15px; 
+      color: var(--primary); 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      font-size: 1.3rem;
+    }
 
     /* Specific Report Filter Styles */
     .specific-report-filter {
         background: var(--light);
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 15px;
         border: 1px solid var(--border);
     }
     
     .filter-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
+        grid-template-columns: 1fr;
+        gap: 12px;
         margin-bottom: 15px;
     }
     
@@ -1246,27 +1927,27 @@
     /* Search and Filter - FIXED: Improved styling */
     .search-filter-container {
       display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      align-items: center;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 15px;
     }
     
     .search-box {
       flex: 1;
-      min-width: 200px;
+      width: 100%;
       position: relative;
     }
     
     .search-box input {
       width: 100%;
-      padding: 10px 15px 10px 40px;
-      border-radius: 12px;
+      padding: 12px 12px 12px 40px;
+      border-radius: 10px;
       border: 2px solid var(--border);
       background: var(--input-bg);
       color: var(--text-color);
       font-size: 14px;
       transition: all 0.3s;
+      min-height: 44px;
     }
     
     .search-box input:focus {
@@ -1285,19 +1966,22 @@
     }
     
     .filter-select {
-      min-width: 150px;
+      width: 100%;
     }
     
     .filter-select select {
       width: 100%;
-      padding: 10px 15px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 10px;
       border: 2px solid var(--border);
       background: var(--input-bg);
       color: var(--text-color);
       font-size: 14px;
       cursor: pointer;
       transition: all 0.3s;
+      min-height: 44px;
+      -webkit-appearance: none;
+      appearance: none;
     }
     
     .filter-select select:focus {
@@ -1315,24 +1999,30 @@
     /* Quick Actions */
     .quick-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      -webkit-overflow-scrolling: touch;
     }
     
     .quick-action-btn {
-      padding: 8px 15px;
+      padding: 10px 14px;
       background: var(--light);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
       color: var(--primary);
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      gap: 6px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-height: 40px;
     }
     
     .quick-action-btn:hover {
@@ -1345,17 +2035,18 @@
     .user-profile {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 16px;
+      gap: 8px;
+      padding: 6px 12px;
       background: rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
+      border-radius: 20px;
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
     }
     
     .user-avatar {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: var(--gradient-1);
       display: flex;
@@ -1363,104 +2054,68 @@
       justify-content: center;
       color: white;
       font-weight: 600;
+      font-size: 0.9rem;
     }
     
     .user-email {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
     }
 
-    /* Responsive */
+    /* ===== RESPONSIVE BREAKPOINTS ===== */
+    
+    /* Large screens - default styles already applied */
+    
+    /* Medium screens (tablets) */
+    @media (max-width: 1024px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      
+      .forms-wrapper {
+        order: -1;
+      }
+      
+      .main-stats-grid,
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Tablets and smaller screens */
     @media (max-width: 992px) {
       .auth-container {
         flex-direction: column;
         height: auto;
+        min-height: auto;
         max-width: 500px;
+        margin: 20px auto;
+      }
+      
+      .auth-left-panel,
+      .auth-right-panel {
+        flex: none;
+        padding: 30px 25px;
       }
       
       .auth-left-panel {
-        padding: 40px 30px;
+        min-height: 300px;
       }
       
       .auth-right-panel {
-        padding: 40px 30px;
+        overflow-y: visible;
       }
       
       .auth-left-content h1 {
-        font-size: 2.2rem;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      body { padding: 10px; }
-      .header { padding: 20px; } .header h1 { font-size: 1.8rem; }
-      .dashboard { padding: 20px; gap: 30px; }
-      .content { padding: 20px; }
-      .charts-section { grid-template-columns: 1fr; }
-      .main-stats-grid, .stats-grid { grid-template-columns: 1fr; }
-      .expense-item, .reminder-item, .budget-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-      .expense-amount, .budget-amount { text-align: left; width: 100%; margin-right: 0; margin-bottom: 10px; }
-      .item-actions { width: 100%; justify-content: flex-end; }
-      .footer-content { flex-direction: column; gap: 15px; }
-      .footer-links { margin-left: 0; justify-content: center; }
-      .btn-cancel { margin-left: 0; margin-top: 10px; }
-      .btn-actions-container { flex-direction: column; }
-      .report-period { grid-template-columns: 1fr; }
-      .report-period > div:last-child { align-self: auto; margin-top: 10px; }
-      .theme-toggle-header {
-        margin-left: 10px;
-      }
-      .filter-grid {
-        grid-template-columns: 1fr;
-      }
-      .filter-actions {
-        flex-direction: column;
-      }
-      .search-filter-container {
-        flex-direction: column;
-      }
-      .quick-actions {
-        justify-content: center;
-      }
-      .user-profile {
-        padding: 6px 12px;
-        font-size: 0.8rem;
-      }
-    }
-    
-    /* NEW: Category Report Modal */
-    .category-report-modal .filter-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .category-report-modal .filter-actions {
-      justify-content: center;
-      margin-top: 20px;
-    }
-    
-    /* FIX: Improve stat card responsiveness */
-    @media (max-width: 1024px) {
-      .main-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .main-stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      .stat-value {
-        font-size: 1.2rem;
-      }
-      
-      .auth-left-content h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
       }
       
       .auth-left-content .tagline {
@@ -1468,7 +2123,522 @@
       }
       
       .auth-welcome h2 {
+        font-size: 1.6rem;
+      }
+      
+      .container {
+        border-radius: 16px;
+        margin: 10px;
+        width: calc(100% - 20px);
+      }
+      
+      .header {
+        padding: 15px;
+      }
+      
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .dashboard {
+        padding: 15px;
+      }
+      
+      .content {
+        padding: 15px;
+      }
+      
+      .modal {
+        max-width: 90%;
+        padding: 15px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Mobile screens */
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+      }
+      
+      .auth-overlay {
+        padding: 10px;
+        align-items: flex-start;
+      }
+      
+      .auth-container {
+        margin: 10px auto;
+        border-radius: 16px;
+        max-width: 100%;
+      }
+      
+      .auth-left-panel,
+      .auth-right-panel {
+        padding: 25px 20px;
+      }
+      
+      .auth-left-panel {
+        min-height: 250px;
+      }
+      
+      .auth-left-content h1 {
         font-size: 1.8rem;
+      }
+      
+      .auth-left-content .tagline {
+        font-size: 1rem;
+      }
+      
+      .features-list li {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+      }
+      
+      .features-list li i {
+        width: 26px;
+        height: 26px;
+        font-size: 0.9rem;
+      }
+      
+      .auth-welcome h2 {
+        font-size: 1.4rem;
+      }
+      
+      .auth-tab {
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+      
+      .auth-input-group input {
+        padding: 12px 14px;
+        font-size: 16px;
+      }
+      
+      .auth-btn {
+        padding: 12px;
+        font-size: 15px;
+      }
+      
+      .header {
+        padding: 15px;
+      }
+      
+      .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .header h1 {
+        font-size: 1.4rem;
+        width: 100%;
+      }
+      
+      .header p {
+        font-size: 0.85rem;
+      }
+      
+      .status-indicator {
+        align-self: flex-start;
+      }
+      
+      .theme-toggle-header {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        margin-left: 0;
+      }
+      
+      .dashboard {
+        padding: 15px;
+        gap: 15px;
+      }
+      
+      .stats-section,
+      .form-section,
+      .expenses-list,
+      .income-list,
+      .reminders-list,
+      .budgets-list,
+      .report-section {
+        padding: 15px;
+        border-radius: 12px;
+      }
+      
+      .main-stats-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .stat-card {
+        padding: 12px;
+        min-height: 80px;
+      }
+      
+      .stat-value {
+        font-size: 1.2rem;
+      }
+      
+      .stat-label {
+        font-size: 0.7rem;
+      }
+      
+      .charts-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .chart-container {
+        padding: 15px;
+        min-height: 220px;
+      }
+      
+      .content {
+        padding: 15px;
+      }
+      
+      .expense-item,
+      .reminder-item,
+      .budget-item {
+        flex-direction: column;
+        padding: 12px;
+        gap: 10px;
+      }
+      
+      .item-actions {
+        justify-content: flex-end;
+      }
+      
+      .footer {
+        padding: 15px;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .footer-links {
+        margin-left: 0;
+        justify-content: center;
+        gap: 10px;
+      }
+      
+      .copyright {
+        font-size: 0.8rem;
+      }
+      
+      .footer-links a {
+        font-size: 0.8rem;
+      }
+      
+      .btn-actions-container {
+        flex-direction: column;
+      }
+      
+      .btn-cancel {
+        margin-left: 0;
+        margin-top: 10px;
+      }
+      
+      .report-period {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+      
+      .report-period > div:last-child {
+        align-self: auto;
+        margin-top: 10px;
+      }
+      
+      .report-controls {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .btn-report {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .quick-actions {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .quick-action-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .search-filter-container {
+        flex-direction: column;
+      }
+      
+      .search-box,
+      .filter-select {
+        width: 100%;
+      }
+      
+      .user-profile {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+      }
+      
+      .user-email {
+        max-width: 100px;
+      }
+      
+      .modal {
+        padding: 15px;
+        max-height: 80vh;
+      }
+      
+      .modal h3 {
+        font-size: 1.2rem;
+      }
+      
+      .modal-actions {
+        flex-direction: column;
+      }
+      
+      .modal-actions .btn {
+        width: 100%;
+      }
+      
+      /* NEW: Category Report Modal */
+      .category-report-modal .filter-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-report-modal .filter-actions {
+        flex-direction: column;
+      }
+      
+      .category-report-modal .filter-actions .btn {
+        width: 100%;
+      }
+    }
+    
+    /* Small mobile screens */
+    @media (max-width: 480px) {
+      .auth-left-content h1 {
+        font-size: 1.6rem;
+      }
+      
+      .auth-left-content .tagline {
+        font-size: 0.95rem;
+      }
+      
+      .auth-left-panel {
+        padding: 20px 15px;
+        min-height: 200px;
+      }
+      
+      .auth-right-panel {
+        padding: 20px 15px;
+      }
+      
+      .auth-welcome h2 {
+        font-size: 1.3rem;
+      }
+      
+      .auth-input-group input {
+        padding: 11px 13px;
+        font-size: 15px;
+      }
+      
+      .auth-btn {
+        padding: 11px;
+        font-size: 14px;
+      }
+      
+      .header h1 {
+        font-size: 1.3rem;
+      }
+      
+      .header h1 i {
+        padding: 8px;
+        font-size: 1rem;
+      }
+      
+      .stat-value {
+        font-size: 1.1rem;
+      }
+      
+      .form-title {
+        font-size: 1.1rem;
+      }
+      
+      .btn {
+        padding: 11px 16px;
+        font-size: 13px;
+      }
+      
+      .expense-amount {
+        font-size: 1rem;
+      }
+      
+      .category-name {
+        flex: 0 0 100px;
+        font-size: 0.75rem;
+      }
+      
+      .category-amount {
+        flex: 0 0 70px;
+        font-size: 0.8rem;
+      }
+      
+      .category-percentage {
+        flex: 0 0 35px;
+        font-size: 0.7rem;
+      }
+      
+      .chart-container {
+        min-height: 200px;
+      }
+      
+      .chart-container h4 {
+        font-size: 0.95rem;
+      }
+      
+      .auth-theme-toggle span {
+        display: none;
+      }
+      
+      .auth-theme-toggle {
+        top: 15px;
+        right: 15px;
+      }
+      
+      .status-indicator {
+        font-size: 0.75rem;
+      }
+      
+      .user-email {
+        max-width: 80px;
+      }
+    }
+    
+    /* Extra small screens */
+    @media (max-width: 360px) {
+      .auth-left-content h1 {
+        font-size: 1.4rem;
+      }
+      
+      .auth-left-content .tagline {
+        font-size: 0.9rem;
+      }
+      
+      .features-list li {
+        font-size: 0.85rem;
+      }
+      
+      .auth-welcome h2 {
+        font-size: 1.2rem;
+      }
+      
+      .header h1 {
+        font-size: 1.2rem;
+      }
+      
+      .stat-value {
+        font-size: 1rem;
+      }
+      
+      .form-title {
+        font-size: 1rem;
+      }
+      
+      .user-email {
+        display: none;
+      }
+      
+      .user-profile {
+        padding: 6px;
+      }
+      
+      .quick-action-btn span {
+        display: none;
+      }
+      
+      .quick-action-btn {
+        padding: 10px;
+        justify-content: center;
+      }
+      
+      .btn-report span {
+        display: none;
+      }
+      
+      .btn-report {
+        padding: 8px;
+        justify-content: center;
+      }
+      
+      .btn-report i {
+        margin: 0;
+      }
+    }
+    
+    /* Landscape mode fixes */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .auth-overlay {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+      
+      .auth-container {
+        height: auto;
+        min-height: auto;
+        margin: 20px auto;
+      }
+      
+      .auth-left-panel {
+        min-height: auto;
+        padding: 20px;
+      }
+      
+      .auth-right-panel {
+        padding: 20px;
+      }
+      
+      .features-list {
+        display: none;
+      }
+      
+      .auth-footer-text {
+        margin-top: 20px;
+        font-size: 0.7rem;
+      }
+    }
+    
+    /* Prevent zoom on input focus for mobile */
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    
+    /* iOS specific fixes */
+    @supports (-webkit-touch-callout: none) {
+      .auth-overlay {
+        height: -webkit-fill-available;
+      }
+      
+      body {
+        min-height: -webkit-fill-available;
+      }
+      
+      input, select, textarea {
+        -webkit-appearance: none;
+        border-radius: 10px;
       }
     }
   </style>
@@ -1492,7 +2662,7 @@
         <div class="auth-left-content">
           <h1>Financial Tracker PRO</h1>
           <p class="tagline">Your Life,Your Money, in Harmony 💶 Live Fully, Finance Wisely.</p>
-          <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px;">
+          <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 20px; font-size: 0.95rem;">
             Financial Tracker PRO helps you create balance and meaning by bringing all aspects of your financial life together in one beautiful, intuitive platform.
           </p>
           
@@ -1621,7 +2791,7 @@
     <div class="header">
       <div class="header-top">
         <h1><i class="fas fa-wallet"></i><span id="appTitle">Financial Tracker PRO</span></h1>
-        <div style="display: flex; align-items: center; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; width: 100%;">
           <div class="user-profile" id="userProfile">
             <div class="user-avatar" id="userAvatar">U</div>
             <div class="user-email" id="userEmail">user@example.com</div>
@@ -1643,9 +2813,9 @@
 
     <div class="dashboard">
       <div class="stats-section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
           <h3><i class="fas fa-chart-line"></i> Quick Stats</h3>
-          <div class="balance-controls">
+          <div class="balance-controls" style="display: flex; gap: 8px;">
             <button class="btn btn-balance" onclick="revealAllBalances()"><i class="fas fa-eye"></i> Reveal All</button>
             <button class="btn btn-balance" onclick="hideAllBalances()"><i class="fas fa-eye-slash"></i> Hide All</button>
           </div>
@@ -1690,7 +2860,7 @@
           </div>
         </div>
         
-        <h4 style="color: var(--primary); margin-bottom: 15px; margin-top: 25px;"><i class="fas fa-calendar-day"></i> Expense Timeframes</h4>
+        <h4 style="color: var(--primary); margin-bottom: 12px; margin-top: 20px; font-size: 1rem;"><i class="fas fa-calendar-day"></i> Expense Timeframes</h4>
         <div class="stats-grid">
           <div class="stat-card expense-card" id="todayCard" onclick="toggleBalance('today')">
             <div class="stat-label"><span><i class="fas fa-calendar-day"></i> Today</span><i class="fas fa-hand-pointer"></i></div>
@@ -1760,67 +2930,6 @@
                   <option value="Giving">🎁 Giving/Donations</option>
                   <option value="Entertainment">🎬 Entertainment</option>
                   <option value="General">📦 General</option>
-                  <option value="Mortgage">🏠 Mortgage</option>
-                  <option value="Insurance">🛡️ Insurance</option>
-                  <option value="Taxes">💰 Taxes</option>
-                  <option value="Home Maintenance">🔨 Home Maintenance</option>
-                  <option value="Car Payment">🚗 Car Payment</option>
-				  <option value="Car Repair">🚗🛠️ Car Repair</option>
-                  <option value="Health Insurance">🏥 Health Insurance</option>
-                  <option value="Gym Membership">💪 Gym Membership</option>
-                  <option value="Streaming Services">📺 Streaming Services</option>
-                  <option value="Mobile Data">📱 Mobile Data</option>
-                  <option value="Household Supplies">🧹 Household Supplies</option>
-                  <option value="Personal Care">💅 Personal Care</option>
-                  <option value="Childcare">👶 Childcare</option>
-                  <option value="Education">🎓 Education</option>
-                  <option value="Gifts">🎁 Gifts</option>
-                  <option value="Donations">❤️ Donations</option>
-                  <option value="Travel">✈️ Travel</option>
-                  <option value="Vacation">🏖️ Vacation</option>
-                  <option value="Hobbies">🎨 Hobbies</option>
-                  <option value="Subscriptions">📱 Subscriptions</option>
-                  <option value="Bank Fees">🏦 Bank Fees</option>
-                  <option value="Business Expenses">💼 Business Expenses</option>
-                  <option value="Office Supplies">📎 Office Supplies</option>
-                  <option value="Pet Care">🐾 Pet Care</option>
-                  <option value="Electronics">💻 Electronics</option>
-                  <option value="Software">🖥️ Software</option>
-                  <option value="Books">📚 Books</option>
-                  <option value="Alcohol">🍷 Alcohol</option>
-                  <option value="Fast Food">🍔 Fast Food</option>
-                  <option value="Coffee">☕ Coffee</option>
-                  <option value="Restaurants">🍽️ Restaurants</option>
-                  <option value="Parking">🅿️ Parking</option>
-                  <option value="Public Transport">🚌 Public Transport</option>
-                  <option value="Taxi">🚕 Taxi</option>
-                  <option value="Hotel">🏨 Hotel</option>
-                  <option value="Sports">⚽ Sports</option>
-                  <option value="Fitness">💪 Fitness</option>
-                  <option value="Music">🎵 Music</option>
-                  <option value="Movies">🎬 Movies</option>
-                  <option value="Concerts">🎤 Concerts</option>
-                  <option value="Museums">🏛️ Museums</option>
-                  <option value="Amusement Parks">🎢 Amusement Parks</option>
-                  <option value="Events">🎪 Events</option>
-                  <option value="Parties">🎉 Parties</option>
-                  <option value="Wedding">💒 Wedding</option>
-                  <option value="Medical Bills">🏥 Medical Bills</option>
-                  <option value="Dental">🦷 Dental</option>
-                  <option value="Vision">👁️ Vision</option>
-                  <option value="Pharmacy">💊 Pharmacy</option>
-                  <option value="Therapy">🧠 Therapy</option>
-                  <option value="Massage">💆 Massage</option>
-                  <option value="Spa">🌿 Spa</option>
-                  <option value="Salon">💇 Salon</option>
-                  <option value="Barber">✂️ Barber</option>
-                  <option value="Cosmetics">💄 Cosmetics</option>
-                  <option value="Skincare">🧴 Skincare</option>
-                  <option value="Haircare">💇 Haircare</option>
-                  <option value="Fragrances">🌸 Fragrances</option>
-                  <option value="Utilities">⚡ Utilities</option>
-                  <option value="Allowances">💰 Allowances</option>
-				   <option value="Azzaro">🖧 Azzaro Expenses</option>
                   <option value="Other">📦 Other</option>
                 </select>
               </div>
@@ -1863,21 +2972,8 @@
                   <option value="Rental Income">🏠 Rental Income</option>
                   <option value="Bonus">💰 Bonus</option>
                   <option value="Commission">📊 Commission</option>
-				  <option value="Allowances">🤑 Allowances</option>
+                  <option value="Allowances">🤑 Allowances</option>
                   <option value="Dividends">📈 Dividends</option>
-                  <option value="Interest">💰 Interest Income</option>
-                  <option value="Royalties">📚 Royalties</option>
-                  <option value="Pension">👴 Pension</option>
-                  <option value="Social Security">🏛️ Social Security</option>
-                  <option value="Child Support">👶 Child Support</option>
-                  <option value="Alimony">💔 Alimony</option>
-                  <option value="Scholarship">🎓 Scholarship</option>
-                  <option value="Grant">🏫 Grant</option>
-                  <option value="Rebate">🔄 Rebate</option>
-                  <option value="Refund">💸 Refund</option>
-                  <option value="Lottery">🎰 Lottery/Winnings</option>
-                  <option value="Inheritance">📜 Inheritance</option>
-                  <option value="Sale">🏷️ Sale of Items</option>
                   <option value="Other">📦 Other</option>
                 </select>
               </div>
@@ -1986,42 +3082,42 @@
       <!-- Quick Actions -->
       <div class="quick-actions">
         <button class="quick-action-btn" onclick="showQuickAddExpense()">
-          <i class="fas fa-bolt"></i> Quick Expense
+          <i class="fas fa-bolt"></i> <span>Quick Expense</span>
         </button>
         <button class="quick-action-btn" onclick="showQuickAddIncome()">
-          <i class="fas fa-money-bill-wave"></i> Quick Income
+          <i class="fas fa-money-bill-wave"></i> <span>Quick Income</span>
         </button>
         <button class="quick-action-btn" onclick="exportAllData()">
-          <i class="fas fa-file-export"></i> Export All Data
+          <i class="fas fa-file-export"></i> <span>Export All Data</span>
         </button>
         <button class="quick-action-btn" onclick="showSavingsCalculator()">
-          <i class="fas fa-calculator"></i> Savings Calculator
+          <i class="fas fa-calculator"></i> <span>Savings Calculator</span>
         </button>
         <button class="quick-action-btn" onclick="showYearlyOverview()">
-          <i class="fas fa-chart-bar"></i> Yearly Overview
+          <i class="fas fa-chart-bar"></i> <span>Yearly Overview</span>
         </button>
         <button class="quick-action-btn" onclick="showDebtTracker()">
-          <i class="fas fa-credit-card"></i> Debt Tracker
+          <i class="fas fa-credit-card"></i> <span>Debt Tracker</span>
         </button>
         <button class="quick-action-btn" onclick="showCategoryReportModal('expense')">
-          <i class="fas fa-filter"></i> Category Report
+          <i class="fas fa-filter"></i> <span>Category Report</span>
         </button>
         <button class="quick-action-btn" onclick="showCategoryReportModal('income')">
-          <i class="fas fa-filter"></i> Source Report
+          <i class="fas fa-filter"></i> <span>Source Report</span>
         </button>
       </div>
 
       <div class="report-section" id="expenseReportSection">
         <h3 class="form-title" style="color: var(--danger);"><i class="fas fa-chart-bar"></i> <span id="expenseReportTitle">Expense Reports</span></h3>
         <div class="report-controls" id="expenseReportControls">
-          <button class="btn btn-report active" onclick="generateReport('today', 'expense', this)"><i class="fas fa-calendar-day"></i> Today</button>
-          <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
-          <button class="btn btn-report" onclick="generateReport('week', 'expense', this)"><i class="fas fa-calendar-week"></i> This Week</button>
-          <button class="btn btn-report" onclick="generateReport('month', 'expense', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
-          <button class="btn btn-report" onclick="generateReport('lastMonth', 'expense', this)"><i class="fas fa-calendar-alt"></i> Last Month</button>
-          <button class="btn btn-report" onclick="generateReport('year', 'expense', this)"><i class="fas fa-calendar"></i> This Year</button>
-          <button class="btn btn-report" onclick="showCustomRange('expense', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
-          <button class="btn btn-report" onclick="showCategoryReportModal('expense')"><i class="fas fa-filter"></i> By Category</button>
+          <button class="btn btn-report active" onclick="generateReport('today', 'expense', this)"><i class="fas fa-calendar-day"></i> <span>Today</span></button>
+          <button class="btn btn-report" onclick="generateReport('yesterday', 'expense', this)"><i class="fas fa-calendar-minus"></i> <span>Yesterday</span></button>
+          <button class="btn btn-report" onclick="generateReport('week', 'expense', this)"><i class="fas fa-calendar-week"></i> <span>This Week</span></button>
+          <button class="btn btn-report" onclick="generateReport('month', 'expense', this)"><i class="fas fa-calendar-alt"></i> <span>This Month</span></button>
+          <button class="btn btn-report" onclick="generateReport('lastMonth', 'expense', this)"><i class="fas fa-calendar-alt"></i> <span>Last Month</span></button>
+          <button class="btn btn-report" onclick="generateReport('year', 'expense', this)"><i class="fas fa-calendar"></i> <span>This Year</span></button>
+          <button class="btn btn-report" onclick="showCustomRange('expense', this)"><i class="fas fa-calendar-range"></i> <span>Custom Range</span></button>
+          <button class="btn btn-report" onclick="showCategoryReportModal('expense')"><i class="fas fa-filter"></i> <span>By Category</span></button>
         </div>
 
         <div class="report-period" id="expenseCustomRange" style="display: none;">
@@ -2042,14 +3138,14 @@
       <div class="report-section" id="incomeReportSection">
         <h3 class="form-title" style="color: var(--success);"><i class="fas fa-chart-line"></i> <span id="incomeReportTitle">Income Reports</span></h3>
         <div class="report-controls" id="incomeReportControls">
-          <button class="btn btn-report active" onclick="generateReport('today', 'income', this)"><i class="fas fa-calendar-day"></i> Today</button>
-          <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> Yesterday</button>
-          <button class="btn btn-report" onclick="generateReport('week', 'income', this)"><i class="fas fa-calendar-week"></i> This Week</button>
-          <button class="btn btn-report" onclick="generateReport('month', 'income', this)"><i class="fas fa-calendar-alt"></i> This Month</button>
-          <button class="btn btn-report" onclick="generateReport('lastMonth', 'income', this)"><i class="fas fa-calendar-alt"></i> Last Month</button>
-          <button class="btn btn-report" onclick="generateReport('year', 'income', this)"><i class="fas fa-calendar"></i> This Year</button>
-          <button class="btn btn-report" onclick="showCustomRange('income', this)"><i class="fas fa-calendar-range"></i> Custom Range</button>
-          <button class="btn btn-report" onclick="showCategoryReportModal('income')"><i class="fas fa-filter"></i> By Source</button>
+          <button class="btn btn-report active" onclick="generateReport('today', 'income', this)"><i class="fas fa-calendar-day"></i> <span>Today</span></button>
+          <button class="btn btn-report" onclick="generateReport('yesterday', 'income', this)"><i class="fas fa-calendar-minus"></i> <span>Yesterday</span></button>
+          <button class="btn btn-report" onclick="generateReport('week', 'income', this)"><i class="fas fa-calendar-week"></i> <span>This Week</span></button>
+          <button class="btn btn-report" onclick="generateReport('month', 'income', this)"><i class="fas fa-calendar-alt"></i> <span>This Month</span></button>
+          <button class="btn btn-report" onclick="generateReport('lastMonth', 'income', this)"><i class="fas fa-calendar-alt"></i> <span>Last Month</span></button>
+          <button class="btn btn-report" onclick="generateReport('year', 'income', this)"><i class="fas fa-calendar"></i> <span>This Year</span></button>
+          <button class="btn btn-report" onclick="showCustomRange('income', this)"><i class="fas fa-calendar-range"></i> <span>Custom Range</span></button>
+          <button class="btn btn-report" onclick="showCategoryReportModal('income')"><i class="fas fa-filter"></i> <span>By Source</span></button>
         </div>
 
         <div class="report-period" id="incomeCustomRange" style="display: none;">
@@ -2194,6 +3290,7 @@
     </div>
   </div>
 
+  <!-- Rest of the modal HTML remains the same as original -->
   <div class="modal-overlay" id="aboutModal">
     <div class="modal">
       <h3><i class="fas fa-info-circle"></i> About Financial Tracker PRO</h3>
@@ -2472,8 +3569,33 @@
       initTheme();
       setDefaultDates();
       setDefaultTargetDate();
-	  fixIOSChromeViewport();
+      
+      // Add touch event listeners for better mobile interaction
+      setupTouchEvents();
     });
+    
+    function setupTouchEvents() {
+      // Prevent double-tap zoom on mobile
+      let lastTouchEnd = 0;
+      document.addEventListener('touchend', function(event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, false);
+      
+      // Improve button tap feedback on mobile
+      document.querySelectorAll('.btn, .action-btn, .quick-action-btn, .btn-report').forEach(btn => {
+        btn.addEventListener('touchstart', function() {
+          this.style.transform = 'scale(0.98)';
+        });
+        
+        btn.addEventListener('touchend', function() {
+          this.style.transform = '';
+        });
+      });
+    }
 
     function initFirebase() {
       if (typeof firebase === 'undefined') { 
@@ -2492,41 +3614,6 @@
         showAuthError('Firebase initialization failed: ' + error.message); 
       }
     }
-
-    // ===== iOS CHROME FIX =====
-    function fixIOSChromeViewport() {
-      // Check if iOS Chrome
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isChrome = /CriOS/.test(navigator.userAgent);
-      
-      if (isIOS && isChrome) {
-        console.log('Applying iOS Chrome fixes');
-        
-        // Fix viewport height
-        const setViewportHeight = () => {
-          const vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-          
-          // Apply to auth overlay
-          const authOverlay = document.querySelector('.auth-overlay');
-          if (authOverlay) {
-            authOverlay.style.height = `${window.innerHeight}px`;
-          }
-        };
-        
-        // Set on load and resize
-        setViewportHeight();
-        window.addEventListener('resize', setViewportHeight);
-        
-        // Prevent elastic scrolling on the auth page
-        document.addEventListener('touchmove', function(e) {
-          if (e.target.closest('.auth-container')) {
-            e.stopPropagation();
-          }
-        }, { passive: false });
-      }
-    }
-	
 
     function setupAuthListeners() {
       auth.onAuthStateChanged((user) => {
@@ -2745,162 +3832,162 @@
     }
 
     // FIXED: Improved date extraction function
-  function getDateFromExpense(item) {
-  if (!item) return new Date(0);
-  
-  // Try to get date from different possible fields
-  let dateValue;
-  
-  // Check date field first
-  if (item.date) {
-    if (item.date instanceof Date) {
-      dateValue = item.date;
-    } else if (item.date.toDate) {
-      // Firestore Timestamp
-      dateValue = item.date.toDate();
-    } else if (typeof item.date === 'string') {
-      // Parse string date - handle multiple formats
-      if (item.date.includes('/')) {
-        const [day, month, year] = item.date.split('/');
-        dateValue = new Date(year, month - 1, day);
-      } else if (item.date.includes('-')) {
-        // Handle ISO format or YYYY-MM-DD
-        const dateParts = item.date.split('-');
-        if (dateParts[0].length === 4) {
-          // YYYY-MM-DD format
-          const [year, month, day] = dateParts;
-          dateValue = new Date(year, month - 1, day);
-        } else {
-          // DD-MM-YYYY format
-          const [day, month, year] = dateParts;
-          dateValue = new Date(year, month - 1, day);
+    function getDateFromExpense(item) {
+      if (!item) return new Date(0);
+      
+      // Try to get date from different possible fields
+      let dateValue;
+      
+      // Check date field first
+      if (item.date) {
+        if (item.date instanceof Date) {
+          dateValue = item.date;
+        } else if (item.date.toDate) {
+          // Firestore Timestamp
+          dateValue = item.date.toDate();
+        } else if (typeof item.date === 'string') {
+          // Parse string date - handle multiple formats
+          if (item.date.includes('/')) {
+            const [day, month, year] = item.date.split('/');
+            dateValue = new Date(year, month - 1, day);
+          } else if (item.date.includes('-')) {
+            // Handle ISO format or YYYY-MM-DD
+            const dateParts = item.date.split('-');
+            if (dateParts[0].length === 4) {
+              // YYYY-MM-DD format
+              const [year, month, day] = dateParts;
+              dateValue = new Date(year, month - 1, day);
+            } else {
+              // DD-MM-YYYY format
+              const [day, month, year] = dateParts;
+              dateValue = new Date(year, month - 1, day);
+            }
+          } else {
+            dateValue = new Date(item.date);
+          }
         }
-      } else {
-        dateValue = new Date(item.date);
       }
+      
+      // If no date field, check timestamp
+      if (!dateValue && item.timestamp) {
+        if (item.timestamp.toDate) {
+          dateValue = item.timestamp.toDate();
+        } else if (item.timestamp instanceof Date) {
+          dateValue = item.timestamp;
+        }
+      }
+      
+      // If still no date, check createdAt
+      if (!dateValue && item.createdAt) {
+        if (item.createdAt.toDate) {
+          dateValue = item.createdAt.toDate();
+        } else if (item.createdAt instanceof Date) {
+          dateValue = item.createdAt;
+        } else if (typeof item.createdAt === 'string') {
+          dateValue = new Date(item.createdAt);
+        }
+      }
+      
+      // If still no valid date, return epoch
+      if (!dateValue || isNaN(dateValue.getTime())) {
+        return new Date(0);
+      }
+      
+      return dateValue;
     }
-  }
-  
-  // If no date field, check timestamp
-  if (!dateValue && item.timestamp) {
-    if (item.timestamp.toDate) {
-      dateValue = item.timestamp.toDate();
-    } else if (item.timestamp instanceof Date) {
-      dateValue = item.timestamp;
-    }
-  }
-  
-  // If still no date, check createdAt
-  if (!dateValue && item.createdAt) {
-    if (item.createdAt.toDate) {
-      dateValue = item.createdAt.toDate();
-    } else if (item.createdAt instanceof Date) {
-      dateValue = item.createdAt;
-    } else if (typeof item.createdAt === 'string') {
-      dateValue = new Date(item.createdAt);
-    }
-  }
-  
-  // If still no valid date, return epoch
-  if (!dateValue || isNaN(dateValue.getTime())) {
-    return new Date(0);
-  }
-  
-  return dateValue;
-}
 
     function updateDashboardFromRealtimeData() {
-  if (!currentUser) return;
-  
-  try {
-    const now = new Date();
-    
-    // Create start and end of today in local time
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    
-    // Create start and end of this week (Sunday to Saturday)
-    const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - now.getDay()); // Start of week (Sunday)
-    weekStart.setHours(0, 0, 0, 0);
-    
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
-    weekEnd.setHours(23, 59, 59, 999);
-    
-    // Create start and end of this month
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-    
-    // Create start and end of this year
-    const yearStart = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
-    const yearEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-    
-    const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
-    const categories = {}, weeklyData = Array(7).fill(0);
-    
-    // Process expenses
-    allExpenses.forEach(expense => {
-      const expenseDate = getDateFromExpense(expense);
+      if (!currentUser) return;
       
-      // Skip if invalid date
-      if (isNaN(expenseDate.getTime())) return;
-      
-      const expenseAmount = parseFloat(expense.amount) || 0;
-      stats.totalExpense += expenseAmount;
-      
-      // Check if it's today
-      if (expenseDate >= todayStart && expenseDate <= todayEnd) {
-        stats.today += expenseAmount;
+      try {
+        const now = new Date();
+        
+        // Create start and end of today in local time
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        
+        // Create start and end of this week (Sunday to Saturday)
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - now.getDay()); // Start of week (Sunday)
+        weekStart.setHours(0, 0, 0, 0);
+        
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
+        weekEnd.setHours(23, 59, 59, 999);
+        
+        // Create start and end of this month
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+        const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+        
+        // Create start and end of this year
+        const yearStart = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+        const yearEnd = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+        
+        const stats = { today: 0, week: 0, month: 0, year: 0, totalExpense: 0, totalIncome: 0, availableBalance: 0 };
+        const categories = {}, weeklyData = Array(7).fill(0);
+        
+        // Process expenses
+        allExpenses.forEach(expense => {
+          const expenseDate = getDateFromExpense(expense);
+          
+          // Skip if invalid date
+          if (isNaN(expenseDate.getTime())) return;
+          
+          const expenseAmount = parseFloat(expense.amount) || 0;
+          stats.totalExpense += expenseAmount;
+          
+          // Check if it's today
+          if (expenseDate >= todayStart && expenseDate <= todayEnd) {
+            stats.today += expenseAmount;
+          }
+          
+          // Check if it's within this week
+          if (expenseDate >= weekStart && expenseDate <= weekEnd) {
+            stats.week += expenseAmount;
+          }
+          
+          // Check if it's this month
+          if (expenseDate >= monthStart && expenseDate <= monthEnd) {
+            stats.month += expenseAmount;
+          }
+          
+          // Check if it's this year
+          if (expenseDate >= yearStart && expenseDate <= yearEnd) {
+            stats.year += expenseAmount;
+          }
+          
+          // Category breakdown
+          const category = expense.category || 'Other';
+          categories[category] = (categories[category] || 0) + expenseAmount;
+          
+          // Weekly data
+          const dayOfWeek = expenseDate.getDay();
+          weeklyData[dayOfWeek] += expenseAmount;
+        });
+        
+        // Process income
+        allIncome.forEach(inc => { 
+          stats.totalIncome += parseFloat(inc.amount) || 0; 
+        });
+        
+        stats.availableBalance = stats.totalIncome - stats.totalExpense;
+        
+        updateStatsUI(stats); 
+        updateCharts(categories, weeklyData);
+        
+        // Update savings goal with current savings
+        if (savingsGoal.amount > 0) {
+          savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
+          updateSavingsGoalUI();
+        }
+        
+        updateStatus('online', 'Connected ✓');
+      } catch (error) { 
+        console.error('Dashboard update error:', error);
+        console.error('Error details:', error.stack);
+        updateStatus('offline', 'Update error');
       }
-      
-      // Check if it's within this week
-      if (expenseDate >= weekStart && expenseDate <= weekEnd) {
-        stats.week += expenseAmount;
-      }
-      
-      // Check if it's this month
-      if (expenseDate >= monthStart && expenseDate <= monthEnd) {
-        stats.month += expenseAmount;
-      }
-      
-      // Check if it's this year
-      if (expenseDate >= yearStart && expenseDate <= yearEnd) {
-        stats.year += expenseAmount;
-      }
-      
-      // Category breakdown
-      const category = expense.category || 'Other';
-      categories[category] = (categories[category] || 0) + expenseAmount;
-      
-      // Weekly data
-      const dayOfWeek = expenseDate.getDay();
-      weeklyData[dayOfWeek] += expenseAmount;
-    });
-    
-    // Process income
-    allIncome.forEach(inc => { 
-      stats.totalIncome += parseFloat(inc.amount) || 0; 
-    });
-    
-    stats.availableBalance = stats.totalIncome - stats.totalExpense;
-    
-    updateStatsUI(stats); 
-    updateCharts(categories, weeklyData);
-    
-    // Update savings goal with current savings
-    if (savingsGoal.amount > 0) {
-      savingsGoal.currentSavings = Math.max(0, stats.availableBalance);
-      updateSavingsGoalUI();
     }
-    
-    updateStatus('online', 'Connected ✓');
-  } catch (error) { 
-    console.error('Dashboard update error:', error);
-    console.error('Error details:', error.stack);
-    updateStatus('offline', 'Update error');
-  }
-}
 
     // ===== AUTH FUNCTIONS =====
     function showAuthTab(tab) {
@@ -4952,33 +6039,33 @@
     }
 
     // ===== DASHBOARD FUNCTIONS =====
-   function updateStatsUI(stats) {
-  document.getElementById('totalIncomeValue').textContent = formatCurrency(stats.totalIncome);
-  document.getElementById('totalExpenseValue').textContent = formatCurrency(stats.totalExpense);
-  document.getElementById('availableBalanceValue').textContent = formatCurrency(stats.availableBalance);
-  document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
-  document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
-  document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
-  document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
-  
-  // Debug log to check values
-  console.log('Stats updated:', { 
-    today: stats.today, 
-    week: stats.week, 
-    month: stats.month, 
-    year: stats.year,
-    totalExpense: stats.totalExpense 
-  });
-  
-  const calcChange = (cur, prev) => { 
-    if (!prev || prev === 0) return '--'; 
-    const chg = ((cur - prev) / prev * 100).toFixed(1); 
-    return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; 
-  };
-  
-  document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); 
-  previousStats = stats;
-}
+    function updateStatsUI(stats) {
+      document.getElementById('totalIncomeValue').textContent = formatCurrency(stats.totalIncome);
+      document.getElementById('totalExpenseValue').textContent = formatCurrency(stats.totalExpense);
+      document.getElementById('availableBalanceValue').textContent = formatCurrency(stats.availableBalance);
+      document.getElementById('todayTotal').textContent = formatCurrency(stats.today);
+      document.getElementById('weekTotal').textContent = formatCurrency(stats.week);
+      document.getElementById('monthTotal').textContent = formatCurrency(stats.month);
+      document.getElementById('yearTotal').textContent = formatCurrency(stats.year);
+      
+      // Debug log to check values
+      console.log('Stats updated:', { 
+        today: stats.today, 
+        week: stats.week, 
+        month: stats.month, 
+        year: stats.year,
+        totalExpense: stats.totalExpense 
+      });
+      
+      const calcChange = (cur, prev) => { 
+        if (!prev || prev === 0) return '--'; 
+        const chg = ((cur - prev) / prev * 100).toFixed(1); 
+        return chg > 0 ? `+${chg}% 📈` : `${chg}% 📉`; 
+      };
+      
+      document.getElementById('monthChange').textContent = calcChange(stats.month, previousStats.month); 
+      previousStats = stats;
+    }
 
     function updateCharts(categories, weeklyData) {
       const pieCtx = document.getElementById('pieChart')?.getContext('2d');
@@ -5317,6 +6404,21 @@
         loadReminders();
       } 
     }, 60000);
+    
+    // Handle window resize for better mobile experience
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        // Force reflow on charts
+        if (pieChart) {
+          pieChart.resize();
+        }
+        if (barChart) {
+          barChart.resize();
+        }
+      }, 250);
+    });
   </script>
 </body>
 </html>
