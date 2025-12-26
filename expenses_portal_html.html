@@ -74,14 +74,14 @@
       --reminder-color: #d8b4fe;
     }
 
-    /* ===== AUTH PAGES STYLES ===== */
+    /* ===== UPDATED AUTH PAGES STYLES ===== */
     .auth-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--gradient-1);
+      background: var(--body-bg);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -91,48 +91,140 @@
     }
     
     .auth-container {
-      background: var(--modal-bg);
-      border-radius: 24px;
-      padding: 40px;
-      max-width: 450px;
+      display: flex;
+      max-width: 1200px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      transition: background 0.3s ease;
+      height: 700px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
     
-    .auth-header {
-      margin-bottom: 30px;
+    body.dark-mode .auth-container {
+      background: var(--card-bg);
     }
     
-    .auth-header h2 {
-      color: var(--primary); /* Orange title */
-      font-size: 2rem;
+    /* Left Panel */
+    .auth-left-panel {
+      flex: 1;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .auth-left-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255, 152, 0, 0.15) 0%, transparent 50%);
+    }
+    
+    .auth-left-content h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
       margin-bottom: 10px;
+      background: linear-gradient(135deg, #ff9800, #ffb74d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .auth-left-content .tagline {
+      font-size: 1.4rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 30px 0;
+    }
+    
+    .features-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    
+    .features-list li i {
+      color: #ff9800;
+      margin-right: 15px;
+      font-size: 1.2rem;
+      background: rgba(255, 152, 0, 0.1);
+      padding: 8px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 15px;
-      transition: color 0.3s ease;
     }
     
-    .auth-header p {
-      color: var(--gray);
+    .auth-footer-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-top: 40px;
+    }
+    
+    /* Right Panel */
+    .auth-right-panel {
+      flex: 1;
+      padding: 60px 50px;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+    
+    .auth-right-content {
+      max-width: 400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .auth-welcome {
+      margin-bottom: 40px;
+    }
+    
+    .auth-welcome h2 {
+      font-size: 2.2rem;
+      color: var(--text-color);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .auth-welcome p {
+      color: var(--text-secondary);
       font-size: 1rem;
-      transition: color 0.3s ease;
     }
     
     .auth-tabs {
       display: flex;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       background: var(--light);
       border-radius: 12px;
       padding: 4px;
+      border: 1px solid var(--border);
     }
     
     .auth-tab {
       flex: 1;
-      padding: 12px;
+      padding: 14px;
       border: none;
       background: transparent;
       color: var(--gray);
@@ -140,6 +232,7 @@
       cursor: pointer;
       border-radius: 8px;
       transition: all 0.3s;
+      font-size: 0.95rem;
     }
     
     .auth-tab.active {
@@ -165,9 +258,10 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
-      color: var(--dark);
+      color: var(--text-color);
       text-align: left;
       transition: color 0.3s ease;
+      font-size: 0.9rem;
     }
     
     .auth-input-group input {
@@ -191,7 +285,7 @@
       background: var(--gradient-1);
       color: white;
       border: none;
-      padding: 15px;
+      padding: 16px;
       border-radius: 12px;
       font-size: 16px;
       font-weight: 600;
@@ -202,11 +296,44 @@
       justify-content: center;
       gap: 10px;
       margin-top: 10px;
+      width: 100%;
     }
     
     .auth-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(255, 152, 0, 0.3);
+    }
+    
+    .google-btn {
+      background: white;
+      color: #333;
+      border: 2px solid var(--border);
+      margin-top: 15px;
+    }
+    
+    .google-btn:hover {
+      background: #f8f9fa;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: var(--text-secondary);
+    }
+    
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    
+    .auth-divider span {
+      padding: 0 15px;
+      font-size: 0.9rem;
     }
     
     .auth-error {
@@ -221,26 +348,61 @@
       font-size: 0.9rem;
     }
     
+    body.dark-mode .auth-error {
+      background: rgba(220, 53, 69, 0.1);
+    }
+    
     .auth-error.show {
       display: flex;
     }
     
-    .auth-footer {
-      margin-top: 25px;
-      color: var(--gray);
-      font-size: 0.9rem;
-      transition: color 0.3s ease;
+    .auth-links {
+      margin-top: 20px;
+      text-align: center;
     }
     
-    .auth-footer a {
+    .auth-link {
       color: var(--primary);
       text-decoration: none;
       font-weight: 600;
       cursor: pointer;
+      display: inline-block;
+      margin: 5px;
+      font-size: 0.9rem;
     }
     
-    .auth-footer a:hover {
+    .auth-link:hover {
       text-decoration: underline;
+    }
+    
+    /* Theme Toggle in Auth */
+    .auth-theme-toggle {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+    
+    .auth-theme-toggle .theme-switch {
+      width: 50px;
+      height: 24px;
+    }
+    
+    .auth-theme-toggle .theme-slider {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .auth-theme-toggle .theme-slider:before {
+      background-color: white;
+    }
+    
+    .auth-theme-toggle span {
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     /* Theme Toggle Switch */
@@ -1153,6 +1315,26 @@
     }
 
     /* Responsive */
+    @media (max-width: 992px) {
+      .auth-container {
+        flex-direction: column;
+        height: auto;
+        max-width: 500px;
+      }
+      
+      .auth-left-panel {
+        padding: 40px 30px;
+      }
+      
+      .auth-right-panel {
+        padding: 40px 30px;
+      }
+      
+      .auth-left-content h1 {
+        font-size: 2.2rem;
+      }
+    }
+    
     @media (max-width: 768px) {
       body { padding: 10px; }
       .header { padding: 20px; } .header h1 { font-size: 1.8rem; }
@@ -1220,6 +1402,18 @@
       .stat-value {
         font-size: 1.2rem;
       }
+      
+      .auth-left-content h1 {
+        font-size: 1.8rem;
+      }
+      
+      .auth-left-content .tagline {
+        font-size: 1.1rem;
+      }
+      
+      .auth-welcome h2 {
+        font-size: 1.8rem;
+      }
     }
   </style>
   
@@ -1237,81 +1431,131 @@
   <!-- Authentication Page -->
   <div class="auth-overlay" id="authPage">
     <div class="auth-container">
-      <div class="theme-toggle" onclick="toggleTheme()">
-        <span id="themeLabel">Light Mode</span>
-        <label class="theme-switch">
-          <input type="checkbox" id="themeToggle">
-          <span class="theme-slider"></span>
-        </label>
-      </div>
-      
-      <div class="auth-header">
-        <h2><i class="fas fa-wallet"></i> Financial Tracker PRO</h2>
-        <p>Secure your financial journey with our multi-user platform</p>
-      </div>
-      
-      <div class="auth-tabs">
-        <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
-        <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
-      </div>
-      
-      <!-- Login Form -->
-      <div class="auth-form active" id="loginForm">
-        <div class="auth-input-group">
-          <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
-          <input type="email" id="loginEmail" placeholder="Enter your email" required>
+      <!-- Left Panel with branding and features -->
+      <div class="auth-left-panel">
+        <div class="auth-left-content">
+          <h1>Financial Tracker PRO</h1>
+          <p class="tagline">Integrate Your Work, Spirit & Financial Life</p>
+          <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px;">
+            Financial Tracker PRO helps you create balance and meaning by bringing all aspects of your financial life together in one beautiful, intuitive platform.
+          </p>
+          
+          <ul class="features-list">
+            <li><i class="fas fa-check"></i> Track expenses and income</li>
+            <li><i class="fas fa-check"></i> Nurture your financial growth</li>
+            <li><i class="fas fa-check"></i> Strengthen your savings goals</li>
+            <li><i class="fas fa-check"></i> Visualize your financial balance</li>
+            <li><i class="fas fa-check"></i> Personalized financial insights</li>
+          </ul>
+          
+          <p class="auth-footer-text">
+            Secure multi-user platform • Real-time sync • Bank-level encryption
+          </p>
         </div>
         
-        <div class="auth-input-group">
-          <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
-          <input type="password" id="loginPassword" placeholder="Enter your password" required>
-        </div>
-        
-        <button class="auth-btn" id="loginBtn">
-          <i class="fas fa-sign-in-alt"></i> Login to Dashboard
-        </button>
-        
-        <div class="auth-error" id="loginError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Invalid email or password. Please try again.</span>
+        <!-- Theme Toggle -->
+        <div class="auth-theme-toggle" onclick="toggleTheme()">
+          <span id="themeLabel">Light Mode</span>
+          <label class="theme-switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="theme-slider"></span>
+          </label>
         </div>
       </div>
       
-      <!-- Sign Up Form -->
-      <div class="auth-form" id="signupForm">
-        <div class="auth-input-group">
-          <label for="signupName"><i class="fas fa-user"></i> Full Name</label>
-          <input type="text" id="signupName" placeholder="Enter your full name" required>
+      <!-- Right Panel with login/signup forms -->
+      <div class="auth-right-panel">
+        <div class="auth-right-content">
+          <div class="auth-welcome">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your financial dashboard</p>
+          </div>
+          
+          <div class="auth-tabs">
+            <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
+            <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+          </div>
+          
+          <!-- Login Form -->
+          <div class="auth-form active" id="loginForm">
+            <div class="auth-input-group">
+              <label for="loginEmail">Email Address</label>
+              <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="auth-input-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            
+            <button class="auth-btn" id="loginBtn">
+              <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+            </button>
+            
+            <div class="auth-divider">
+              <span>or</span>
+            </div>
+            
+            <button class="auth-btn google-btn" onclick="showMessage('Google login coming soon!', 'info')">
+              <i class="fab fa-google"></i> Continue with Google
+            </button>
+            
+            <div class="auth-error" id="loginError">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>Invalid email or password. Please try again.</span>
+            </div>
+            
+            <div class="auth-links">
+              <a class="auth-link" onclick="showMessage('Password reset feature coming soon!', 'info')">Forgot your password?</a>
+              <span style="color: var(--text-secondary);">•</span>
+              <a class="auth-link" onclick="showAuthTab('signup')">Don't have an account? Sign up here</a>
+            </div>
+          </div>
+          
+          <!-- Sign Up Form -->
+          <div class="auth-form" id="signupForm">
+            <div class="auth-input-group">
+              <label for="signupName">Full Name</label>
+              <input type="text" id="signupName" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="auth-input-group">
+              <label for="signupEmail">Email Address</label>
+              <input type="email" id="signupEmail" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="auth-input-group">
+              <label for="signupPassword">Password (min. 6 characters)</label>
+              <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+            </div>
+            
+            <div class="auth-input-group">
+              <label for="signupConfirmPassword">Confirm Password</label>
+              <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+            </div>
+            
+            <button class="auth-btn" id="signupBtn">
+              <i class="fas fa-user-plus"></i> Create Account
+            </button>
+            
+            <div class="auth-divider">
+              <span>or</span>
+            </div>
+            
+            <button class="auth-btn google-btn" onclick="showMessage('Google signup coming soon!', 'info')">
+              <i class="fab fa-google"></i> Continue with Google
+            </button>
+            
+            <div class="auth-error" id="signupError">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>Please check your information and try again.</span>
+            </div>
+            
+            <div class="auth-links">
+              <a class="auth-link" onclick="showAuthTab('login')">Already have an account? Login here</a>
+            </div>
+          </div>
         </div>
-        
-        <div class="auth-input-group">
-          <label for="signupEmail"><i class="fas fa-envelope"></i> Email Address</label>
-          <input type="email" id="signupEmail" placeholder="Enter your email" required>
-        </div>
-        
-        <div class="auth-input-group">
-          <label for="signupPassword"><i class="fas fa-lock"></i> Password (min. 6 characters)</label>
-          <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
-        </div>
-        
-        <div class="auth-input-group">
-          <label for="signupConfirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
-          <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
-        </div>
-        
-        <button class="auth-btn" id="signupBtn">
-          <i class="fas fa-user-plus"></i> Create Account
-        </button>
-        
-        <div class="auth-error" id="signupError">
-          <i class="fas fa-exclamation-circle"></i>
-          <span>Please check your information and try again.</span>
-        </div>
-      </div>
-      
-      <div class="auth-footer">
-        <p>By using this platform, you agree to our <a onclick="showTerms()">Terms of Service</a> and <a onclick="showPrivacy()">Privacy Policy</a>.</p>
-        <p style="margin-top: 10px;">Need help? <a onclick="showContact()">Contact Support</a></p>
       </div>
     </div>
   </div>
