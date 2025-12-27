@@ -1465,10 +1465,10 @@
     .category-item { 
       display: flex; 
       align-items: center; 
-      margin-bottom: 8px; 
-      padding: 8px; 
+      margin-bottom: 6px; 
+      padding: 6px; 
       background: var(--light); 
-      border-radius: 6px; 
+      border-radius: 4px; 
       flex-wrap: wrap;
     }
     
@@ -1525,14 +1525,14 @@
     .reminder-item, 
     .budget-item { 
       display: flex; 
-      flex-direction: column;
-      padding: 12px; 
-      border-bottom: 2px solid var(--border); 
-      transition: all 0.3s; 
-      border-radius: 10px; 
-      margin-bottom: 8px; 
+	  flex-direction: column;
+      padding: 4px 6px; 
+      border-bottom: 1px solid var(--border); 
+      transition: all 0.4s; 
+      border-radius: 4px; 
+      margin-bottom: 2px; 
       background: var(--light); 
-      gap: 10px;
+      gap: 4px;
     }
     
     .expense-item:hover, 
@@ -1549,26 +1549,28 @@
     
     .expense-amount { 
       font-weight: 700; 
-      font-size: 1.1rem; 
+      font-size: 1rem; 
       font-family: 'SF Mono', 'Courier New', monospace; 
       background: var(--gradient-1); 
       -webkit-background-clip: text; 
       -webkit-text-fill-color: transparent; 
       text-align: right; 
-      margin-top: 5px;
+      margin-top: 2px;
     }
     
     .income-amount { 
       background: var(--gradient-income); 
       -webkit-background-clip: text; 
-      -webkit-text-fill-color: transparent; 
+      -webkit-text-fill-color: transparent;
+	  margin-top: 2px; 
     }
     
     .item-actions { 
       display: flex; 
-      gap: 8px; 
+      gap: 6px; 
       justify-content: flex-end;
       width: 100%;
+	  margin-top: 4px;
     }
     
     .action-btn { 
@@ -1631,14 +1633,14 @@
     .category-badge { 
       display: inline-flex; 
       align-items: center; 
-      gap: 6px; 
-      padding: 6px 10px; 
-      border-radius: 16px; 
-      font-size: 0.75rem; 
+      gap: 4px; 
+      padding: 4px 8px; 
+      border-radius: 12px; 
+      font-size: 0.7rem; 
       font-weight: 600; 
-      margin-right: 8px; 
+      margin-right: 6px; 
       transition: all 0.3s; 
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
     
     .category-badge:hover { 
@@ -1711,10 +1713,10 @@
     .reminder-due {
       font-size: 0.75rem;
       padding: 4px 8px;
-      border-radius: 12px;
+      border-radius: 6px;
       font-weight: 600;
       display: inline-block;
-      margin-top: 5px;
+      margin-top: 3px;
     }
     
     .reminder-due.today {
@@ -2641,6 +2643,922 @@
         border-radius: 10px;
       }
     }
+	
+	/* ===== UPDATED COMPACT LIST STYLES ===== */
+/* Make all list items more compact */
+.expense-item,
+.reminder-item,
+.budget-item {
+    padding: 6px 8px !important; /* Reduced from 8px 12px */
+    margin-bottom: 3px !important; /* Reduced from 4px */
+    border-radius: 6px !important; /* Slightly smaller radius */
+    gap: 4px !important; /* Reduced from 6px */
+    min-height: auto !important;
+}
+
+/* Reduce inner spacing for list items */
+.expense-item .item-content,
+.reminder-item .item-content,
+.budget-item .item-content {
+    gap: 3px !important;
+}
+
+/* Make category badges more compact */
+.category-badge { 
+    padding: 3px 6px !important; /* Reduced from 4px 8px */
+    font-size: 0.65rem !important; /* Smaller font */
+    margin-right: 4px !important; /* Reduced spacing */
+    margin-bottom: 2px !important; /* Reduced spacing */
+}
+
+/* Make date text smaller and tighter */
+.expense-item strong,
+.reminder-item strong {
+    font-size: 0.8rem !important;
+    display: block;
+    margin-top: 1px !important;
+}
+
+/* Reduce description text size and spacing */
+.expense-item .item-content div,
+.reminder-item .item-content div {
+    font-size: 0.75rem !important;
+    margin-top: 1px !important;
+    line-height: 1.1 !important;
+}
+
+/* Make amount display more compact */
+.expense-amount,
+.income-amount {
+    font-size: 0.95rem !important; /* Reduced from 1rem */
+    margin-top: 0 !important;
+    padding: 1px 0 !important;
+}
+
+/* Make action buttons smaller and tighter */
+.item-actions {
+    gap: 4px !important; /* Reduced from 6px */
+    margin-top: 2px !important;
+}
+
+.action-btn {
+    width: 28px !important; /* Reduced from 32px */
+    height: 28px !important; /* Reduced from 32px */
+    font-size: 0.8rem !important; /* Smaller icons */
+}
+
+/* Reduce list container padding */
+.expenses-list,
+.income-list,
+.reminders-list,
+.budgets-list {
+    padding: 8px !important; /* Reduced from 15px */
+}
+
+/* Reduce list header spacing */
+.list-header {
+    margin-bottom: 10px !important; /* Reduced from 12px */
+}
+
+/* Make budget progress bars more compact */
+.budget-progress {
+    margin-top: 3px !important; /* Reduced from 4px */
+    height: 5px !important; /* Reduced from 6px */
+}
+
+.budget-status {
+    font-size: 0.65rem !important; /* Smaller text */
+    margin-top: 2px !important; /* Reduced spacing */
+}
+
+/* Make reminder due dates more compact */
+.reminder-due {
+    font-size: 0.65rem !important; /* Smaller text */
+    padding: 2px 4px !important; /* Reduced padding */
+}
+
+/* Reduce gap in category breakdown items */
+.category-item {
+    padding: 5px 6px !important; /* Reduced from 6px 8px */
+    margin-bottom: 3px !important; /* Reduced from 4px */
+}
+
+/* Make quick actions more compact */
+.quick-actions {
+    gap: 5px !important; /* Reduced from 6px */
+    margin-bottom: 10px !important; /* Reduced from 12px */
+}
+
+.quick-action-btn {
+    padding: 6px 8px !important; /* Reduced from 8px 10px */
+    font-size: 0.75rem !important; /* Smaller text */
+    min-height: 36px !important; /* Reduced from 40px */
+}
+
+/* Make report items more compact */
+.report-section {
+    padding: 12px !important; /* Reduced from 15px */
+    margin: 12px 0 !important; /* Reduced from 15px 0 */
+}
+
+/* Reduce spacing in search/filter container */
+.search-filter-container {
+    gap: 6px !important; /* Reduced from 8px */
+    margin-bottom: 10px !important; /* Reduced from 12px */
+}
+
+/* ===== MOBILE-SPECIFIC COMPACT STYLES ===== */
+@media (max-width: 768px) {
+    /* Even more compact on mobile */
+    .expense-item,
+    .reminder-item,
+    .budget-item {
+        padding: 5px 6px !important;
+        margin-bottom: 2px !important;
+        gap: 3px !important;
+    }
+    
+    .category-badge {
+        padding: 2px 4px !important;
+        font-size: 0.6rem !important;
+    }
+    
+    .expense-amount,
+    .income-amount {
+        font-size: 0.9rem !important;
+    }
+    
+    .item-actions {
+        gap: 3px !important;
+    }
+    
+    .action-btn {
+        width: 26px !important;
+        height: 26px !important;
+    }
+    
+    .expenses-list,
+    .income-list,
+    .reminders-list,
+    .budgets-list {
+        padding: 10px !important;
+    }
+    
+    .quick-action-btn {
+        padding: 5px 6px !important;
+        font-size: 0.7rem !important;
+        min-height: 32px !important;
+    }
+    
+    .report-section {
+        padding: 10px !important;
+        margin: 10px 0 !important;
+    }
+}
+
+/* Extra small screens - super compact */
+@media (max-width: 480px) {
+    .expense-item,
+    .reminder-item,
+    .budget-item {
+        padding: 4px 5px !important;
+        margin-bottom: 1px !important;
+        gap: 2px !important;
+    }
+    
+    .category-badge {
+        padding: 1px 3px !important;
+        font-size: 0.55rem !important;
+        margin-right: 2px !important;
+        margin-bottom: 1px !important;
+    }
+    
+    .expense-amount,
+    .income-amount {
+        font-size: 0.85rem !important;
+    }
+    
+    .action-btn {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.7rem !important;
+    }
+    
+    .expense-item strong,
+    .reminder-item strong {
+        font-size: 0.75rem !important;
+    }
+    
+    .expense-item .item-content div,
+    .reminder-item .item-content div {
+        font-size: 0.7rem !important;
+        line-height: 1 !important;
+    }
+}
+
+/* ===== MOBILE-SPECIFIC COMPACT STYLES ===== */
+@media (max-width: 768px) {
+    /* Even more compact on mobile */
+    .expense-item,
+    .reminder-item,
+    .budget-item {
+        padding: 6px 10px !important;
+        margin-bottom: 3px !important;
+        gap: 4px !important;
+    }
+    
+    .category-badge {
+        padding: 3px 6px !important;
+        font-size: 0.65rem !important;
+    }
+    
+    .expense-amount,
+    .income-amount {
+        font-size: 0.95rem !important;
+    }
+    
+    .item-actions {
+        gap: 4px !important;
+    }
+    
+    .action-btn {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    
+    .expenses-list,
+    .income-list,
+    .reminders-list,
+    .budgets-list {
+        padding: px !important;
+    }
+}
+	/* ===== ULTRA-COMPACT LIST SECTIONS WITH DISTINCT SEPARATORS ===== */
+/* Target all 3 list sections */
+.expenses-list,
+.income-list,
+.reminders-list {
+    padding: 8px 10px !important; /* Further reduced */
+    margin-top: 10px !important; /* Further reduced */
+    border-radius: 10px !important; /* Slightly smaller radius */
+}
+
+/* DRAMATICALLY REDUCE ITEM SIZE - ULTRA COMPACT */
+.expenses-list .expense-item,
+.income-list .income-item,
+.reminders-list .reminder-item {
+    padding: 4px 6px !important; /* Further reduced */
+    margin-bottom: 1px !important; /* Minimal margin */
+    gap: 3px !important; /* Extremely tight spacing */
+    border-radius: 6px !important; /* Smaller radius */
+    min-height: 45px !important; /* Set minimum height */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* DISTINCT LINES BETWEEN ITEMS IN REMINDERS SECTION */
+.reminders-list .reminder-item {
+    border-bottom: 1px solid var(--border) !important; /* Solid separator */
+    border-left: 2px solid transparent !important; /* Left accent border */
+    border-right: 1px solid rgba(255, 152, 0, 0.05) !important; /* Right subtle border */
+    background: linear-gradient(to right, var(--card-bg), var(--light)) !important;
+    margin-bottom: 1px !important; /* Minimal separation */
+}
+
+/* Add alternating background for better distinction */
+.reminders-list .reminder-item:nth-child(odd) {
+    background: linear-gradient(to right, var(--light), var(--card-bg)) !important;
+}
+
+.reminders-list .reminder-item:hover {
+    border-left-color: var(--primary) !important; /* Color accent on hover */
+    border-bottom-color: var(--primary) !important;
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.05), var(--card-bg)) !important;
+}
+
+/* Reduce space between list header and content */
+.expenses-list .list-header,
+.income-list .list-header,
+.reminders-list .list-header {
+    margin-bottom: 6px !important; /* Further reduced */
+    padding-bottom: 3px !important;
+}
+
+/* Ultra-compact category badges */
+.expenses-list .category-badge,
+.income-list .category-badge,
+.reminders-list .category-badge {
+    padding: 1px 4px !important; /* Minimal padding */
+    font-size: 0.6rem !important; /* Very small font */
+    margin-bottom: 1px !important;
+    margin-right: 2px !important;
+    border-radius: 4px !important;
+    line-height: 1.1 !important;
+}
+
+/* ULTRA-COMPACT SEARCH BARS */
+.expenses-list .search-filter-container,
+.income-list .search-filter-container,
+.reminders-list .search-filter-container {
+    margin-bottom: 6px !important; /* Minimal spacing */
+    gap: 4px !important; /* Extremely tight */
+}
+
+.expenses-list .search-box input,
+.income-list .search-box input,
+.reminders-list .search-box input {
+    padding: 6px 6px 6px 26px !important; /* Very compact */
+    font-size: 12px !important; /* Smaller font */
+    border-radius: 6px !important; /* Smaller radius */
+    min-height: 36px !important; /* Fixed height */
+}
+
+.expenses-list .search-box i,
+.income-list .search-box i,
+.reminders-list .search-box i {
+    left: 8px !important; /* Adjusted position */
+    font-size: 11px !important; /* Smaller icon */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+/* Ultra-compact filter selects */
+.expenses-list .filter-select select,
+.income-list .filter-select select,
+.reminders-list .filter-select select {
+    padding: 6px !important; /* Minimal */
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    min-height: 36px !important; /* Fixed height */
+}
+
+/* Ultra-compact list headers */
+.expenses-list h3,
+.income-list h3,
+.reminders-list h3 {
+    font-size: 0.9rem !important; /* Smaller */
+    margin: 0 !important;
+}
+
+/* ULTRA-COMPACT ITEM CONTENT - COLUMNS REDUCED */
+.expenses-list .item-content,
+.income-list .item-content,
+.reminders-list .item-content {
+    gap: 1px !important; /* Minimal gap between elements */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Ultra-compact amount display */
+.expenses-list .expense-amount,
+.income-list .income-amount,
+.reminders-list .reminder-amount {
+    font-size: 0.85rem !important; /* Very small */
+    margin-top: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+}
+
+/* Ultra-compact description text */
+.expenses-list .expense-item .item-content div,
+.income-list .income-item .item-content div,
+.reminders-list .reminder-item .item-content div {
+    font-size: 0.75rem !important; /* Very small */
+    line-height: 1.1 !important; /* Tight */
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+/* Ultra-compact date text */
+.expenses-list .expense-item strong,
+.income-list .income-item strong,
+.reminders-list .reminder-item strong {
+    font-size: 0.75rem !important; /* Very small */
+    margin-top: 0 !important;
+    display: inline-block;
+    line-height: 1 !important;
+}
+
+/* Ultra-compact action buttons */
+.expenses-list .item-actions,
+.income-list .item-actions,
+.reminders-list .item-actions {
+    gap: 2px !important; /* Minimal spacing */
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.expenses-list .action-btn,
+.income-list .action-btn,
+.reminders-list .action-btn {
+    width: 24px !important; /* Very small */
+    height: 24px !important;
+    font-size: 0.7rem !important; /* Tiny icons */
+    border-radius: 5px !important;
+}
+
+/* Loading spinner adjustments for ultra-compact */
+.expenses-list .loading,
+.income-list .loading,
+.reminders-list .loading {
+    padding: 8px !important; /* Minimal */
+}
+
+.expenses-list .spinner,
+.income-list .spinner,
+.reminders-list .spinner {
+    width: 20px !important; /* Smaller */
+    height: 20px !important;
+    border-width: 2px !important; /* Thinner */
+}
+
+/* Empty state adjustments */
+.expenses-list .empty-state,
+.income-list .empty-state,
+.reminders-list .empty-state {
+    padding: 12px !important; /* Minimal */
+    font-size: 0.85rem !important; /* Smaller text */
+}
+
+/* Ultra-compact toggle icons */
+.expenses-list .toggle-icon,
+.income-list .toggle-icon,
+.reminders-list .toggle-icon {
+    font-size: 0.8rem !important; /* Smaller icon */
+}
+
+/* ENHANCED HOVER EFFECTS FOR ULTRA-COMPACT ITEMS */
+.expenses-list .expense-item:hover,
+.income-list .income-item:hover,
+.reminders-list .reminder-item:hover {
+    transform: translateY(-2px) translateX(2px) !important; /* Subtle lift */
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15) !important; /* Subtle shadow */
+    margin-bottom: 3px !important; /* Slight separation on hover */
+    margin-top: -1px !important;
+    padding: 5px 7px !important; /* Slightly expanded on hover */
+}
+
+/* Shimmer effect for all items */
+.expenses-list .expense-item::before,
+.income-list .income-item::before,
+.reminders-list .reminder-item::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255, 152, 0, 0.08), transparent) !important;
+    transition: left 0.4s ease !important;
+    pointer-events: none !important;
+}
+
+.expenses-list .expense-item:hover::before,
+.income-list .income-item:hover::before,
+.reminders-list .reminder-item:hover::before {
+    left: 100% !important;
+}
+
+/* Mobile responsiveness for ultra-compact design */
+@media (max-width: 768px) {
+    .expenses-list,
+    .income-list,
+    .reminders-list {
+        padding: 6px 8px !important; /* Even more compact on mobile */
+        margin-top: 8px !important;
+    }
+    
+    .expenses-list .expense-item,
+    .income-list .income-item,
+    .reminders-list .reminder-item {
+        padding: 3px 4px !important; /* Minimal padding on mobile */
+        margin-bottom: 0 !important; /* No margin between items on mobile */
+        border-bottom: 1px solid rgba(255, 152, 0, 0.05) !important; /* Add subtle separator */
+        min-height: 40px !important; /* Even shorter on mobile */
+    }
+    
+    .expenses-list .expense-amount,
+    .income-list .income-amount,
+    .reminders-list .reminder-amount {
+        font-size: 0.8rem !important; /* Smaller on mobile */
+    }
+    
+    .expenses-list .category-badge,
+    .income-list .category-badge,
+    .reminders-list .category-badge {
+        padding: 1px 3px !important;
+        font-size: 0.55rem !important;
+    }
+    
+    .expenses-list .action-btn,
+    .income-list .action-btn,
+    .reminders-list .action-btn {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    
+    /* Stack search and filter on mobile for better space usage */
+    .expenses-list .search-filter-container,
+    .income-list .search-filter-container,
+    .reminders-list .search-filter-container {
+        flex-direction: column !important;
+        gap: 3px !important;
+    }
+    
+    .expenses-list .search-box,
+    .income-list .search-box,
+    .reminders-list .search-box {
+        width: 100% !important;
+    }
+    
+    .expenses-list .filter-select,
+    .income-list .filter-select,
+    .reminders-list .filter-select {
+        width: 100% !important;
+    }
+}
+
+/* Small screen adjustments */
+@media (max-width: 480px) {
+    .expenses-list h3,
+    .income-list h3,
+    .reminders-list h3 {
+        font-size: 0.85rem !important;
+    }
+    
+    .expenses-list .expense-item strong,
+    .income-list .income-item strong,
+    .reminders-list .reminder-item strong {
+        font-size: 0.7rem !important;
+    }
+    
+    .expenses-list .expense-item .item-content div,
+    .income-list .income-item .item-content div,
+    .reminders-list .reminder-item .item-content div {
+        font-size: 0.7rem !important;
+    }
+    
+    /* Hide some text on very small screens */
+    .expenses-list .category-badge span,
+    .income-list .category-badge span,
+    .reminders-list .category-badge span {
+        display: none !important;
+    }
+    
+    .expenses-list .category-badge i,
+    .income-list .category-badge i,
+    .reminders-list .category-badge i {
+        margin-right: 0 !important;
+    }
+}
+
+/* ===== MOBILE-OPTIMIZED FUTURISTIC SEARCH BARS ===== */
+/* Mobile-first approach for search containers */
+.expenses-list .search-filter-container,
+.income-list .search-filter-container,
+.reminders-list .search-filter-container {
+    margin-bottom: 6px !important;
+    gap: 6px !important; /* Slightly larger gap for touch */
+    padding: 8px !important; /* Better touch target */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08), 
+        rgba(255, 255, 255, 0.03)) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important; /* iOS support */
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 152, 0, 0.1) !important;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    position: relative !important;
+    max-width: 100% !important;
+}
+
+/* Responsive search box layout */
+.expenses-list .search-box input,
+.income-list .search-box input,
+.reminders-list .search-box input {
+    padding: 10px 10px 10px 36px !important; /* Better touch target */
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+    font-weight: 500 !important;
+    color: var(--text-color) !important;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12), 
+        rgba(255, 255, 255, 0.05)) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important; /* iOS support */
+    border: 1px solid rgba(255, 152, 0, 0.2) !important;
+    border-radius: 10px !important;
+    box-shadow: 
+        0 4px 14px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 44px !important; /* Minimum touch target for iOS */
+    -webkit-tap-highlight-color: transparent !important; /* Remove tap highlight */
+    -webkit-appearance: none !important; /* Remove iOS default styling */
+    appearance: none !important;
+    width: 100% !important; /* Full width within container */
+    box-sizing: border-box !important;
+}
+
+/* Enhanced search icon for touch */
+.expenses-list .search-box i,
+.income-list .search-box i,
+.reminders-list .search-box i {
+    left: 14px !important; /* Better touch target */
+    font-size: 16px !important; /* Larger for visibility */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--primary) !important;
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5) !important;
+    z-index: 2 !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    padding: 4px !important; /* Add touch padding */
+}
+
+/* Modern filter selects - Touch optimized */
+.expenses-list .filter-select select,
+.income-list .filter-select select,
+.reminders-list .filter-select select {
+    padding: 12px 40px 12px 14px !important; /* Better touch target */
+    font-size: 16px !important; /* Prevent iOS zoom */
+    font-weight: 500 !important;
+    color: var(--text-color) !important;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12), 
+        rgba(255, 255, 255, 0.05)) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 152, 0, 0.2) !important;
+    border-radius: 10px !important;
+    box-shadow: 
+        0 4px 14px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 2 !important;
+    min-height: 44px !important; /* Minimum touch target */
+    -webkit-tap-highlight-color: transparent !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Custom arrow with better visibility */
+.expenses-list .filter-select::after,
+.income-list .filter-select::after,
+.reminders-list .filter-select::after {
+    content: '▼' !important;
+    position: absolute !important;
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 14px !important; /* Larger for visibility */
+    color: var(--primary) !important;
+    text-shadow: 0 0 10px rgba(255, 152, 0, 0.5) !important;
+    pointer-events: none !important;
+    z-index: 3 !important;
+    transition: all 0.3s ease !important;
+    padding: 4px !important; /* Touch area */
+}
+
+/* ===== MOBILE SPECIFIC ADJUSTMENTS ===== */
+
+/* iPhone/Android portrait mode */
+@media (max-width: 768px) {
+    /* HALF-SCREEN SEARCH CONTAINERS STARTING FROM MIDDLE */
+    .expenses-list .search-filter-container,
+    .income-list .search-filter-container,
+    .reminders-list .search-filter-container {
+        display: flex !important;
+        flex-direction: row !important; /* Side by side on mobile */
+        justify-content: center !important; /* Center the items */
+        align-items: center !important;
+        width: 50% !important; /* Half of the screen */
+        margin-left: auto !important; /* Push to the middle/right */
+        margin-right: 0 !important; /* Align to middle/right edge */
+        gap: 8px !important;
+        padding: 10px !important;
+    }
+    
+    /* Each search/filter item takes half of the container */
+    .expenses-list .search-box,
+    .income-list .search-box,
+    .reminders-list .search-box,
+    .expenses-list .filter-select,
+    .income-list .filter-select,
+    .reminders-list .filter-select {
+        flex: 1 !important; /* Each takes equal space */
+        min-width: 0 !important; /* Allow shrinking */
+    }
+    
+    /* Stack vertically on very small screens */
+    @media (max-width: 480px) {
+        .expenses-list .search-filter-container,
+        .income-list .search-filter-container,
+        .reminders-list .search-filter-container {
+            flex-direction: column !important;
+            width: 60% !important; /* Slightly wider on very small screens */
+            margin-left: auto !important;
+            margin-right: 0 !important;
+        }
+    }
+    
+    /* iOS Safari specific fixes */
+    @supports (-webkit-touch-callout: none) {
+        .expenses-list .search-box input,
+        .income-list .search-box input,
+        .reminders-list .search-box input,
+        .expenses-list .filter-select select,
+        .income-list .filter-select select,
+        .reminders-list .filter-select select {
+            font-size: 16px !important; /* Prevent auto-zoom */
+            line-height: 1.2 !important;
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+        }
+        
+        /* Fix for iOS input shadows */
+        .expenses-list .search-box input,
+        .income-list .search-box input,
+        .reminders-list .search-box input {
+            -webkit-appearance: none !important;
+            border-radius: 10px !important;
+        }
+    }
+    
+    /* Fix for Chrome on Android */
+    @supports (-webkit-appearance: none) and (not (-ms-accelerator: true)) {
+        .expenses-list .search-box input,
+        .income-list .search-box input,
+        .reminders-list .search-box input {
+            line-height: 1.5 !important;
+        }
+    }
+}
+
+/* Tablet landscape and larger phones */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .expenses-list .search-filter-container,
+    .income-list .search-filter-container,
+    .reminders-list .search-filter-container {
+        width: 40% !important; /* Smaller width on tablets */
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        gap: 8px !important;
+    }
+}
+
+/* Desktop - Full width */
+@media (min-width: 1025px) {
+    .expenses-list .search-filter-container,
+    .income-list .search-filter-container,
+    .reminders-list .search-filter-container {
+        width: 100% !important; /* Full width on desktop */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* Safe area insets for iPhone X+ notches */
+@supports (padding: max(0px)) {
+    .expenses-list .search-filter-container,
+    .income-list .search-filter-container,
+    .reminders-list .search-filter-container {
+        padding-left: max(10px, env(safe-area-inset-left, 10px)) !important;
+        padding-right: max(10px, env(safe-area-inset-right, 10px)) !important;
+    }
+}
+
+/* Hover effects only for non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+    .expenses-list .search-filter-container:hover,
+    .income-list .search-filter-container:hover,
+    .reminders-list .search-filter-container:hover {
+        border-color: rgba(255, 152, 0, 0.25) !important;
+        animation: container-pulse 3s infinite ease-in-out !important;
+    }
+    
+    .expenses-list .search-box input:hover,
+    .income-list .search-box input:hover,
+    .reminders-list .search-box input:hover,
+    .expenses-list .filter-select select:hover,
+    .income-list .filter-select select:hover,
+    .reminders-list .filter-select select:hover {
+        border-color: rgba(255, 152, 0, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+}
+
+/* Remove blue highlight on iOS tap */
+.expenses-list .search-box input,
+.income-list .search-box input,
+.reminders-list .search-box input,
+.expenses-list .filter-select select,
+.income-list .filter-select select,
+.reminders-list .filter-select select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Focus effects for accessibility */
+.expenses-list .search-box input:focus,
+.income-list .search-box input:focus,
+.reminders-list .search-box input:focus,
+.expenses-list .filter-select select:focus,
+.income-list .filter-select select:focus,
+.reminders-list .filter-select select:focus {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.25), 
+        rgba(255, 255, 255, 0.12)) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 
+        0 0 20px rgba(255, 152, 0, 0.4),
+        0 8px 25px rgba(255, 152, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    transform: translateY(-2px) !important;
+    animation: neon-pulse 2s infinite alternate !important;
+}
+
+/* Active state for touch feedback */
+.expenses-list .search-box input:active,
+.income-list .search-box input:active,
+.reminders-list .search-box input:active,
+.expenses-list .filter-select select:active,
+.income-list .filter-select select:active,
+.reminders-list .filter-select select:active {
+    transform: translateY(0) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* Placeholder text adjustments */
+.expenses-list .search-box input::placeholder,
+.income-list .search-box input::placeholder,
+.reminders-list .search-box input::placeholder {
+    color: var(--gray) !important;
+    opacity: 0.7 !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Dark mode adjustments for mobile */
+body.dark-mode .expenses-list .search-filter-container,
+body.dark-mode .income-list .search-filter-container,
+body.dark-mode .reminders-list .search-filter-container {
+    background: linear-gradient(135deg, 
+        rgba(31, 41, 55, 0.8), 
+        rgba(31, 41, 55, 0.6)) !important;
+    border-color: rgba(255, 183, 77, 0.2) !important;
+}
+
+body.dark-mode .expenses-list .search-box input,
+body.dark-mode .income-list .search-box input,
+body.dark-mode .reminders-list .search-box input,
+body.dark-mode .expenses-list .filter-select select,
+body.dark-mode .income-list .filter-select select,
+body.dark-mode .reminders-list .filter-select select {
+    background: linear-gradient(135deg, 
+        rgba(31, 41, 55, 0.7), 
+        rgba(31, 41, 55, 0.5)) !important;
+    border-color: rgba(255, 183, 77, 0.25) !important;
+    color: var(--dark) !important;
+}
+
+body.dark-mode .expenses-list .search-box input::placeholder,
+body.dark-mode .income-list .search-box input::placeholder,
+body.dark-mode .reminders-list .search-box input::placeholder {
+    color: var(--gray) !important;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .expenses-list .search-box input,
+    .income-list .search-box input,
+    .reminders-list .search-box input,
+    .expenses-list .filter-select select,
+    .income-list .filter-select select,
+    .reminders-list .filter-select select {
+        transition: none !important;
+    }
+    
+    .expenses-list .search-filter-container:hover,
+    .income-list .search-filter-container:hover,
+    .reminders-list .search-filter-container:hover {
+        animation: none !important;
+    }
+}
+	
+	
   </style>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -3443,10 +4361,12 @@
       <div style="margin-bottom: 20px;">
         <label><i class="fas fa-calendar"></i> Select Year:</label>
         <select id="yearSelect" onchange="loadYearlyOverview()" style="margin-left: 10px; padding: 8px; border-radius: 8px; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border);">
-          <option value="2024">2024</option>
-          <option value="2025" selected>2025</option>
-          <option value="2026">2026</option>
-        </select>
+  <option value="2022">2022</option>
+  <option value="2023">2023</option>
+  <option value="2024">2024</option>
+  <option value="2025" selected>2025</option>
+  <option value="2026">2026</option>
+</select>
       </div>
       <div id="yearlyOverviewContent">
         <div class="loading"><div class="spinner"></div><p>Loading yearly overview...</p></div>
@@ -4494,7 +5414,7 @@
             const otherField = isExpense ? '' : '';
             
             html += `
-              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
+              <div class="expense-item" style="padding: 8px; border-bottom: 1px solid var(--border); margin-bottom: 6px;">
                 <div class="item-content">
                   <span style="font-weight:600; font-size:0.9rem;">${date.toLocaleDateString('en-UG')}</span>
                   <div style="font-size:0.85rem; color:var(--gray); margin-top:5px;">${description}</div>
@@ -6029,6 +6949,601 @@
         showError('PDF download failed: ' + error.message);
       }
     }
+	
+	// ===== YEARLY OVERVIEW FUNCTIONS =====
+let yearlyTrendChart = null; // Define this variable at the top
+
+async function loadYearlyOverview() {
+  const yearSelect = document.getElementById('yearSelect');
+  const selectedYear = parseInt(yearSelect.value);
+  const container = document.getElementById('yearlyOverviewContent');
+  
+  // Show loading state
+  container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading yearly data for ${selectedYear}...</p></div>`;
+  
+  try {
+    // Get yearly data
+    const yearlyData = getYearlyData(selectedYear); // Removed async since it's not doing async operations
+    
+    if (!yearlyData || yearlyData.totalIncome === 0 && yearlyData.totalExpense === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="padding: 30px;">
+          <i class="fas fa-calendar fa-3x" style="color: var(--gray); margin-bottom: 15px;"></i>
+          <h4 style="color: var(--gray); margin-bottom: 10px;">No Data Available</h4>
+          <p>No financial data found for ${selectedYear}. Start adding expenses and income to see your yearly overview.</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Generate HTML for yearly overview
+    let html = `
+      <div class="report-summary" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+        <div class="report-summary-item" style="border: 1px solid var(--success);">
+          <div class="label" style="color: var(--success);">Total Income</div>
+          <div class="value" style="color: var(--success); font-size: 1.4rem;">${formatCurrency(yearlyData.totalIncome)}</div>
+        </div>
+        <div class="report-summary-item" style="border: 1px solid var(--danger);">
+          <div class="label" style="color: var(--danger);">Total Expenses</div>
+          <div class="value" style="color: var(--danger); font-size: 1.4rem;">${formatCurrency(yearlyData.totalExpense)}</div>
+        </div>
+        <div class="report-summary-item" style="border: 1px solid var(--primary);">
+          <div class="label" style="color: var(--primary);">Net Savings</div>
+          <div class="value" style="color: var(--primary); font-size: 1.4rem;">${formatCurrency(yearlyData.netSavings)}</div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom: 25px;">
+        <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;">
+          <i class="fas fa-chart-line"></i> Yearly Trend
+        </h4>
+        <div style="height: 200px; position: relative;">
+          <canvas id="yearlyTrendChart" style="width:100%; height:100%;"></canvas>
+        </div>
+      </div>
+      
+      <div>
+        <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;">
+          <i class="fas fa-calendar-alt"></i> Month-by-Month Breakdown
+        </h4>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="background: var(--light); border-bottom: 2px solid var(--border);">
+                <th style="padding: 10px; text-align: left;">Month</th>
+                <th style="padding: 10px; text-align: right; color: var(--success);">Income</th>
+                <th style="padding: 10px; text-align: right; color: var(--danger);">Expenses</th>
+                <th style="padding: 10px; text-align: right; color: var(--primary);">Net</th>
+                <th style="padding: 10px; text-align: center;">Savings Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    // Add month rows
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    let totalIncome = 0;
+    let totalExpense = 0;
+    
+    monthNames.forEach((monthName, index) => {
+      const monthData = yearlyData.monthlyData[index] || { income: 0, expense: 0 };
+      const net = monthData.income - monthData.expense;
+      const savingsRate = monthData.income > 0 ? 
+        Math.round((net / monthData.income) * 100) : 
+        (monthData.expense > 0 ? -100 : 0);
+      
+      totalIncome += monthData.income;
+      totalExpense += monthData.expense;
+      
+      html += `
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 10px; font-weight: 600;">${monthName}</td>
+          <td style="padding: 10px; text-align: right; color: var(--success);">${formatCurrency(monthData.income)}</td>
+          <td style="padding: 10px; text-align: right; color: var(--danger);">${formatCurrency(monthData.expense)}</td>
+          <td style="padding: 10px; text-align: right; color: ${net >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(net)}</td>
+          <td style="padding: 10px; text-align: center; color: ${savingsRate >= 0 ? 'var(--success)' : 'var(--danger)'};">
+            ${savingsRate}%
+          </td>
+        </tr>
+      `;
+    });
+    
+    // Add totals row
+    const yearlyNet = totalIncome - totalExpense;
+    const yearlySavingsRate = totalIncome > 0 ? Math.round((yearlyNet / totalIncome) * 100) : 0;
+    
+    html += `
+            <tr style="background: var(--light); border-top: 2px solid var(--border); font-weight: 700;">
+              <td style="padding: 10px;">TOTAL</td>
+              <td style="padding: 10px; text-align: right; color: var(--success);">${formatCurrency(totalIncome)}</td>
+              <td style="padding: 10px; text-align: right; color: var(--danger);">${formatCurrency(totalExpense)}</td>
+              <td style="padding: 10px; text-align: right; color: ${yearlyNet >= 0 ? 'var(--success)' : 'var(--danger)'};">${formatCurrency(yearlyNet)}</td>
+              <td style="padding: 10px; text-align: center; color: ${yearlySavingsRate >= 0 ? 'var(--success)' : 'var(--danger)'};">${yearlySavingsRate}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    // Add category breakdown if available
+    if (Object.keys(yearlyData.topCategories).length > 0) {
+      html += `
+        <div style="margin-top: 25px;">
+          <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 1.1rem;">
+            <i class="fas fa-chart-pie"></i> Top Expense Categories
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+      `;
+      
+      let categoryCount = 0;
+      for (const [category, amount] of Object.entries(yearlyData.topCategories)) {
+        if (categoryCount >= 6) break; // Show top 6 categories
+        const percentage = yearlyData.totalExpense > 0 ? 
+          Math.round((amount / yearlyData.totalExpense) * 100) : 0;
+        
+        html += `
+          <div style="background: var(--light); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary);">
+            <div style="font-weight: 600; margin-bottom: 5px;">${category}</div>
+            <div style="color: var(--danger); font-weight: 700; font-size: 1.1rem; margin-bottom: 5px;">${formatCurrency(amount)}</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, var(--danger), #ff6b6b); border-radius: 3px;"></div>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--gray);">${percentage}%</div>
+            </div>
+          </div>
+        `;
+        categoryCount++;
+      }
+      
+      html += `</div></div>`;
+    }
+    
+    // Add top income sources if available
+    if (Object.keys(yearlyData.topSources).length > 0) {
+      html += `
+        <div style="margin-top: 25px;">
+          <h4 style="color: var(--success); margin-bottom: 15px; font-size: 1.1rem;">
+            <i class="fas fa-money-bill-wave"></i> Top Income Sources
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+      `;
+      
+      let sourceCount = 0;
+      for (const [source, amount] of Object.entries(yearlyData.topSources)) {
+        if (sourceCount >= 6) break; // Show top 6 sources
+        const percentage = yearlyData.totalIncome > 0 ? 
+          Math.round((amount / yearlyData.totalIncome) * 100) : 0;
+        
+        html += `
+          <div style="background: var(--light); padding: 12px; border-radius: 8px; border-left: 4px solid var(--success);">
+            <div style="font-weight: 600; margin-bottom: 5px;">${source}</div>
+            <div style="color: var(--success); font-weight: 700; font-size: 1.1rem; margin-bottom: 5px;">${formatCurrency(amount)}</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, var(--success), #2ecc71); border-radius: 3px;"></div>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--gray);">${percentage}%</div>
+            </div>
+          </div>
+        `;
+        sourceCount++;
+      }
+      
+      html += `</div></div>`;
+    }
+    
+    container.innerHTML = html;
+    
+    // Store data for PDF export
+    window.currentYearlyData = yearlyData;
+    window.currentYearlyData.year = selectedYear;
+    window.currentYearlyData.monthNames = monthNames;
+    
+    // Create the yearly trend chart after a small delay to ensure DOM is ready
+    setTimeout(() => {
+      createYearlyTrendChart(yearlyData);
+    }, 100);
+    
+    showMessage(`✅ Yearly overview for ${selectedYear} loaded successfully!`, 'success');
+  } catch (error) {
+    console.error('Error loading yearly overview:', error);
+    container.innerHTML = `
+      <div class="message error show">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Error loading yearly data: ${error.message}</span>
+      </div>
+    `;
+  }
+}
+
+function getYearlyData(year) {
+  const monthlyData = Array(12).fill().map(() => ({ income: 0, expense: 0 }));
+  const topCategories = {};
+  const topSources = {};
+  
+  let totalIncome = 0;
+  let totalExpense = 0;
+  
+  // Process expenses
+  allExpenses.forEach(expense => {
+    const expenseDate = getDateFromExpense(expense);
+    if (expenseDate.getFullYear() === year) {
+      const month = expenseDate.getMonth(); // 0-11
+      const amount = parseFloat(expense.amount) || 0;
+      
+      monthlyData[month].expense += amount;
+      totalExpense += amount;
+      
+      // Track categories
+      const category = expense.category || 'Other';
+      topCategories[category] = (topCategories[category] || 0) + amount;
+    }
+  });
+  
+  // Process income
+  allIncome.forEach(income => {
+    const incomeDate = getDateFromExpense(income);
+    if (incomeDate.getFullYear() === year) {
+      const month = incomeDate.getMonth(); // 0-11
+      const amount = parseFloat(income.amount) || 0;
+      
+      monthlyData[month].income += amount;
+      totalIncome += amount;
+      
+      // Track sources
+      const source = income.source || 'Other';
+      topSources[source] = (topSources[source] || 0) + amount;
+    }
+  });
+  
+  // Sort categories and sources by amount (descending)
+  const sortedCategories = Object.entries(topCategories)
+    .sort(([,a], [,b]) => b - a)
+    .reduce((obj, [key, val]) => {
+      obj[key] = val;
+      return obj;
+    }, {});
+  
+  const sortedSources = Object.entries(topSources)
+    .sort(([,a], [,b]) => b - a)
+    .reduce((obj, [key, val]) => {
+      obj[key] = val;
+      return obj;
+    }, {});
+  
+  return {
+    monthlyData,
+    totalIncome,
+    totalExpense,
+    netSavings: totalIncome - totalExpense,
+    topCategories: sortedCategories,
+    topSources: sortedSources
+  };
+}
+
+function createYearlyTrendChart(yearlyData) {
+  const ctx = document.getElementById('yearlyTrendChart');
+  if (!ctx) {
+    console.error('Canvas element not found for yearly trend chart');
+    return;
+  }
+  
+  // Destroy existing chart if it exists
+  if (yearlyTrendChart && typeof yearlyTrendChart.destroy === 'function') {
+    try {
+      yearlyTrendChart.destroy();
+    } catch (e) {
+      console.warn('Error destroying previous chart:', e);
+    }
+  }
+  
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const incomeData = yearlyData.monthlyData.map(m => m.income);
+  const expenseData = yearlyData.monthlyData.map(m => m.expense);
+  const netData = yearlyData.monthlyData.map(m => m.income - m.expense);
+  
+  // Get the context
+  const chartContext = ctx.getContext('2d');
+  if (!chartContext) {
+    console.error('Could not get canvas context');
+    return;
+  }
+  
+  try {
+    yearlyTrendChart = new Chart(chartContext, {
+      type: 'line',
+      data: {
+        labels: monthNames,
+        datasets: [
+          {
+            label: 'Income',
+            data: incomeData,
+            borderColor: 'rgba(40, 167, 69, 1)',
+            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Expenses',
+            data: expenseData,
+            borderColor: 'rgba(220, 53, 69, 1)',
+            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Net',
+            data: netData,
+            borderColor: 'rgba(255, 152, 0, 1)',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.4,
+            borderDash: [5, 5]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: currentTheme === 'dark' ? '#ffffff' : '#333333',
+              font: {
+                size: 11
+              }
+            }
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function(context) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += formatCurrency(context.parsed.y).replace('UGX ', 'UGX ');
+                return label;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              color: currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              color: currentTheme === 'dark' ? '#ffffff' : '#333333'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              color: currentTheme === 'dark' ? '#ffffff' : '#333333',
+              callback: function(value) {
+                if (value >= 1000000) return 'UGX ' + (value / 1000000).toFixed(1) + 'M';
+                if (value >= 1000) return 'UGX ' + (value / 1000).toFixed(0) + 'K';
+                return 'UGX ' + value;
+              }
+            }
+          }
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error creating yearly trend chart:', error);
+    showError('Failed to create chart: ' + error.message);
+  }
+}
+
+function downloadYearlyPDF() {
+  if (!window.currentYearlyData) {
+    showError('No yearly data available to download. Please load the yearly overview first.');
+    return;
+  }
+  
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const year = window.currentYearlyData.year;
+    const monthNames = window.currentYearlyData.monthNames || 
+      ['January', 'February', 'March', 'April', 'May', 'June', 
+       'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    // Title
+    doc.setFontSize(20);
+    doc.setTextColor(67, 97, 238);
+    doc.text(`Financial Tracker PRO - Yearly Overview ${year}`, 105, 20, { align: 'center' });
+    
+    // Summary Section
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Yearly Summary', 20, 40);
+    
+    doc.setFontSize(11);
+    doc.text(`Year: ${year}`, 20, 50);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-UG')}`, 20, 56);
+    doc.text(`User: ${currentUser.email}`, 20, 62);
+    
+    // Summary Boxes
+    const summaryY = 75;
+    doc.setDrawColor(40, 167, 69);
+    doc.rect(20, summaryY, 55, 20);
+    doc.setTextColor(40, 167, 69);
+    doc.setFontSize(10);
+    doc.text('TOTAL INCOME', 27, summaryY + 8);
+    doc.setFontSize(12);
+    doc.text(formatCurrency(window.currentYearlyData.totalIncome), 27, summaryY + 16);
+    
+    doc.setDrawColor(220, 53, 69);
+    doc.rect(80, summaryY, 55, 20);
+    doc.setTextColor(220, 53, 69);
+    doc.setFontSize(10);
+    doc.text('TOTAL EXPENSES', 87, summaryY + 8);
+    doc.setFontSize(12);
+    doc.text(formatCurrency(window.currentYearlyData.totalExpense), 87, summaryY + 16);
+    
+    doc.setDrawColor(255, 152, 0);
+    doc.rect(140, summaryY, 55, 20);
+    doc.setTextColor(255, 152, 0);
+    doc.setFontSize(10);
+    doc.text('NET SAVINGS', 147, summaryY + 8);
+    doc.setFontSize(12);
+    doc.text(formatCurrency(window.currentYearlyData.netSavings), 147, summaryY + 16);
+    
+    // Month-by-Month Table
+    let yPos = 110;
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Month-by-Month Breakdown', 20, yPos);
+    yPos += 10;
+    
+    const tableData = [];
+    monthNames.forEach((month, index) => {
+      const monthData = window.currentYearlyData.monthlyData[index] || { income: 0, expense: 0 };
+      const net = monthData.income - monthData.expense;
+      const savingsRate = monthData.income > 0 ? 
+        Math.round((net / monthData.income) * 100) : 
+        (monthData.expense > 0 ? -100 : 0);
+      
+      tableData.push([
+        month,
+        formatCurrency(monthData.income),
+        formatCurrency(monthData.expense),
+        formatCurrency(net),
+        `${savingsRate}%`
+      ]);
+    });
+    
+    // Add totals row
+    tableData.push([
+      'TOTAL',
+      formatCurrency(window.currentYearlyData.totalIncome),
+      formatCurrency(window.currentYearlyData.totalExpense),
+      formatCurrency(window.currentYearlyData.netSavings),
+      window.currentYearlyData.totalIncome > 0 ? 
+        `${Math.round((window.currentYearlyData.netSavings / window.currentYearlyData.totalIncome) * 100)}%` : '0%'
+    ]);
+    
+    doc.autoTable({
+      startY: yPos,
+      head: [['Month', 'Income', 'Expenses', 'Net', 'Savings Rate']],
+      body: tableData,
+      headStyles: { fillColor: [67, 97, 238] },
+      styles: { fontSize: 9 },
+      columnStyles: {
+        0: { cellWidth: 30 },
+        1: { cellWidth: 40, halign: 'right' },
+        2: { cellWidth: 40, halign: 'right' },
+        3: { cellWidth: 40, halign: 'right' },
+        4: { cellWidth: 25, halign: 'center' }
+      },
+      didDrawPage: function(data) {
+        // Footer
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(
+          `Generated by Financial Tracker PRO - ${new Date().toLocaleString()}`,
+          data.settings.margin.left,
+          doc.internal.pageSize.height - 10
+        );
+      }
+    });
+    
+    // Add a new page for top categories if there are categories
+    if (Object.keys(window.currentYearlyData.topCategories).length > 0) {
+      doc.addPage();
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Top Expense Categories', 20, 20);
+      
+      let categoryY = 30;
+      let count = 0;
+      for (const [category, amount] of Object.entries(window.currentYearlyData.topCategories)) {
+        if (count >= 10) break; // Show top 10 categories
+        
+        const percentage = window.currentYearlyData.totalExpense > 0 ? 
+          Math.round((amount / window.currentYearlyData.totalExpense) * 100) : 0;
+        
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`${category}:`, 20, categoryY);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(220, 53, 69);
+        doc.text(formatCurrency(amount), 120, categoryY);
+        
+        doc.setFontSize(9);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`${percentage}%`, 180, categoryY);
+        
+        categoryY += 8;
+        count++;
+      }
+    }
+    
+    // Add a new page for top income sources if there are sources
+    if (Object.keys(window.currentYearlyData.topSources).length > 0) {
+      doc.addPage();
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Top Income Sources', 20, 20);
+      
+      let sourceY = 30;
+      let count = 0;
+      for (const [source, amount] of Object.entries(window.currentYearlyData.topSources)) {
+        if (count >= 10) break; // Show top 10 sources
+        
+        const percentage = window.currentYearlyData.totalIncome > 0 ? 
+          Math.round((amount / window.currentYearlyData.totalIncome) * 100) : 0;
+        
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`${source}:`, 20, sourceY);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(40, 167, 69);
+        doc.text(formatCurrency(amount), 120, sourceY);
+        
+        doc.setFontSize(9);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`${percentage}%`, 180, sourceY);
+        
+        sourceY += 8;
+        count++;
+      }
+    }
+    
+    // Save the PDF
+    doc.save(`Yearly_Financial_Overview_${year}.pdf`);
+    showMessage('✅ Yearly PDF report downloaded successfully!', 'success');
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    showError('Failed to generate PDF: ' + error.message);
+  }
+}
+
+// Also, update the showYearlyOverview function to load data when modal is shown:
+function showYearlyOverview() { 
+  document.getElementById('yearlyOverviewModal').style.display = 'flex';
+  // Set default year to current year
+  const currentYear = new Date().getFullYear();
+  document.getElementById('yearSelect').value = currentYear;
+  // Load data
+  setTimeout(() => loadYearlyOverview(), 100);
+}
 
     // ===== DEBT TRACKER =====
     function calculateDebt() {
@@ -6267,28 +7782,28 @@
         const source = inc.source || 'Other';
         const sourceClass = source.toLowerCase().replace('/', '-');
         
-        html += `
-          <div class="expense-item">
-            <div class="item-content">
-              <span class="category-badge category-${sourceClass}" style="background:var(--success); color:white;">
-                <i class="fas fa-briefcase"></i> ${source}
-              </span>
-              <strong>${date}</strong>
-              <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
-                ${inc.notes || ''}
-              </div>
-            </div>
-            <div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div>
-            <div class="item-actions">
-              <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${source}', '${inc.date || ''}', '${notesSafe}')">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${source} - ${formatCurrency(inc.amount)}')">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        `;
+      html += `
+  <div class="income-item"> <!-- CHANGED FROM expense-item TO income-item -->
+    <div class="item-content">
+      <span class="category-badge category-${sourceClass}" style="background:var(--success); color:white;">
+        <i class="fas fa-briefcase"></i> ${source}
+      </span>
+      <strong>${date}</strong>
+      <div style="font-size: 0.9rem; color: var(--gray); margin-top: 5px;">
+        ${inc.notes || ''}
+      </div>
+    </div>
+    <div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div>
+    <div class="item-actions">
+      <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${source}', '${inc.date || ''}', '${notesSafe}')">
+        <i class="fas fa-edit"></i>
+      </button>
+      <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${source} - ${formatCurrency(inc.amount)}')">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+`;
       });
       
       container.innerHTML = html;
