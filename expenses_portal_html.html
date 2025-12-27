@@ -5356,6 +5356,16 @@ function initAppAfterLogin() {
           console.error('Reminders listener error:', error);
         });
     }
+	
+	function resetAuthState() {
+  if (auth) {
+    auth.signOut().then(() => {
+      localStorage.removeItem('revealedBalances_' + currentUser?.uid);
+      localStorage.removeItem('savingsGoal_' + currentUser?.uid);
+      window.location.reload();
+    });
+  }
+}
 
     // FIXED: Improved date extraction function
     function getDateFromExpense(item) {
