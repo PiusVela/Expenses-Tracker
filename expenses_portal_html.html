@@ -3558,6 +3558,32 @@ body.dark-mode .reminders-list .search-box input::placeholder {
     }
 }
 	
+	/* Income source badges */
+.source-salary { background: linear-gradient(135deg, #ffcc80, #ffb74d); color: var(--dark); }
+.source-freelance { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
+.source-investment { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+.source-business { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
+.source-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+.source-rental-income { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; }
+.source-bonus { background: linear-gradient(135deg, #ffd166, #ff9a9e); color: var(--dark); }
+.source-commission { background: linear-gradient(135deg, #a78bfa, #7c3aed); color: white; }
+.source-allowances { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: var(--dark); }
+.source-dividends { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+.source-interest { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
+.source-royalties { background: linear-gradient(135deg, #cd9cf2, #f6f3ff); color: var(--dark); }
+.source-pension { background: linear-gradient(135deg, #ffcc80, #ffb74d); color: var(--dark); }
+.source-social-security { background: linear-gradient(135deg, #89f7fe, #66a6ff); color: white; }
+.source-child-support { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
+.source-alimony { background: linear-gradient(135deg, #ff6b6b, #ffa8a8); color: white; }
+.source-scholarship { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+.source-grant { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
+.source-rebate { background: linear-gradient(135deg, #ffd166, #ff9a9e); color: var(--dark); }
+.source-refund { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
+.source-lottery { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; }
+.source-inheritance { background: linear-gradient(135deg, #cd9cf2, #f6f3ff); color: var(--dark); }
+.source-sale { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
+.source-other { background: var(--gray); color: white; }
+	
 	
   </style>
   
@@ -5049,18 +5075,7 @@ function setupNetworkMonitor() {
   }
 }
 
-// Call this in initAppAfterLogin
-function initAppAfterLogin() {
-  // Set default dates only when first loading
-  setDefaultDates();
-  setDefaultTargetDate();
-  loadRevealedState();
-  loadSavingsGoal();
-  setupEventListeners();
-  testFirestoreConnection();
-  setupRealtimeListeners();
-  setupNetworkMonitor(); // ADD THIS LINE
-}
+
     // New variables for category reports
     let currentCategoryReportType = null; // 'expense' or 'income'
     
@@ -5313,6 +5328,14 @@ function initAppAfterLogin() {
       setupEventListeners();
       testFirestoreConnection();
       setupRealtimeListeners();
+	  setupNetworkMonitor(); // ADD THIS LINE 
+	     setTimeout(() => {
+        if (allIncome && allIncome.length > 0) {
+            updateIncomeList();
+			populateIncomeFilters();
+        }
+    }, 1000);
+    
     }
 
     function setupRealtimeListeners() {
@@ -5368,7 +5391,9 @@ function initAppAfterLogin() {
           });
           console.log('Income updated:', allIncome.length, 'items');
           updateDashboardFromRealtimeData();
-          loadIncomeList(allIncome);
+          // ✅ Use the new updateIncomeList function instead of loadIncomeList
+          updateIncomeList();
+          populateIncomeFilters(); // Also populate the filter dropdowns
           
           if (currentReportPeriod.income) {
             generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
@@ -6223,6 +6248,372 @@ function loadIncomeList(incomeArray) {
   
   incomeList.innerHTML = html;
 }
+
+// ===== INCOME FILTERING FUNCTIONS =====
+
+// Function to search income records
+function searchIncome() {
+    const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+    filterIncome();
+}
+
+// Function to filter income records by source and month
+function filterIncome() {
+    const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+    const selectedSource = document.getElementById('filterIncomeSource').value;
+    const selectedMonth = document.getElementById('filterIncomeMonth').value;
+    
+    const filteredIncome = allIncome.filter(income => {
+        // Search filter
+        const matchesSearch = !searchTerm || 
+            income.source.toLowerCase().includes(searchTerm) ||
+            (income.notes && income.notes.toLowerCase().includes(searchTerm)) ||
+            income.amount.toString().includes(searchTerm);
+        
+        // Source filter
+        const matchesSource = !selectedSource || income.source === selectedSource;
+        
+        // Month filter
+        let matchesMonth = true;
+        if (selectedMonth && income.date) {
+            const incomeDate = new Date(income.date);
+            const incomeMonth = incomeDate.getMonth() + 1; // getMonth() returns 0-11
+            const incomeYear = incomeDate.getFullYear();
+            
+            const [selectedYear, selectedMonthNum] = selectedMonth.split('-');
+            matchesMonth = incomeYear == selectedYear && 
+                          incomeMonth == parseInt(selectedMonthNum);
+        }
+        
+        return matchesSearch && matchesSource && matchesMonth;
+    });
+    
+    displayIncomeList(filteredIncome);
+}
+
+// Function to display income list
+function displayIncomeList(incomeArray) {
+    const incomeListContainer = document.getElementById('incomeList');
+    
+    if (!incomeArray || incomeArray.length === 0) {
+        incomeListContainer.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-money-bill-alt"></i>
+                <p>No income records found</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Sort by date descending (most recent first)
+    incomeArray.sort((a, b) => {
+        const dateA = new Date(a.date || a.timestamp?.toDate?.() || 0);
+        const dateB = new Date(b.date || b.timestamp?.toDate?.() || 0);
+        return dateB - dateA;
+    });
+    
+    let html = '';
+    incomeArray.forEach(income => {
+        const date = income.date ? new Date(income.date) : 
+                     income.timestamp?.toDate?.() || new Date();
+        const formattedDate = date.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        
+        // Format amount with commas
+        const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount || 0);
+        
+        // Get category class for styling
+        const sourceClass = income.source ? 
+        'source-' + income.source.toLowerCase().replace(/[^a-z0-9]/g, '-') : 
+        'source-other';        
+        html += `
+            <div class="income-item">
+                <div class="item-content">
+                    <div>
+                        <strong>${formattedDate}</strong>
+                        <span class="category-badge ${sourceClass}">
+                            <i class="fas fa-money-bill-alt"></i>
+                             <span>${income.source || 'Unknown'}</span>
+                        </span>
+                    </div>
+                    <div>${income.notes || 'No description'}</div>
+                </div>
+                <div class="income-amount">UGX ${formattedAmount}</div>
+                <div class="item-actions">
+                    <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    incomeListContainer.innerHTML = html;
+}
+
+// Function to load income list initially
+function loadIncomeList(incomeArray = allIncome) {
+    displayIncomeList(incomeArray);
+	updateIncomeList(incomeArray);
+    
+    // Populate source filter dropdown
+    const sourceFilter = document.getElementById('filterIncomeSource');
+    if (sourceFilter) {
+        // Get unique sources
+        const sources = [...new Set(incomeArray.map(item => item.source).filter(Boolean))];
+        sources.sort();
+        
+        // Clear existing options except the first one
+        sourceFilter.innerHTML = '<option value="">All Sources</option>';
+        
+        // Add source options
+        sources.forEach(source => {
+            const option = document.createElement('option');
+            option.value = source;
+            option.textContent = source;
+            sourceFilter.appendChild(option);
+        });
+    }
+    
+    // Populate month filter dropdown
+    const monthFilter = document.getElementById('filterIncomeMonth');
+    if (monthFilter) {
+        // Get unique months (YYYY-MM format)
+        const months = [...new Set(incomeArray.map(item => {
+            if (!item.date) return null;
+            const date = new Date(item.date);
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }).filter(Boolean))];
+        
+        months.sort().reverse(); // Most recent first
+        
+        // Clear existing options except the first one
+        monthFilter.innerHTML = '<option value="">All Months</option>';
+        
+        // Add month options
+        months.forEach(month => {
+            const [year, monthNum] = month.split('-');
+            const monthName = new Date(year, monthNum - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const option = document.createElement('option');
+            option.value = month;
+            option.textContent = monthName;
+            monthFilter.appendChild(option);
+        });
+    }
+}
+
+// ===== INCOME LIST MANAGEMENT & FILTERING =====
+
+// Function to update income list with filtering
+function updateIncomeList(incomeArray = allIncome) {
+    const incomeListDiv = document.getElementById('incomeList');
+    if (!incomeListDiv) return;
+
+    if (incomeArray.length === 0) {
+        incomeListDiv.innerHTML = '<div class="empty-state"><i class="fas fa-money-bill-alt fa-2x"></i><p>No income records found</p></div>';
+        return;
+    }
+
+    // Sort by date descending
+    incomeArray.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    let html = '';
+    incomeArray.forEach(income => {
+        const date = new Date(income.date);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        const sourceClass = 'source-' + income.source.toLowerCase().replace(/ /g, '-');
+        
+        html += `
+            <div class="income-item" id="income-${income.id}">
+                <div class="item-content">
+                    <div>
+                        <strong>${formattedDate}</strong>
+                        <span class="category-badge ${sourceClass}"><i class="fas fa-${getSourceIcon(income.source)}"></i> ${income.source}</span>
+                    </div>
+                    <div>${income.notes || ''}</div>
+                </div>
+                <div class="income-amount">UGX ${income.amount.toLocaleString()}</div>
+                <div class="item-actions">
+                    <button class="action-btn edit" onclick="editIncome('${income.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    });
+
+    incomeListDiv.innerHTML = html;
+}
+
+// Function to filter income
+function filterIncome() {
+    const sourceFilter = document.getElementById('filterIncomeSource').value;
+    const monthFilter = document.getElementById('filterIncomeMonth').value;
+    
+    let filtered = allIncome;
+    
+    // Apply source filter
+    if (sourceFilter) {
+        filtered = filtered.filter(income => income.source === sourceFilter);
+    }
+    
+    // Apply month filter
+    if (monthFilter) {
+        filtered = filtered.filter(income => {
+            const incomeDate = new Date(income.date);
+            const incomeMonth = incomeDate.getFullYear() + '-' + 
+                               String(incomeDate.getMonth() + 1).padStart(2, '0');
+            return incomeMonth === monthFilter;
+        });
+    }
+    
+    updateIncomeList(filtered);
+}
+
+// Function to search income
+function searchIncome() {
+    const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+    const sourceFilter = document.getElementById('filterIncomeSource').value;
+    const monthFilter = document.getElementById('filterIncomeMonth').value;
+    
+    let filtered = allIncome;
+    
+    // Apply source filter
+    if (sourceFilter) {
+        filtered = filtered.filter(income => income.source === sourceFilter);
+    }
+    
+    // Apply month filter
+    if (monthFilter) {
+        filtered = filtered.filter(income => {
+            const incomeDate = new Date(income.date);
+            const incomeMonth = incomeDate.getFullYear() + '-' + 
+                               String(incomeDate.getMonth() + 1).padStart(2, '0');
+            return incomeMonth === monthFilter;
+        });
+    }
+    
+    // Apply search term
+    if (searchTerm) {
+        filtered = filtered.filter(income =>
+            income.source.toLowerCase().includes(searchTerm) ||
+            (income.notes && income.notes.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    updateIncomeList(filtered);
+}
+
+// Function to populate income filters
+function populateIncomeFilters() {
+    const sourceSelect = document.getElementById('filterIncomeSource');
+    const monthSelect = document.getElementById('filterIncomeMonth');
+    
+    if (!sourceSelect || !monthSelect) return; // Guard clause
+    
+    // Clear existing options except the first one
+    while (sourceSelect.options.length > 1) {
+        sourceSelect.remove(1);
+    }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
+    
+    // Get unique sources and months from allIncome
+    const sources = [...new Set(allIncome.map(income => income.source))];
+    const months = [...new Set(allIncome.map(income => {
+        const date = new Date(income.date);
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+    }))];
+    
+    // Sort months in descending order (newest first)
+    months.sort((a, b) => b.localeCompare(a));
+    
+    // Populate source filter
+    sources.forEach(source => {
+        const option = document.createElement('option');
+        option.value = source;
+        option.textContent = source;
+        sourceSelect.appendChild(option);
+    });
+    
+    // Populate month filter
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = formatMonthYear(month);
+        monthSelect.appendChild(option);
+    });
+}
+
+// Helper function to format month for display
+function formatMonthYear(monthString) {
+    const [year, month] = monthString.split('-');
+    const date = new Date(year, month - 1, 1);
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+// Helper function to get icon for income source
+function getSourceIcon(source) {
+    const iconMap = {
+        'Salary': 'money-check',
+        'Freelance': 'laptop-code',
+        'Investment': 'chart-line',
+        'Business': 'building',
+        'Gift': 'gift',
+        'Rental Income': 'home',
+        'Bonus': 'star',
+        'Commission': 'percentage',
+        'Allowances': 'hand-holding-usd',
+        'Dividends': 'chart-pie',
+        'Interest': 'coins',
+        'Royalties': 'book',
+        'Pension': 'user-tie',
+        'Social Security': 'university',
+        'Child Support': 'child',
+        'Alimony': 'heart',
+        'Scholarship': 'graduation-cap',
+        'Grant': 'handshake',
+        'Rebate': 'undo',
+        'Refund': 'reply',
+        'Lottery': 'dice',
+        'Inheritance': 'gem',
+        'Sale': 'tag',
+        'Other': 'money-bill'
+    };
+    return iconMap[source] || 'money-bill';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ===== FIXED: SEARCH FUNCTIONS =====
 function searchExpenses() {
