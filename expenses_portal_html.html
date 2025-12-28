@@ -1674,13 +1674,6 @@
     .category-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
     .category-other { background: var(--gray); color: white; }
 
-
-
-
-
-
-
-
     /* Progress Bar for Budget */
     .budget-progress {
       height: 8px;
@@ -3694,6 +3687,7 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   gap: 5px !important;
   justify-content: center !important;
   min-height: 48px !important;
+  min-width: 0 !important; /* Important for text truncation on mobile */
 }
 
 /* Lock the category badge styling - more comfortable */
@@ -3712,12 +3706,13 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   height: 22px !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  flex-shrink: 0 !important; /* Prevent badge from shrinking */
 }
 
-/* Lock the amount display - REDUCED FONT SIZE */
+/* Lock the amount display - ADJUSTED FOR MOBILE */
 .income-item .income-amount {
   font-weight: 700 !important;
-  font-size: 0.95rem !important; /* Reduced from 1.1rem */
+  font-size: 0.95rem !important; /* Base size */
   font-family: 'SF Mono', 'Courier New', monospace !important;
   background: var(--gradient-income) !important;
   -webkit-background-clip: text !important;
@@ -3726,12 +3721,13 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   margin: 0 !important;
   order: 2 !important;
   width: auto !important;
-  padding: 0 16px !important;
-  min-width: 95px !important; /* Slightly reduced from 100px */
+  padding: 0 8px 0 4px !important; /* Reduced horizontal padding */
+  min-width: 0 !important; /* Allow shrinking on mobile */
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  letter-spacing: 0.3px !important; /* Reduced from 0.5px */
+  letter-spacing: 0.3px !important;
+  flex-shrink: 0 !important; /* Prevent too much shrinking */
 }
 
 /* Lock action buttons - now inline with amount */
@@ -3742,19 +3738,19 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   width: auto !important;
   margin: 0 !important;
   order: 3 !important;
-  flex-shrink: 0 !important;
+  flex-shrink: 0 !important; /* Don't shrink */
 }
 
 /* Style the action buttons themselves for better spacing */
 .income-item .item-actions button {
   margin-bottom: 0 !important;
-  padding: 5px 8px !important;
-  min-width: 32px !important;
-  min-height: 32px !important;
+  padding: 5px 6px !important; /* Reduced padding */
+  min-width: 28px !important; /* Reduced from 32px */
+  min-height: 28px !important; /* Reduced from 32px */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 0.85rem !important; /* Added font size for buttons */
+  font-size: 0.8rem !important; /* Reduced button font */
 }
 
 /* Prevent any hover effects from changing layout */
@@ -3772,6 +3768,9 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   color: var(--text-color) !important;
   line-height: 1.3 !important;
   font-weight: 600 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 /* Lock notes styling - more readable */
@@ -3786,7 +3785,7 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
-  padding-right: 8px !important;
+  padding-right: 4px !important; /* Reduced padding */
 }
 
 /* Ensure proper vertical spacing for all content */
@@ -3794,6 +3793,73 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+/* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .income-item {
+    padding: 6px 8px !important; /* Reduced padding on mobile */
+    gap: 10px !important; /* Reduced gap on mobile */
+    min-height: 52px !important; /* Slightly reduced height */
+  }
+  
+  .income-item .income-amount {
+    font-size: 0.9rem !important; /* Smaller font on mobile */
+    padding: 0 6px 0 2px !important; /* Less padding on mobile */
+    letter-spacing: 0.2px !important; /* Less letter spacing */
+  }
+  
+  .income-item .item-actions {
+    gap: 4px !important; /* Smaller gap between buttons */
+  }
+  
+  .income-item .item-actions button {
+    padding: 4px 5px !important; /* Smaller buttons */
+    min-width: 26px !important;
+    min-height: 26px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .income-item strong {
+    font-size: 0.8rem !important; /* Slightly smaller date */
+  }
+  
+  .income-item .item-content div:nth-child(2) {
+    font-size: 0.75rem !important; /* Slightly smaller notes */
+    -webkit-line-clamp: 1 !important; /* Only 1 line on mobile */
+  }
+  
+  .income-item .category-badge {
+    font-size: 0.7rem !important; /* Smaller badge text */
+    padding: 2px 6px !important; /* Smaller badge */
+    height: 20px !important; /* Smaller badge height */
+  }
+}
+
+/* Extra small devices (phones, less than 480px) */
+@media (max-width: 480px) {
+  .income-item {
+    padding: 5px 6px !important; /* Even more compact */
+    gap: 8px !important;
+  }
+  
+  .income-item .income-amount {
+    font-size: 0.85rem !important; /* Even smaller on very small screens */
+    padding: 0 4px !important;
+    min-width: 0 !important; /* Allow maximum shrinking */
+  }
+  
+  .income-item .item-actions {
+    gap: 3px !important;
+  }
+  
+  .income-item .item-actions button {
+    padding: 3px 4px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+  }
+}
+
+
 
 
 	
@@ -4741,6 +4807,8 @@ body.dark-mode .reminders-list .search-box input::placeholder {
   
   
   
+  
+
 
   <script>
     // ===== JAVASCRIPT =====
