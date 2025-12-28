@@ -4372,6 +4372,9 @@ body.dark-mode .reminders-list .search-box input::placeholder {
       </div>
     </div>
 
+
+
+
     <div class="footer">
       <div class="footer-content">
         <div class="copyright"><i class="fas fa-copyright"></i><span>Copyright @2025 Financial Tracker PRO - Multi-User Platform</span></div>
@@ -4599,6 +4602,165 @@ body.dark-mode .reminders-list .search-box input::placeholder {
       totalIncome: false, totalExpense: false, availableBalance: false,
       monthlyBudget: false, savingsGoal: false 
     };
+	
+
+function searchIncome() {
+  const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+  let filteredIncome = allIncome;
+  
+  if (searchTerm) {
+    filteredIncome = filteredIncome.filter(income => 
+      (income.source && income.source.toLowerCase().includes(searchTerm)) ||
+      (income.notes && income.notes.toLowerCase().includes(searchTerm)) ||
+      (income.amount && income.amount.toString().includes(searchTerm))
+    );
+  }
+  
+  // Apply the current filters on the search result
+  const selectedSource = document.getElementById('filterIncomeSource').value;
+  const selectedMonth = document.getElementById('filterIncomeMonth').value;
+  
+  if (selectedSource) {
+    filteredIncome = filteredIncome.filter(income => income.source === selectedSource);
+  }
+  
+  if (selectedMonth) {
+    filteredIncome = filteredIncome.filter(income => {
+      const incomeDate = new Date(income.date);
+      const incomeMonth = incomeDate.getFullYear() + '-' + (incomeDate.getMonth() + 1).toString().padStart(2, '0');
+      return incomeMonth === selectedMonth;
+    });
+  }
+  
+  displayIncome(filteredIncome);
+}
+
+function filterIncome() {
+  // This function is called when either source or month filter changes
+  // It should simply call searchIncome() to apply both search and filters
+  searchIncome();
+}
+	
+function getSourceDisplayName(source) {
+  const sourceMap = {
+    'Salary': '💼 Salary',
+    'Freelance': '💻 Freelance/Side-Hustle',
+    'Investment': '📈 Investment/Dividends',
+    'Business': '🏢 Business',
+    'Gift': '🎁 Gift',
+    'Rental Income': '🏠 Rental Income',
+    'Bonus': '💰 Bonus',
+    'Commission': '📊 Commission',
+    'Allowances': '🤑 Allowances',
+    'Dividends': '📈 Dividends',
+    'Interest': '💰 Interest Income',
+    'Royalties': '📚 Royalties',
+    'Pension': '👴 Pension',
+    'Social Security': '🏛️ Social Security',
+    'Child Support': '👶 Child Support',
+    'Alimony': '💔 Alimony',
+    'Scholarship': '🎓 Scholarship',
+    'Grant': '🏫 Grant',
+    'Rebate': '🔄 Rebate',
+    'Refund': '💸 Refund',
+    'Lottery': '🎰 Lottery/Winnings',
+    'Inheritance': '📜 Inheritance',
+    'Sale': '🏷️ Sale of Items',
+    'Other': '📦 Other'
+  };
+  return sourceMap[source] || source;
+}
+
+
+
+function populateIncomeFilters() {
+  const sourceFilter = document.getElementById('filterIncomeSource');
+  const monthFilter = document.getElementById('filterIncomeMonth');
+  
+  if (!sourceFilter || !monthFilter) return;
+  
+  // Clear existing options except the first one
+  sourceFilter.innerHTML = '<option value="">All Sources</option>';
+  monthFilter.innerHTML = '<option value="">All Months</option>';
+  
+  // Get unique sources
+  const sources = [...new Set(allIncome.map(income => income.source))].sort();
+  sources.forEach(source => {
+    const option = document.createElement('option');
+    option.value = source;
+    option.textContent = getSourceDisplayName(source);
+    sourceFilter.appendChild(option);
+  });
+  
+  // Get unique months (YYYY-MM format)
+  const months = [...new Set(allIncome.map(income => {
+    const date = new Date(income.date);
+    return date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0');
+  }))].sort().reverse();
+  
+  months.forEach(month => {
+    const option = document.createElement('option');
+    option.value = month;
+    // Format month for display: e.g., "January 2023"
+    const [year, monthNum] = month.split('-');
+    const date = new Date(year, monthNum - 1, 1);
+    option.textContent = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    monthFilter.appendChild(option);
+  });
+}
+
+
+
+	function displayIncome(incomeArray) {
+  const incomeListContainer = document.getElementById('incomeList');
+  if (!incomeListContainer) return;
+  
+  if (incomeArray.length === 0) {
+    incomeListContainer.innerHTML = '<div class="empty-state">No income records found</div>';
+    return;
+  }
+  
+  let html = '';
+  incomeArray.forEach(income => {
+    const displaySource = getSourceDisplayName(income.source);
+    const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
+    const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    
+    html += `
+      <div class="income-item" data-id="${income.id}">
+        <div class="item-content">
+          <div>
+            <span class="category-badge source-${income.source.toLowerCase().replace(/\s+/g, '-')}">
+              <i class="fas fa-money-bill-wave"></i> ${displaySource}
+            </span>
+            <strong>${formattedDate}</strong>
+          </div>
+          <div>${income.notes || ''}</div>
+        </div>
+        <div class="income-amount">UGX ${formattedAmount}</div>
+        <div class="item-actions">
+          <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  
+  incomeListContainer.innerHTML = html;
+}
+	
+	
+	
+	
+	
     // ===== UPDATED FIREBASE & AUTH FUNCTIONS =====
 
 // Add this function at the beginning of your JavaScript (after global variables)
@@ -6431,64 +6593,87 @@ function loadIncomeList(incomeData = allIncome) {
   
 }
 
-// 2. Update income list (alias for loadIncomeList)
-function updateIncomeList() {
-  loadIncomeList();
-}
 
 // 3. Search income function
+// FIXED: Search income function
 function searchIncome() {
-  const searchTerm = document.getElementById('searchIncome').value.toLowerCase().trim();
-  filterIncome();
+    const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+    const source = document.getElementById('filterIncomeSource').value;
+    const month = document.getElementById('filterIncomeMonth').value;
+    
+    let filtered = allIncome;
+    
+    // Apply source filter if set
+    if (source) {
+        filtered = filtered.filter(income => {
+            return income.source === source || 
+                   (income.source && income.source.includes(source));
+        });
+    }
+    
+    // Apply month filter if set
+    if (month) {
+        filtered = filtered.filter(income => {
+            if (!income.date) return false;
+            try {
+                const incomeDate = new Date(income.date);
+                const incomeMonth = incomeDate.getFullYear() + '-' + 
+                                   String(incomeDate.getMonth() + 1).padStart(2, '0');
+                return incomeMonth === month;
+            } catch (e) {
+                return false;
+            }
+        });
+    }
+    
+    // Apply search term
+    if (searchTerm) {
+        filtered = filtered.filter(income => 
+            income.notes?.toLowerCase().includes(searchTerm) ||
+            income.source?.toLowerCase().includes(searchTerm) ||
+            income.amount?.toString().includes(searchTerm) ||
+            income.date?.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    displayIncome(filtered);
 }
 
-
-// 4. Filter income function (similar to expenses)
-// ===== UPDATED: INCOME FILTERING =====
-    function filterIncome() {
-        const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
-        const selectedSource = document.getElementById('filterIncomeSource').value;
-        const selectedMonth = document.getElementById('filterIncomeMonth').value;
-
-        // Start with all income
-        let filtered = allIncome;
-
-        // 1. Apply Search Filter
-        if (searchTerm) {
-            filtered = filtered.filter(income => {
-                const notes = (income.notes || '').toLowerCase();
-                const source = (income.source || '').toLowerCase();
-                return notes.includes(searchTerm) || source.includes(searchTerm);
-            });
-        }
-
-        // 2. Apply Source Filter (Equivalent to Category for Income)
-        if (selectedSource) {
-            filtered = filtered.filter(income => income.source === selectedSource);
-        }
-
-        // 3. Apply Month Filter
-        if (selectedMonth) {
-            filtered = filtered.filter(income => {
-                const itemMonth = getYearMonthFromItem(income);
-                return itemMonth === selectedMonth;
-            });
-        }
-
-        // Re-render the list with the filtered data
-        loadIncomeList(filtered);
+// FIXED: Income filtering function
+function filterIncome() {
+    const source = document.getElementById('filterIncomeSource').value;
+    const month = document.getElementById('filterIncomeMonth').value;
+    let filtered = allIncome;
+    
+    if (source) {
+        filtered = filtered.filter(income => {
+            // Handle source filtering
+            return income.source === source || 
+                   (income.source && income.source.includes(source));
+        });
     }
-
-    // ===== UPDATED: SEARCH TRIGGERS =====
-    // These functions now trigger the main filter functions
-    function searchExpenses() {
-        filterExpenses();
+    
+    if (month) {
+        filtered = filtered.filter(income => {
+            if (!income.date) return false;
+            
+            try {
+                const incomeDate = new Date(income.date);
+                if (isNaN(incomeDate.getTime())) return false;
+                
+                // Format date as YYYY-MM for comparison
+                const incomeMonth = incomeDate.getFullYear() + '-' + 
+                                   String(incomeDate.getMonth() + 1).padStart(2, '0');
+                return incomeMonth === month;
+            } catch (e) {
+                console.error('Date parsing error:', e, income);
+                return false;
+            }
+        });
     }
-
-    function searchIncome() {
-        filterIncome();
-    }
-	
+    
+    displayIncome(filtered);
+}
 // ===== UPDATED: EXPENSE FILTERING =====
     function filterExpenses() {
         const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
@@ -6970,52 +7155,52 @@ function searchIncome() {
     displayIncome(filtered);
 }
 
-// Update displayIncome function to show message when no results
-function displayIncome(incomeItems) {
-    const incomeList = document.getElementById('incomeList');
-	
-    if (!incomeList) return;
-    
-    if (!incomeItems || incomeItems.length === 0) {
-        incomeList.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-money-bill-wave" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
-                <p>No income records found</p>
-                <p style="font-size: 0.8rem; opacity: 0.7;">Try changing your search or filter</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Limit to recent 50 items for performance
-    const displayIncome = incomeItems.slice(0, 50);
-    
-    let html = '';
-    incomeList.forEach(income => {
-        const formattedAmount = formatCurrency(income.amount);
-        const formattedDate = formatDate(income.date);
-        const sourceBadgeClass = getSourceBadgeClass(income.source);
-        
-        html += `
-            <div class="income-item" id="income-${income.id}">
-                <div class="item-content">
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span class="category-badge ${sourceBadgeClass}"><i class="fas fa-${getSourceIcon(income.source)}"></i> ${income.source}</span>
-                        <strong>${formattedDate}</strong>
-                    </div>
-                    <div>${income.notes || ''}</div>
-                </div>
-                <div class="income-amount">UGX ${formattedAmount}</div>
-                <div class="item-actions">
-                    <button class="action-btn edit" onclick="editIncome('${income.id}')"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-        `;
+function displayIncome(incomeArray) {
+  const incomeListContainer = document.getElementById('incomeList');
+  if (!incomeListContainer) return;
+  
+  if (incomeArray.length === 0) {
+    incomeListContainer.innerHTML = '<div class="empty-state">No income records found</div>';
+    return;
+  }
+  
+  let html = '';
+  incomeArray.forEach(income => {
+    const displaySource = getSourceDisplayName(income.source);
+    const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
+    const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
     });
     
-    incomeListContainer.innerHTML = html;
+    html += `
+      <div class="income-item" data-id="${income.id}">
+        <div class="item-content">
+          <div>
+            <span class="category-badge source-${income.source.toLowerCase().replace(/\s+/g, '-')}">
+              <i class="fas fa-money-bill-wave"></i> ${displaySource}
+            </span>
+            <strong>${formattedDate}</strong>
+          </div>
+          <div>${income.notes || ''}</div>
+        </div>
+        <div class="income-amount">UGX ${formattedAmount}</div>
+        <div class="item-actions">
+          <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  });
+  
+  incomeListContainer.innerHTML = html;
 }
+
 
 // Helper function to get source badge class
 function getSourceBadgeClass(source) {
@@ -7188,85 +7373,91 @@ function getSourceIcon(source) {
 
 
 
-// ===== FIXED: SEARCH FUNCTIONS =====
+/// FIXED: Search expenses function
 function searchExpenses() {
-  const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
-  const selectedCategory = document.getElementById('filterExpenseCategory').value;
-  const selectedMonth = document.getElementById('filterExpenseMonth').value;
-  let filtered = allExpenses;
-  
-  
-   // Apply filters...
-  if (searchTerm) {
-    filtered = filtered.filter(exp => 
-      exp.description?.toLowerCase().includes(searchTerm) || 
-      exp.category?.toLowerCase().includes(searchTerm)
-    );
-  }
-  
-  if (category) {
-    filtered = filtered.filter(exp => exp.category === category);
-  }
-  
-  if (month) {
-    filtered = filtered.filter(exp => exp.date.startsWith(month));
-  }
-  
-  // ===== LIMIT TO 50 ITEMS HERE =====
-  const displayExpenses = filtered.slice(0, 50);
-  displayExpenses(displayExpenses);
-  
-  
-  
-  const filteredExpenses = allExpenses.filter(expense => {
-    // Search term matching
-    const matchesSearch = !searchTerm || 
-      (expense.description && expense.description.toLowerCase().includes(searchTerm)) ||
-      (expense.category && expense.category.toLowerCase().includes(searchTerm));
+    const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
+    const category = document.getElementById('filterExpenseCategory').value;
+    const month = document.getElementById('filterExpenseMonth').value;
     
-    // Category filter
-    const matchesCategory = !selectedCategory || expense.category === selectedCategory;
+    let filtered = allExpenses;
     
-    // Month filter
-    let matchesMonth = true;
-    if (selectedMonth && expense.date) {
-      const expenseDate = new Date(expense.date);
-      const expenseMonthYear = `${expenseDate.getFullYear()}-${String(expenseDate.getMonth() + 1).padStart(2, '0')}`;
-      matchesMonth = expenseMonthYear === selectedMonth;
+    // Apply category filter if set
+    if (category) {
+        filtered = filtered.filter(expense => {
+            const categoryValue = getCategoryValue(expense.category);
+            return categoryValue === category || expense.category === category;
+        });
     }
     
-    return matchesSearch && matchesCategory && matchesMonth;
-  });
-  
-  loadExpensesList(filteredExpenses);
+    // Apply month filter if set
+    if (month) {
+        filtered = filtered.filter(expense => {
+            if (!expense.date) return false;
+            try {
+                const expenseDate = new Date(expense.date);
+                const expenseMonth = expenseDate.getFullYear() + '-' + 
+                                   String(expenseDate.getMonth() + 1).padStart(2, '0');
+                return expenseMonth === month;
+            } catch (e) {
+                return false;
+            }
+        });
+    }
+    
+    // Apply search term
+    if (searchTerm) {
+        filtered = filtered.filter(expense => 
+            expense.description?.toLowerCase().includes(searchTerm) ||
+            expense.category?.toLowerCase().includes(searchTerm) ||
+            expense.amount?.toString().includes(searchTerm)
+        );
+    }
+    
+    displayExpenses(filtered);
 }
 
+// FIXED: Search income function
 function searchIncome() {
-  const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
-  const selectedSource = document.getElementById('filterIncomeSource').value;
-  const selectedMonth = document.getElementById('filterIncomeMonth').value;
-  
-  const filteredIncome = allIncome.filter(income => {
-    // Search term matching
-    const matchesSearch = !searchTerm || 
-      (income.notes && income.notes.toLowerCase().includes(searchTerm)) ||
-      (income.source && income.source.toLowerCase().includes(searchTerm));
+    const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
+    const source = document.getElementById('filterIncomeSource').value;
+    const month = document.getElementById('filterIncomeMonth').value;
     
-    // Source filter
-    const matchesSource = !selectedSource || income.source === selectedSource;
+    let filtered = allIncome;
     
-    // Month filter
-    let matchesMonth = true;
-    if (selectedMonth && income.date) {
-      const incomeDate = new Date(income.date);
-      const incomeMonthYear = `${incomeDate.getFullYear()}-${String(incomeDate.getMonth() + 1).padStart(2, '0')}`;
-      matchesMonth = incomeMonthYear === selectedMonth;
+    // Apply source filter if set
+    if (source) {
+        filtered = filtered.filter(income => {
+            return income.source === source || 
+                   (income.source && income.source.includes(source));
+        });
     }
     
-    return matchesSearch && matchesSource && matchesMonth;
-  });
-  
-  loadIncomeList(filteredIncome);
+    // Apply month filter if set
+    if (month) {
+        filtered = filtered.filter(income => {
+            if (!income.date) return false;
+            try {
+                const incomeDate = new Date(income.date);
+                const incomeMonth = incomeDate.getFullYear() + '-' + 
+                                   String(incomeDate.getMonth() + 1).padStart(2, '0');
+                return incomeMonth === month;
+            } catch (e) {
+                return false;
+            }
+        });
+    }
+    
+    // Apply search term
+    if (searchTerm) {
+        filtered = filtered.filter(income => 
+            income.notes?.toLowerCase().includes(searchTerm) ||
+            income.source?.toLowerCase().includes(searchTerm) ||
+            income.amount?.toString().includes(searchTerm) ||
+            income.date?.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    displayIncome(filtered);
 }
 
 // ===== FIXED: FILTER DROPDOWN POPULATION =====
@@ -8284,55 +8475,122 @@ function populateFilterDropdowns() {
   }
 }
 
-// ===== FIXED EXPENSE FILTER FUNCTIONS =====
-
+// FIXED: Populate expense filters with unique values
 function populateExpenseFilters() {
-    if (!allExpenses || allExpenses.length === 0) return;
-    
-    // Clear existing options
     const categorySelect = document.getElementById('filterExpenseCategory');
     const monthSelect = document.getElementById('filterExpenseMonth');
     
-    // Keep "All Categories" option and clear others
-    categorySelect.innerHTML = '<option value="">All Categories</option>';
-    monthSelect.innerHTML = '<option value="">All Months</option>';
+    // Clear existing options except the first one
+    while (categorySelect.options.length > 1) {
+        categorySelect.remove(1);
+    }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
     
-    // Get unique categories
-    const categories = [...new Set(allExpenses.map(expense => expense.category))];
-    categories.sort();
-    
-    // Add category options
+    // Get unique categories from allExpenses
+    const categories = [...new Set(allExpenses.map(exp => exp.category))].sort();
     categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = getCategoryDisplayName(category);
-        categorySelect.appendChild(option);
+        if (category) {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = getCategoryDisplayName(category);
+            categorySelect.appendChild(option);
+        }
     });
     
-    // Get unique months from expenses
-    const monthYears = {};
+    // Get unique months from allExpenses
+    const months = [];
     allExpenses.forEach(expense => {
         if (expense.date) {
-            const date = new Date(expense.date);
-            if (!isNaN(date.getTime())) {
-                const monthYear = date.toLocaleDateString('en-US', { 
-                    month: 'long', 
-                    year: 'numeric' 
-                });
-                const monthYearKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
-                monthYears[monthYearKey] = monthYear;
+            try {
+                const date = new Date(expense.date);
+                if (!isNaN(date.getTime())) {
+                    const monthStr = date.getFullYear() + '-' + 
+                                   String(date.getMonth() + 1).padStart(2, '0');
+                    const displayMonth = date.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    
+                    if (!months.some(m => m.value === monthStr)) {
+                        months.push({ value: monthStr, display: displayMonth });
+                    }
+                }
+            } catch (e) {
+                console.error('Error parsing date:', e);
             }
         }
     });
     
-    // Add month options (sorted by date, most recent first)
-    const sortedMonths = Object.keys(monthYears)
-        .sort((a, b) => new Date(b.split('-')[0], b.split('-')[1]) - new Date(a.split('-')[0], a.split('-')[1]));
+    // Sort months chronologically
+    months.sort((a, b) => b.value.localeCompare(a.value));
     
-    sortedMonths.forEach(monthKey => {
+    // Add month options
+    months.forEach(month => {
         const option = document.createElement('option');
-        option.value = monthKey;
-        option.textContent = monthYears[monthKey];
+        option.value = month.value;
+        option.textContent = month.display;
+        monthSelect.appendChild(option);
+    });
+}
+
+// FIXED: Populate income filters with unique values
+function populateIncomeFilters() {
+    const sourceSelect = document.getElementById('filterIncomeSource');
+    const monthSelect = document.getElementById('filterIncomeMonth');
+    
+    // Clear existing options except the first one
+    while (sourceSelect.options.length > 1) {
+        sourceSelect.remove(1);
+    }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
+    
+    // Get unique sources from allIncome
+    const sources = [...new Set(allIncome.map(inc => inc.source))].sort();
+    sources.forEach(source => {
+        if (source) {
+            const option = document.createElement('option');
+            option.value = source;
+            option.textContent = source;
+            sourceSelect.appendChild(option);
+        }
+    });
+    
+    // Get unique months from allIncome
+    const months = [];
+    allIncome.forEach(income => {
+        if (income.date) {
+            try {
+                const date = new Date(income.date);
+                if (!isNaN(date.getTime())) {
+                    const monthStr = date.getFullYear() + '-' + 
+                                   String(date.getMonth() + 1).padStart(2, '0');
+                    const displayMonth = date.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    
+                    if (!months.some(m => m.value === monthStr)) {
+                        months.push({ value: monthStr, display: displayMonth });
+                    }
+                }
+            } catch (e) {
+                console.error('Error parsing date:', e);
+            }
+        }
+    });
+    
+    // Sort months chronologically
+    months.sort((a, b) => b.value.localeCompare(a.value));
+    
+    // Add month options
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month.value;
+        option.textContent = month.display;
         monthSelect.appendChild(option);
     });
 }
@@ -8903,63 +9161,240 @@ function displayExpenses(expenses) {
       });
     }
     
-    // FIXED: Month filtering now works correctly
-    function filterExpenses() {
-      const category = document.getElementById('filterExpenseCategory').value;
-      const month = document.getElementById('filterExpenseMonth').value;
-      const expenseItems = document.querySelectorAll('#expensesList .expense-item');
-      
-      expenseItems.forEach(item => {
-        const itemCategory = item.querySelector('.category-badge')?.textContent.trim() || '';
-        const dateElement = item.querySelector('strong');
-        const itemDate = dateElement ? new Date(dateElement.textContent) : null;
-        
-        // Get month from date (0-11) or from stored data attribute
-        let itemMonth = '';
-        if (itemDate && !isNaN(itemDate.getTime())) {
-          itemMonth = itemDate.toLocaleDateString('en-US', { month: 'short' });
-        }
-        
-        const categoryMatch = !category || itemCategory.includes(category);
-        const monthMatch = !month || itemMonth === month;
-        
-        item.style.display = categoryMatch && monthMatch ? 'flex' : 'none';
-      });
+  // FIXED: Expense filtering function
+function filterExpenses() {
+    const category = document.getElementById('filterExpenseCategory').value;
+    const month = document.getElementById('filterExpenseMonth').value;
+    let filtered = allExpenses;
+    
+    if (category) {
+        filtered = filtered.filter(expense => {
+            // Handle category filtering - compare both values and display names
+            const categoryValue = getCategoryValue(expense.category);
+            return categoryValue === category || expense.category === category;
+        });
     }
     
-    function searchIncome() {
-      const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
-      const incomeItems = document.querySelectorAll('#incomeList .expense-item');
-      
-      incomeItems.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
-      });
+    if (month) {
+        filtered = filtered.filter(expense => {
+            if (!expense.date) return false;
+            
+            try {
+                const expenseDate = new Date(expense.date);
+                if (isNaN(expenseDate.getTime())) return false;
+                
+                // Format date as YYYY-MM for comparison
+                const expenseMonth = expenseDate.getFullYear() + '-' + 
+                                    String(expenseDate.getMonth() + 1).padStart(2, '0');
+                return expenseMonth === month;
+            } catch (e) {
+                console.error('Date parsing error:', e, expense);
+                return false;
+            }
+        });
     }
     
-    // FIXED: Income filtering now works correctly
-    function filterIncome() {
-      const source = document.getElementById('filterIncomeSource').value;
-      const month = document.getElementById('filterIncomeMonth').value;
-      const incomeItems = document.querySelectorAll('#incomeList .expense-item');
-      
-      incomeItems.forEach(item => {
-        const itemSource = item.querySelector('.category-badge')?.textContent.trim() || '';
-        const dateElement = item.querySelector('strong');
-        const itemDate = dateElement ? new Date(dateElement.textContent) : null;
-        
-        // Get month from date (0-11) or from stored data attribute
-        let itemMonth = '';
-        if (itemDate && !isNaN(itemDate.getTime())) {
-          itemMonth = itemDate.toLocaleDateString('en-US', { month: 'short' });
-        }
-        
-        const sourceMatch = !source || itemSource.includes(source);
-        const monthMatch = !month || itemMonth === month;
-        
-        item.style.display = sourceMatch && monthMatch ? 'flex' : 'none';
-      });
+    displayExpenses(filtered);
+}
+// FIXED: Income filtering function
+function filterIncome() {
+    const source = document.getElementById('filterIncomeSource').value;
+    const month = document.getElementById('filterIncomeMonth').value;
+    let filtered = allIncome;
+    
+    if (source) {
+        filtered = filtered.filter(income => {
+            // Handle source filtering
+            return income.source === source || 
+                   (income.source && income.source.includes(source));
+        });
     }
+    
+    if (month) {
+        filtered = filtered.filter(income => {
+            if (!income.date) return false;
+            
+            try {
+                const incomeDate = new Date(income.date);
+                if (isNaN(incomeDate.getTime())) return false;
+                
+                // Format date as YYYY-MM for comparison
+                const incomeMonth = incomeDate.getFullYear() + '-' + 
+                                   String(incomeDate.getMonth() + 1).padStart(2, '0');
+                return incomeMonth === month;
+            } catch (e) {
+                console.error('Date parsing error:', e, income);
+                return false;
+            }
+        });
+    }
+    
+    displayIncome(filtered);
+}
+
+// FIXED: Income filtering function
+function filterIncome() {
+    const source = document.getElementById('filterIncomeSource').value;
+    const month = document.getElementById('filterIncomeMonth').value;
+    let filtered = allIncome;
+    
+    if (source) {
+        filtered = filtered.filter(income => {
+            // Handle source filtering
+            return income.source === source || 
+                   (income.source && income.source.includes(source));
+        });
+    }
+    
+    if (month) {
+        filtered = filtered.filter(income => {
+            if (!income.date) return false;
+            
+            try {
+                const incomeDate = new Date(income.date);
+                if (isNaN(incomeDate.getTime())) return false;
+                
+                // Format date as YYYY-MM for comparison
+                const incomeMonth = incomeDate.getFullYear() + '-' + 
+                                   String(incomeDate.getMonth() + 1).padStart(2, '0');
+                return incomeMonth === month;
+            } catch (e) {
+                console.error('Date parsing error:', e, income);
+                return false;
+            }
+        });
+    }
+    
+    displayIncome(filtered);
+}
+
+
+// FIXED: Populate expense filters with unique values
+function populateExpenseFilters() {
+    const categorySelect = document.getElementById('filterExpenseCategory');
+    const monthSelect = document.getElementById('filterExpenseMonth');
+    
+    // Clear existing options except the first one
+    while (categorySelect.options.length > 1) {
+        categorySelect.remove(1);
+    }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
+    
+    // Get unique categories from allExpenses
+    const categories = [...new Set(allExpenses.map(exp => exp.category))].sort();
+    categories.forEach(category => {
+        if (category) {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = getCategoryDisplayName(category);
+            categorySelect.appendChild(option);
+        }
+    });
+    
+    // Get unique months from allExpenses
+    const months = [];
+    allExpenses.forEach(expense => {
+        if (expense.date) {
+            try {
+                const date = new Date(expense.date);
+                if (!isNaN(date.getTime())) {
+                    const monthStr = date.getFullYear() + '-' + 
+                                   String(date.getMonth() + 1).padStart(2, '0');
+                    const displayMonth = date.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    
+                    if (!months.some(m => m.value === monthStr)) {
+                        months.push({ value: monthStr, display: displayMonth });
+                    }
+                }
+            } catch (e) {
+                console.error('Error parsing date:', e);
+            }
+        }
+    });
+    
+    // Sort months chronologically
+    months.sort((a, b) => b.value.localeCompare(a.value));
+    
+    // Add month options
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month.value;
+        option.textContent = month.display;
+        monthSelect.appendChild(option);
+    });
+}
+
+// FIXED: Populate income filters with unique values
+function populateIncomeFilters() {
+    const sourceSelect = document.getElementById('filterIncomeSource');
+    const monthSelect = document.getElementById('filterIncomeMonth');
+    
+    // Clear existing options except the first one
+    while (sourceSelect.options.length > 1) {
+        sourceSelect.remove(1);
+    }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
+    
+    // Get unique sources from allIncome
+    const sources = [...new Set(allIncome.map(inc => inc.source))].sort();
+    sources.forEach(source => {
+        if (source) {
+            const option = document.createElement('option');
+            option.value = source;
+            option.textContent = source;
+            sourceSelect.appendChild(option);
+        }
+    });
+    
+    // Get unique months from allIncome
+    const months = [];
+    allIncome.forEach(income => {
+        if (income.date) {
+            try {
+                const date = new Date(income.date);
+                if (!isNaN(date.getTime())) {
+                    const monthStr = date.getFullYear() + '-' + 
+                                   String(date.getMonth() + 1).padStart(2, '0');
+                    const displayMonth = date.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    
+                    if (!months.some(m => m.value === monthStr)) {
+                        months.push({ value: monthStr, display: displayMonth });
+                    }
+                }
+            } catch (e) {
+                console.error('Error parsing date:', e);
+            }
+        }
+    });
+    
+    // Sort months chronologically
+    months.sort((a, b) => b.value.localeCompare(a.value));
+    
+    // Add month options
+    months.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month.value;
+        option.textContent = month.display;
+        monthSelect.appendChild(option);
+    });
+}
+
+
+
+
+
+
+
     
     function searchBudgets() {
       const searchTerm = document.getElementById('searchBudgets').value.toLowerCase();
