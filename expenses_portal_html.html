@@ -2914,17 +2914,20 @@
     min-height: 45px !important; /* Set minimum height */
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-/* Fix for income list item structure */
+/* Fix for income list item structure - MATCHES EXPENSE ITEM */
 .income-item {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
+    align-items: center !important;
     padding: 4px 6px !important;
     border-bottom: 1px solid var(--border) !important;
     transition: all 0.4s !important;
     border-radius: 4px !important;
     margin-bottom: 2px !important;
     background: var(--light) !important;
-    gap: 4px !important;
+    gap: 6px !important;
+    min-height: 40px !important;
+    position: relative;
 }
 
 /* Ensure income amount is aligned to the right */
@@ -4096,6 +4099,1190 @@ body.dark-mode .reminders-list .search-box input::placeholder {
     0% { left: -100%; }
     100% { left: 100%; }
 }
+
+
+
+
+
+
+/* ===== FIXED SHIMMER EFFECT FOR BLURRED BALANCES ===== */
+/* Remove the old shimmer effect */
+.balance-value.blurred::after {
+    display: none;
+}
+
+/* Alternative: Subtle pulsing effect instead of shimmer */
+.balance-value.blurred {
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-value.blurred::before {
+    content: '👁️ Tap to reveal';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+    background: linear-gradient(135deg, 
+        rgba(255, 152, 0, 0.1), 
+        rgba(245, 124, 0, 0.1));
+    border-radius: 4px;
+    z-index: 1;
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { 
+        opacity: 0.7;
+        background: linear-gradient(135deg, 
+            rgba(255, 152, 0, 0.1), 
+            rgba(245, 124, 0, 0.1));
+    }
+    50% { 
+        opacity: 1;
+        background: linear-gradient(135deg, 
+            rgba(255, 152, 0, 0.15), 
+            rgba(245, 124, 0, 0.15));
+    }
+}
+
+/* Remove any conflicting animations from parent elements */
+.stat-card .stat-value.hidden::after {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== FIXED SHIMMER EFFECT FOR BLURRED BALANCES ===== */
+/* Remove the old shimmer effect */
+.balance-value.blurred::after {
+    display: none;
+}
+
+/* Alternative: Subtle pulsing effect instead of shimmer */
+.balance-value.blurred {
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-value.blurred::before {
+    content: '👁️ Tap to reveal';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+    background: linear-gradient(135deg, 
+        rgba(255, 152, 0, 0.1), 
+        rgba(245, 124, 0, 0.1));
+    border-radius: 4px;
+    z-index: 1;
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+    0%, 100% { 
+        opacity: 0.7;
+        background: linear-gradient(135deg, 
+            rgba(255, 152, 0, 0.1), 
+            rgba(245, 124, 0, 0.1));
+    }
+    50% { 
+        opacity: 1;
+        background: linear-gradient(135deg, 
+            rgba(255, 152, 0, 0.15), 
+            rgba(245, 124, 0, 0.15));
+    }
+}
+
+/* Remove any conflicting animations from parent elements */
+.stat-card .stat-value.hidden::after {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ===== ENHANCED EXPENSE TIMEFRAME CARDS ===== */
+.stat-card.expense-card {
+    background: linear-gradient(135deg, #fff9f0 0%, #ffedd5 100%) !important;
+    border: 2px solid #ff9800 !important;
+    border-radius: 12px !important;
+    box-shadow: 
+        0 6px 20px rgba(255, 152, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Optional accent line at top */
+.stat-card.expense-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff9800, #ffb74d) !important;
+    opacity: 0.9;
+}
+
+.stat-card.expense-card:hover {
+    background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%) !important;
+    border-color: #f57c00 !important;
+    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow: 
+        0 12px 30px rgba(255, 152, 0, 0.25),
+        0 4px 12px rgba(255, 152, 0, 0.15) !important;
+}
+
+/* Card content styling for better readability */
+.stat-card.expense-card .stat-title {
+    color: #e65100 !important;
+    font-weight: 600 !important;
+}
+
+.stat-card.expense-card .stat-value {
+    color: #bf360c !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Dark mode adjustments - refined colors */
+body.dark-mode .stat-card.expense-card {
+    background: linear-gradient(135deg, #4a2308 0%, #7c2d12 100%) !important;
+    border: 2px solid #ffb74d !important;
+    box-shadow: 
+        0 6px 20px rgba(255, 183, 77, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode .stat-card.expense-card::before {
+    background: linear-gradient(90deg, #ffb74d, #ffcc80) !important;
+}
+
+body.dark-mode .stat-card.expense-card:hover {
+    background: linear-gradient(135deg, #7c2d12 0%, #9a3412 100%) !important;
+    border-color: #ff9800 !important;
+    box-shadow: 
+        0 15px 35px rgba(255, 183, 77, 0.25),
+        0 5px 15px rgba(255, 183, 77, 0.15) !important;
+}
+
+/* Dark mode text colors */
+body.dark-mode .stat-card.expense-card .stat-title {
+    color: #ffb74d !important;
+    opacity: 0.9;
+}
+
+body.dark-mode .stat-card.expense-card .stat-value {
+    color: #ffcc80 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Focus state for accessibility */
+.stat-card.expense-card:focus-within {
+    outline: 3px solid rgba(255, 152, 0, 0.4) !important;
+    outline-offset: 2px !important;
+}
+
+/* Optional: Add a subtle shine effect on hover */
+.stat-card.expense-card:hover::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+    ) !important;
+    transform: rotate(30deg);
+    animation: shine 1.5s ease-out;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+}
+
+
+
+
+
+
+
+
+/* ===== ULTRA-PREMIUM STAT CARD ANIMATIONS ===== */
+.main-stats-grid .stat-card {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(255, 255, 255, 0.03) 50%, 
+        var(--card-bg) 100%
+    );
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transform: translateY(0);
+    backdrop-filter: blur(10px);
+}
+
+/* Premium gradient accents - subtle but elegant */
+#totalIncomeCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(72, 187, 120, 0.04) 100%
+    );
+    border-left: 4px solid #48bb78;
+}
+
+#totalExpenseCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(245, 101, 101, 0.04) 100%
+    );
+    border-left: 4px solid #f56565;
+}
+
+#availableBalanceCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.04) 100%
+    );
+    border-left: 4px solid #4299e1;
+}
+
+#monthlyBudgetCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(159, 122, 234, 0.04) 100%
+    );
+    border-left: 4px solid #9f7aea;
+}
+
+#savingsGoalCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(56, 178, 172, 0.04) 100%
+    );
+    border-left: 4px solid #38b2ac;
+}
+
+/* Premium hover effect - instant with subtle depth */
+.main-stats-grid .stat-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1);
+}
+
+/* Subtle glow effect on hover */
+.main-stats-grid .stat-card:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* Premium reveal animation - smooth and elegant */
+.main-stats-grid .stat-card.revealed {
+    animation: premiumReveal 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes premiumReveal {
+    0% {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.02);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Premium press effect */
+.main-stats-grid .stat-card:active {
+    transform: scale(0.99) translateY(1px);
+    transition: transform 0.08s cubic-bezier(0.32, 0.94, 0.6, 1);
+}
+
+/* Premium value reveal */
+.main-stats-grid .stat-value.revealed {
+    animation: valueRevealPremium 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes valueRevealPremium {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+        filter: blur(2px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Premium hidden state */
+.main-stats-grid .stat-value.hidden {
+    color: transparent;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+    position: relative;
+    background: none;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+}
+
+.main-stats-grid .stat-value.hidden::after {
+    content: 'Tap to reveal';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: rgba(255, 152, 0, 0.06);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 152, 0, 0.1);
+    opacity: 0.9;
+}
+
+/* Enhanced stat labels */
+.main-stats-grid .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.main-stats-grid .stat-card:hover .stat-label {
+    color: var(--primary);
+    transform: translateX(1px);
+}
+
+/* Premium stat values - clear and elegant */
+.main-stats-grid .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 10px 0;
+    font-family: 'SF Mono', 'Courier New', monospace;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+    transition: all 0.15s ease;
+}
+
+/* Premium color palette */
+#totalIncomeValue {
+    color: #2d7d46;
+}
+
+#totalExpenseValue {
+    color: #c62828;
+}
+
+#availableBalanceValue {
+    color: #1a56db;
+}
+
+#monthlyBudgetValue {
+    color: #7e3af2;
+}
+
+#savingsGoalValue {
+    color: #0e9f6e;
+}
+
+/* Enhanced stat change */
+.main-stats-grid .stat-change {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: all 0.15s ease;
+}
+
+.main-stats-grid .stat-card:hover .stat-change {
+    opacity: 1;
+    transform: translateX(1px);
+}
+
+/* Premium entrance animation */
+@keyframes premiumEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(20px) rotateX(-5deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+    }
+}
+
+.main-stats-grid .stat-card {
+    animation: premiumEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform-origin: center bottom;
+}
+
+/* Stagger with proper timing */
+.main-stats-grid .stat-card:nth-child(1) { animation-delay: 0.05s; }
+.main-stats-grid .stat-card:nth-child(2) { animation-delay: 0.1s; }
+.main-stats-grid .stat-card:nth-child(3) { animation-delay: 0.15s; }
+.main-stats-grid .stat-card:nth-child(4) { animation-delay: 0.2s; }
+.main-stats-grid .stat-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* Update animation */
+@keyframes valueUpdate {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.main-stats-grid .stat-value.updated {
+    animation: valueUpdate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== PREMIUM INCOME LIST - MATCHING EXPENSE STYLE ===== */
+.income-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.02) 100%
+    );
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.income-item:hover {
+    transform: translateX(2px);
+    background: linear-gradient(135deg, 
+        var(--light) 0%, 
+        rgba(66, 153, 225, 0.05) 100%
+    );
+    border-color: rgba(66, 153, 225, 0.2);
+    box-shadow: 0 3px 10px rgba(66, 153, 225, 0.1);
+}
+
+.income-item .item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.income-item strong {
+    color: var(--text-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    opacity: 0.9;
+}
+
+/* Premium income badges */
+.income-item .category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(66, 153, 225, 0.1);
+    color: #2c5282;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    border: 1px solid rgba(66, 153, 225, 0.15);
+    transition: all 0.15s ease;
+}
+
+.income-item .category-badge:hover {
+    background: rgba(66, 153, 225, 0.15);
+    transform: scale(1.03);
+}
+
+/* Premium amount display */
+.income-item .income-amount {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #2c5282;
+    min-width: 90px;
+    text-align: right;
+    font-family: 'SF Mono', 'Courier New', monospace;
+    padding-right: 8px;
+    transition: all 0.15s ease;
+}
+
+.income-item:hover .income-amount {
+    color: #1a56db;
+}
+
+/* Premium action buttons */
+.income-item .item-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.income-item .action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--light);
+    color: var(--gray);
+    border: 1px solid var(--border);
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1);
+}
+
+.income-item .action-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.income-item .action-btn.delete:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+    transform: scale(1.05);
+}
+
+/* Description text */
+.income-item .item-content div {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ===== DARK MODE PREMIUM ADJUSTMENTS ===== */
+body.dark-mode .main-stats-grid .stat-card {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(255, 255, 255, 0.02) 50%, 
+        var(--card-bg) 100%
+    );
+    backdrop-filter: blur(20px);
+}
+
+body.dark-mode #totalIncomeCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(72, 187, 120, 0.08) 100%
+    );
+}
+
+body.dark-mode #totalExpenseCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(245, 101, 101, 0.08) 100%
+    );
+}
+
+body.dark-mode #availableBalanceCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.08) 100%
+    );
+}
+
+body.dark-mode #monthlyBudgetCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(159, 122, 234, 0.08) 100%
+    );
+}
+
+body.dark-mode #savingsGoalCard {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(56, 178, 172, 0.08) 100%
+    );
+}
+
+body.dark-mode .main-stats-grid .stat-card:hover::before {
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .income-item {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.03) 100%
+    );
+}
+
+body.dark-mode .income-item:hover {
+    background: linear-gradient(135deg, 
+        var(--light) 0%, 
+        rgba(66, 153, 225, 0.08) 100%
+    );
+}
+
+body.dark-mode .income-item .category-badge {
+    background: rgba(66, 153, 225, 0.15);
+    color: #90cdf4;
+    border-color: rgba(66, 153, 225, 0.25);
+}
+
+body.dark-mode .income-item .income-amount {
+    color: #90caf9;
+}
+
+body.dark-mode .income-item:hover .income-amount {
+    color: #63b3ed;
+}
+
+/* Dark mode text colors */
+body.dark-mode #totalIncomeValue {
+    color: #81c784;
+}
+
+body.dark-mode #totalExpenseValue {
+    color: #ef9a9a;
+}
+
+body.dark-mode #availableBalanceValue {
+    color: #90caf9;
+}
+
+body.dark-mode #monthlyBudgetValue {
+    color: #b39ddb;
+}
+
+body.dark-mode #savingsGoalValue {
+    color: #80cbc4;
+}
+
+body.dark-mode .main-stats-grid .stat-value.hidden::after {
+    background: rgba(255, 183, 77, 0.1);
+    border-color: rgba(255, 183, 77, 0.2);
+    color: #ffb74d;
+}
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+@media (max-width: 768px) {
+    .main-stats-grid .stat-card {
+        padding: 16px;
+        backdrop-filter: blur(5px);
+    }
+    
+    .main-stats-grid .stat-value {
+        font-size: 1.3rem;
+    }
+    
+    .main-stats-grid .stat-card:hover {
+        transform: translateY(-2px) scale(1.005);
+    }
+    
+    .income-item {
+        padding: 8px 10px;
+    }
+    
+    .income-item .income-amount {
+        font-size: 0.85rem;
+        min-width: 80px;
+    }
+    
+    .income-item .action-btn {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .main-stats-grid .stat-card {
+        padding: 14px;
+    }
+    
+    .main-stats-grid .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .income-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .income-item .item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .income-item .income-amount {
+        width: 100%;
+        text-align: left;
+        min-width: auto;
+    }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+@media (prefers-reduced-motion: reduce) {
+    .main-stats-grid .stat-card,
+    .main-stats-grid .stat-value,
+    .income-item,
+    .income-item .action-btn {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .main-stats-grid .stat-card {
+        transform: none !important;
+        opacity: 1 !important;
+    }
+    
+    .income-item:hover {
+        transform: none !important;
+    }
+}
+
+/* ===== ADDITIONAL PREMIUM EFFECTS ===== */
+/* Subtlet shine on stat cards */
+.main-stats-grid .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent
+    );
+    border-radius: 12px 12px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.main-stats-grid .stat-card:hover::after {
+    opacity: 1;
+}
+
+/* Enhanced focus states for accessibility */
+.main-stats-grid .stat-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    transform: translateY(-2px);
+}
+
+.income-item:focus-within {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Loading shimmer effect for empty states */
+.stat-card.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Enhanced border animation on hover */
+.main-stats-grid .stat-card {
+    border-image: linear-gradient(
+        var(--border),
+        var(--border),
+        var(--border),
+        var(--border)
+    ) 1;
+    transition: border-image 0.3s ease;
+}
+
+.main-stats-grid .stat-card:hover {
+    border-image: linear-gradient(
+        var(--primary),
+        rgba(255, 152, 0, 0.3),
+        rgba(255, 152, 0, 0.1),
+        var(--primary)
+    ) 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== SUPER CLEAN INCOME STYLES ===== */
+.income-item {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+    border-left: 3px solid #4299E1 !important;
+    border-radius: 6px !important;
+    padding: 10px 12px !important;
+    margin-bottom: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.income-item:hover {
+    background: var(--light) !important;
+}
+
+.income-item .item-content {
+    flex: 1 !important;
+}
+
+.income-item .item-content strong {
+    color: var(--text-color) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    opacity: 0.7 !important;
+}
+
+.income-item .category-badge {
+    background: rgba(66, 153, 225, 0.1) !important;
+    color: #4299E1 !important;
+    padding: 3px 8px !important;
+    font-size: 0.8rem !important;
+    border-radius: 4px !important;
+    display: inline-block !important;
+    margin-right: 6px !important;
+}
+
+.income-item .income-amount {
+    font-weight: 600 !important;
+    color: #4299E1 !important;
+    min-width: 90px !important;
+    text-align: right !important;
+}
+
+.income-item .item-actions {
+    display: flex !important;
+    gap: 4px !important;
+}
+
+.income-item .action-btn {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 4px !important;
+    background: var(--light) !important;
+    color: var(--gray) !important;
+}
+
+/* Dark mode */
+body.dark-mode .income-item {
+    border-color: var(--border) !important;
+}
+
+body.dark-mode .income-item .category-badge {
+    background: rgba(66, 153, 225, 0.2) !important;
+    color: #90CDF4 !important;
+}
+
+body.dark-mode .income-item .income-amount {
+    color: #90CDF4 !important;
+}
+
+
+
+
+
+
+
+
+
+/* FIX FOR INCOME ITEMS TO MATCH EXPENSES */
+.income-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 4px 6px !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: all 0.4s !important;
+    border-radius: 4px !important;
+    margin-bottom: 2px !important;
+    background: var(--light) !important;
+    gap: 6px !important;
+    min-height: 40px !important;
+    position: relative !important;
+}
+
+.income-item .item-content {
+    flex: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+.income-item .income-amount {
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    font-family: 'SF Mono', 'Courier New', monospace !important;
+    background: var(--gradient-income) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    text-align: right !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+.income-item .item-actions {
+    display: flex !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+}
+
+.income-item .category-badge {
+    padding: 2px 5px !important;
+    font-size: 0.65rem !important;
+    margin-right: 4px !important;
+    margin-bottom: 0 !important;
+}
+
+.income-item strong {
+    font-size: 0.8rem !important;
+    display: block !important;
+    margin-top: 1px !important;
+}
+
+.income-item .item-content div {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+    margin-top: 1px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6758,11 +7945,170 @@ incomeListener = db.collection('income')
 	
 	
 
-// Helper function for category display names
-function getCategoryDisplayName(category) {
-    // Extract just the text part (remove emoji)
-    return category.replace(/^[^a-zA-Z0-9]+/, '').trim();
+// Add this function to map category names to their display versions with emojis
+function getCategoryDisplayName(categoryValue) {
+    const categoryMap = {
+        'Yaka': '💡 Yaka (Electricity)',
+        'Water': '🚰 Water Bill',
+        'Groceries': '🛒 Groceries',
+        'Food': '🍲 Food & Dining',
+        'Fuel': '⛽ Fuel',
+        'Transport': '🚗 Transport',
+        'Internet': '🌐 Internet',
+        'Airtime': '📱 Airtime',
+        'Rent': '🏠 Rent',
+        'Laundry': '👕 Laundry',
+        'Clothing': '👚 Clothing',
+        'School Fees': '🎓 School Fees',
+        'Medical': '🏥 Medical',
+        'Savings': '💰 Savings',
+        'Debt': '💳 Debt Repayment',
+        'Giving': '🎁 Giving/Donations',
+        'Entertainment': '🎬 Entertainment',
+        'General': '📦 General',
+        'Mortgage': '🏠 Mortgage',
+        'Insurance': '🛡️ Insurance',
+        'Taxes': '💰 Taxes',
+        'Home Maintenance': '🔨 Home Maintenance',
+        'Car Payment': '🚗 Car Payment',
+        'Car Repair': '🚗🛠️ Car Repair',
+        'Health Insurance': '🏥 Health Insurance',
+        'Gym Membership': '💪 Gym Membership',
+        'Streaming Services': '📺 Streaming Services',
+        'Mobile Data': '📱 Mobile Data',
+        'Household Supplies': '🧹 Household Supplies',
+        'Personal Care': '💅 Personal Care',
+        'Childcare': '👶 Childcare',
+        'Education': '🎓 Education',
+        'Gifts': '🎁 Gifts',
+        'Donations': '❤️ Donations',
+        'Travel': '✈️ Travel',
+        'Vacation': '🏖️ Vacation',
+        'Hobbies': '🎨 Hobbies',
+        'Subscriptions': '📱 Subscriptions',
+        'Bank Fees': '🏦 Bank Fees',
+        'Business Expenses': '💼 Business Expenses',
+        'Office Supplies': '📎 Office Supplies',
+        'Pet Care': '🐾 Pet Care',
+        'Electronics': '💻 Electronics',
+        'Software': '🖥️ Software',
+        'Books': '📚 Books',
+        'Alcohol': '🍷 Alcohol',
+        'Fast Food': '🍔 Fast Food',
+        'Coffee': '☕ Coffee',
+        'Restaurants': '🍽️ Restaurants',
+        'Parking': '🅿️ Parking',
+        'Public Transport': '🚌 Public Transport',
+        'Taxi': '🚕 Taxi',
+        'Hotel': '🏨 Hotel',
+        'Sports': '⚽ Sports',
+        'Fitness': '💪 Fitness',
+        'Music': '🎵 Music',
+        'Movies': '🎬 Movies',
+        'Concerts': '🎤 Concerts',
+        'Museums': '🏛️ Museums',
+        'Amusement Parks': '🎢 Amusement Parks',
+        'Events': '🎪 Events',
+        'Parties': '🎉 Parties',
+        'Wedding': '💒 Wedding',
+        'Medical Bills': '🏥 Medical Bills',
+        'Dental': '🦷 Dental',
+        'Vision': '👁️ Vision',
+        'Pharmacy': '💊 Pharmacy',
+        'Therapy': '🧠 Therapy',
+        'Massage': '💆 Massage',
+        'Spa': '🌿 Spa',
+        'Salon': '💇 Salon',
+        'Barber': '✂️ Barber',
+        'Cosmetics': '💄 Cosmetics',
+        'Skincare': '🧴 Skincare',
+        'Haircare': '💇 Haircare',
+        'Fragrances': '🌸 Fragrances',
+        'Utilities': '⚡ Utilities',
+        'Allowances': '💰 Allowances',
+        'Azzaro': '🖧 Azzaro Expenses',
+        'Other': '📦 Other'
+    };
+    
+    return categoryMap[categoryValue] || categoryValue;
 }
+
+// Add this function for income sources too
+function getSourceDisplayName(sourceValue) {
+    const sourceMap = {
+        'Salary': '💼 Salary',
+        'Freelance': '💻 Freelance/Side-Hustle',
+        'Investment': '📈 Investment/Dividends',
+        'Business': '🏢 Business',
+        'Gift': '🎁 Gift',
+        'Rental Income': '🏠 Rental Income',
+        'Bonus': '💰 Bonus',
+        'Commission': '📊 Commission',
+        'Allowances': '🤑 Allowances',
+        'Dividends': '📈 Dividends',
+        'Interest': '💰 Interest Income',
+        'Royalties': '📚 Royalties',
+        'Pension': '👴 Pension',
+        'Social Security': '🏛️ Social Security',
+        'Child Support': '👶 Child Support',
+        'Alimony': '💔 Alimony',
+        'Scholarship': '🎓 Scholarship',
+        'Grant': '🏫 Grant',
+        'Rebate': '🔄 Rebate',
+        'Refund': '💸 Refund',
+        'Lottery': '🎰 Lottery/Winnings',
+        'Inheritance': '📜 Inheritance',
+        'Sale': '🏷️ Sale of Items',
+        'Other': '📦 Other'
+    };
+    
+    return sourceMap[sourceValue] || sourceValue;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Helper function to get category class
 function getCategoryClass(category) {
