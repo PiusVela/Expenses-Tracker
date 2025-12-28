@@ -1674,6 +1674,251 @@
     .category-gift { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
     .category-other { background: var(--gray); color: white; }
 
+
+/* ===== UPDATED EXPENSE ITEM LAYOUT ===== */
+.expense-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important; /* Reduced from 2px */
+  background: var(--light);
+  gap: 6px !important; /* Reduced from gap */
+  min-height: 40px !important;
+  position: relative;
+}
+
+/* Content takes available space */
+.expense-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0; /* Allows text truncation */
+}
+
+/* Amount on the right */
+.expense-item .expense-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Buttons next to amount */
+.expense-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* Compact action buttons */
+.expense-item .action-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+  font-size: 0.8rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make category badges more compact */
+.expense-item .category-badge {
+  padding: 2px 5px !important;
+  font-size: 0.65rem !important;
+  margin-right: 4px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Compact date display */
+.expense-item strong {
+  font-size: 0.8rem !important;
+  display: block;
+  margin-top: 1px !important;
+}
+
+/* Compact description */
+.expense-item .item-content div {
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+  margin-top: 1px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== INCOME ITEM LAYOUT (for consistency) ===== */
+.income-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important;
+  background: var(--light);
+  gap: 6px !important;
+  min-height: 40px !important;
+}
+
+.income-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.income-item .income-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-income);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.income-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* ===== REMINDER ITEM LAYOUT (for consistency) ===== */
+.reminder-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important;
+  background: var(--light);
+  gap: 6px !important;
+  min-height: 40px !important;
+}
+
+.reminder-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.reminder-item .reminder-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.reminder-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .expense-item,
+  .income-item,
+  .reminder-item {
+    padding: 3px 5px !important;
+    margin-bottom: 1px !important;
+    gap: 4px !important;
+    min-height: 36px !important;
+  }
+  
+  .expense-item .expense-amount,
+  .income-item .income-amount,
+  .reminder-item .reminder-amount {
+    font-size: 0.85rem !important;
+  }
+  
+  .expense-item .action-btn,
+  .income-item .action-btn,
+  .reminder-item .action-btn {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .expense-item .category-badge {
+    padding: 1px 4px !important;
+    font-size: 0.6rem !important;
+  }
+  
+  .expense-item strong {
+    font-size: 0.75rem !important;
+  }
+  
+  .expense-item .item-content div {
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stack on very small screens */
+  .expense-item,
+  .income-item,
+  .reminder-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 4px !important;
+    gap: 3px !important;
+  }
+  
+  .expense-item .expense-amount,
+  .income-item .income-amount,
+  .reminder-item .reminder-amount {
+    width: 100%;
+    text-align: left !important;
+    order: 2;
+  }
+  
+  .expense-item .item-actions,
+  .income-item .item-actions,
+  .reminder-item .item-actions {
+    width: 100%;
+    justify-content: flex-end !important;
+    order: 3;
+  }
+}
+
+
+
+
+
     /* Progress Bar for Budget */
     .budget-progress {
       height: 8px;
@@ -3628,7 +3873,167 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 .source-inheritance { background: linear-gradient(135deg, #cd9cf2, #f6f3ff); color: var(--dark); }
 .source-sale { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
 .source-other { background: var(--gray); color: white; }
-	
+
+
+/* Income source badges */
+.source-salary { background: linear-gradient(135deg, #ffcc80, #ffb74d); color: var(--dark); }
+.source-freelance { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
+/* ... all other source styles ... */
+.source-other { background: var(--gray); color: white; }
+
+/* ADD THIS NEW CSS RIGHT HERE: */
+/* Ensure income source badges are properly styled */
+.income-item .category-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 3px 6px !important;
+    border-radius: 12px !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    margin-right: 4px !important;
+    margin-bottom: 2px !important;
+    transition: all 0.3s !important;
+}
+
+/* Ensure emojis are visible in income badges */
+.income-item .category-badge i {
+    font-size: 0.7rem !important;
+    margin-right: 2px !important;
+}
+
+/* Make sure the text content (including emojis) is visible */
+.income-item .category-badge {
+    color: inherit !important;
+}
+
+/* ===== LOCK INCOME LIST STYLING - PREVENT CHANGES ===== */
+.income-item {
+  display: flex !important;
+  flex-direction: row !important;
+  padding: 8px 12px !important;
+  margin-bottom: 4px !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--light) !important;
+  gap: 16px !important;
+  transition: none !important; /* No transitions */
+  animation: none !important; /* No animations */
+  min-height: 56px !important;
+  position: relative !important;
+  align-items: center !important;
+}
+
+/* Lock the item content - now takes available space */
+.income-item .item-content {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  gap: 5px !important;
+  justify-content: center !important;
+  min-height: 48px !important;
+}
+
+/* Lock the category badge styling - more comfortable */
+.income-item .category-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 3px 8px !important;
+  border-radius: 12px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  margin-right: 6px !important;
+  margin-bottom: 0px !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  height: 22px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Lock the amount display - REDUCED FONT SIZE */
+.income-item .income-amount {
+  font-weight: 700 !important;
+  font-size: 0.95rem !important; /* Reduced from 1.1rem */
+  font-family: 'SF Mono', 'Courier New', monospace !important;
+  background: var(--gradient-income) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-align: right !important;
+  margin: 0 !important;
+  order: 2 !important;
+  width: auto !important;
+  padding: 0 16px !important;
+  min-width: 95px !important; /* Slightly reduced from 100px */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  letter-spacing: 0.3px !important; /* Reduced from 0.5px */
+}
+
+/* Lock action buttons - now inline with amount */
+.income-item .item-actions {
+  display: flex !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  margin: 0 !important;
+  order: 3 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Style the action buttons themselves for better spacing */
+.income-item .item-actions button {
+  margin-bottom: 0 !important;
+  padding: 5px 8px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.85rem !important; /* Added font size for buttons */
+}
+
+/* Prevent any hover effects from changing layout */
+.income-item:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: var(--light) !important;
+}
+
+/* Lock the date styling - more readable */
+.income-item strong {
+  font-size: 0.85rem !important;
+  display: block !important;
+  margin: 0 !important;
+  color: var(--text-color) !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+}
+
+/* Lock notes styling - more readable */
+.income-item .item-content div:nth-child(2) {
+  font-size: 0.8rem !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  padding-right: 8px !important;
+}
+
+/* Ensure proper vertical spacing for all content */
+.income-item > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+
 	
   </style>
   
@@ -4571,6 +4976,9 @@ body.dark-mode .reminders-list .search-box input::placeholder {
       </div>
     </div>
   </div>
+  
+  
+  
 
   <script>
     // ===== JAVASCRIPT =====
@@ -4710,8 +5118,8 @@ function populateIncomeFilters() {
 }
 
 
-
-	function displayIncome(incomeArray) {
+// ===== INCOME LIST FUNCTIONS - FIXED FOR EMOJIS =====
+function displayIncome(incomeArray) {
   const incomeListContainer = document.getElementById('incomeList');
   if (!incomeListContainer) return;
   
@@ -4722,7 +5130,7 @@ function populateIncomeFilters() {
   
   let html = '';
   incomeArray.forEach(income => {
-    const displaySource = getSourceDisplayName(income.source);
+    const displaySource = getSourceDisplayNameWithEmoji(income.source); // Use emoji version
     const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
     const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
       year: 'numeric', 
@@ -4730,12 +5138,15 @@ function populateIncomeFilters() {
       day: 'numeric' 
     });
     
+    // Use emoji from displaySource for badge
+    const sourceEmoji = getSourceEmoji(income.source);
+    
     html += `
       <div class="income-item" data-id="${income.id}">
         <div class="item-content">
           <div>
-            <span class="category-badge source-${income.source.toLowerCase().replace(/\s+/g, '-')}">
-              <i class="fas fa-money-bill-wave"></i> ${displaySource}
+            <span class="category-badge ${getSourceClass(income.source)}">
+              ${sourceEmoji} ${income.source}
             </span>
             <strong>${formattedDate}</strong>
           </div>
@@ -4756,10 +5167,202 @@ function populateIncomeFilters() {
   
   incomeListContainer.innerHTML = html;
 }
-	
-	
-	
-	
+
+// Helper function to get source display name with emoji
+function getSourceDisplayNameWithEmoji(source) {
+  const sourceMap = {
+    'Salary': '💼 Salary',
+    'Freelance': '💻 Freelance',
+    'Investment': '📈 Investment',
+    'Business': '🏢 Business',
+    'Gift': '🎁 Gift',
+    'Rental Income': '🏠 Rental Income',
+    'Bonus': '💰 Bonus',
+    'Commission': '📊 Commission',
+    'Allowances': '🤑 Allowances',
+    'Dividends': '📈 Dividends',
+    'Interest': '💰 Interest',
+    'Royalties': '📚 Royalties',
+    'Pension': '👴 Pension',
+    'Social Security': '🏛️ Social Security',
+    'Child Support': '👶 Child Support',
+    'Alimony': '💔 Alimony',
+    'Scholarship': '🎓 Scholarship',
+    'Grant': '🏫 Grant',
+    'Rebate': '🔄 Rebate',
+    'Refund': '💸 Refund',
+    'Lottery': '🎰 Lottery',
+    'Inheritance': '📜 Inheritance',
+    'Sale': '🏷️ Sale',
+    'Other': '📦 Other'
+  };
+  
+  return sourceMap[source] || source;
+}
+
+// Helper function to get just the emoji
+function getSourceEmoji(source) {
+  const emojiMap = {
+    'Salary': '💼',
+    'Freelance': '💻',
+    'Investment': '📈',
+    'Business': '🏢',
+    'Gift': '🎁',
+    'Rental Income': '🏠',
+    'Bonus': '💰',
+    'Commission': '📊',
+    'Allowances': '🤑',
+    'Dividends': '📈',
+    'Interest': '💰',
+    'Royalties': '📚',
+    'Pension': '👴',
+    'Social Security': '🏛️',
+    'Child Support': '👶',
+    'Alimony': '💔',
+    'Scholarship': '🎓',
+    'Grant': '🏫',
+    'Rebate': '🔄',
+    'Refund': '💸',
+    'Lottery': '🎰',
+    'Inheritance': '📜',
+    'Sale': '🏷️',
+    'Other': '📦'
+  };
+  
+  return emojiMap[source] || '💰';
+}
+
+
+// ===== INCOME SOURCE HELPER FUNCTIONS =====
+
+// Helper function to get source CSS class
+function getSourceClass(source) {
+    const sourceMap = {
+        'Salary': 'source-salary',
+        'Freelance': 'source-freelance',
+        'Investment': 'source-investment',
+        'Business': 'source-business',
+        'Gift': 'source-gift',
+        'Rental Income': 'source-rental-income',
+        'Bonus': 'source-bonus',
+        'Commission': 'source-commission',
+        'Allowances': 'source-allowances',
+        'Dividends': 'source-dividends',
+        'Interest': 'source-interest',
+        'Royalties': 'source-royalties',
+        'Pension': 'source-pension',
+        'Social Security': 'source-social-security',
+        'Child Support': 'source-child-support',
+        'Alimony': 'source-alimony',
+        'Scholarship': 'source-scholarship',
+        'Grant': 'source-grant',
+        'Rebate': 'source-rebate',
+        'Refund': 'source-refund',
+        'Lottery': 'source-lottery',
+        'Inheritance': 'source-inheritance',
+        'Sale': 'source-sale',
+        'Other': 'source-other'
+    };
+    
+    return sourceMap[source] || 'source-other';
+}
+
+// Helper function for source icon
+function getSourceIcon(source) {
+    const iconMap = {
+        'Salary': 'fas fa-money-check-alt',
+        'Freelance': 'fas fa-laptop-code',
+        'Investment': 'fas fa-chart-line',
+        'Business': 'fas fa-briefcase',
+        'Gift': 'fas fa-gift',
+        'Rental Income': 'fas fa-home',
+        'Bonus': 'fas fa-star',
+        'Commission': 'fas fa-handshake',
+        'Allowances': 'fas fa-hand-holding-usd',
+        'Dividends': 'fas fa-coins',
+        'Interest': 'fas fa-percentage',
+        'Royalties': 'fas fa-copyright',
+        'Pension': 'fas fa-umbrella-beach',
+        'Social Security': 'fas fa-shield-alt',
+        'Child Support': 'fas fa-child',
+        'Alimony': 'fas fa-heart-broken',
+        'Scholarship': 'fas fa-graduation-cap',
+        'Grant': 'fas fa-award',
+        'Rebate': 'fas fa-undo',
+        'Refund': 'fas fa-reply',
+        'Lottery': 'fas fa-dice',
+        'Inheritance': 'fas fa-landmark',
+        'Sale': 'fas fa-tag',
+        'Other': 'fas fa-money-bill-wave'
+    };
+    
+    return iconMap[source] || 'fas fa-money-bill-wave';
+}
+
+// Helper function to get source display name with emoji
+function getSourceDisplayName(source) {
+    const sourceMap = {
+        'Salary': '💼 Salary',
+        'Freelance': '💻 Freelance/Side-Hustle',
+        'Investment': '📈 Investment/Dividends',
+        'Business': '🏢 Business',
+        'Gift': '🎁 Gift',
+        'Rental Income': '🏠 Rental Income',
+        'Bonus': '💰 Bonus',
+        'Commission': '📊 Commission',
+        'Allowances': '🤑 Allowances',
+        'Dividends': '📈 Dividends',
+        'Interest': '💰 Interest Income',
+        'Royalties': '📚 Royalties',
+        'Pension': '👴 Pension',
+        'Social Security': '🏛️ Social Security',
+        'Child Support': '👶 Child Support',
+        'Alimony': '💔 Alimony',
+        'Scholarship': '🎓 Scholarship',
+        'Grant': '🏫 Grant',
+        'Rebate': '🔄 Rebate',
+        'Refund': '💸 Refund',
+        'Lottery': '🎰 Lottery/Winnings',
+        'Inheritance': '📜 Inheritance',
+        'Sale': '🏷️ Sale of Items',
+        'Other': '📦 Other'
+    };
+    
+    return sourceMap[source] || source;
+}
+
+// Reverse mapping: display name to value
+function getSourceValue(displayName) {
+    const reverseMap = {
+        '💼 Salary': 'Salary',
+        '💻 Freelance/Side-Hustle': 'Freelance',
+        '📈 Investment/Dividends': 'Investment',
+        '🏢 Business': 'Business',
+        '🎁 Gift': 'Gift',
+        '🏠 Rental Income': 'Rental Income',
+        '💰 Bonus': 'Bonus',
+        '📊 Commission': 'Commission',
+        '🤑 Allowances': 'Allowances',
+        '📈 Dividends': 'Dividends',
+        '💰 Interest Income': 'Interest',
+        '📚 Royalties': 'Royalties',
+        '👴 Pension': 'Pension',
+        '🏛️ Social Security': 'Social Security',
+        '👶 Child Support': 'Child Support',
+        '💔 Alimony': 'Alimony',
+        '🎓 Scholarship': 'Scholarship',
+        '🏫 Grant': 'Grant',
+        '🔄 Rebate': 'Rebate',
+        '💸 Refund': 'Refund',
+        '🎰 Lottery/Winnings': 'Lottery',
+        '📜 Inheritance': 'Inheritance',
+        '🏷️ Sale of Items': 'Sale',
+        '📦 Other': 'Other'
+    };
+    
+    return reverseMap[displayName] || displayName;
+}
+
 	
     // ===== UPDATED FIREBASE & AUTH FUNCTIONS =====
 
@@ -5581,37 +6184,41 @@ function setupNetworkMonitor() {
           updateStatus('offline', 'Sync error');
         });
 
-      // FIXED: Income real-time listener - preserve original date  
-      incomeListener = db.collection('income')
-        .where('userId', '==', currentUser.uid)
-        .onSnapshot((snapshot) => {
-          allIncome = [];
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            // FIXED: Don't overwrite the date if it already exists as a string
-            // Only convert if it's a Firestore timestamp
-            if (data.date) {
-              if (data.date.toDate) {
-                data.date = data.date.toDate().toISOString().split('T')[0];
-              }
-              // If it's already a string, leave it as is
-            }
-            allIncome.push({ id: doc.id, ...data });
-          });
-          console.log('Income updated:', allIncome.length, 'items');
-          updateDashboardFromRealtimeData();
-          // ✅ Use the new updateIncomeList function instead of loadIncomeList
-          displayIncome(allIncome);
-          populateIncomeFilters(); // Also populate the filter dropdowns
-          
-          if (currentReportPeriod.income) {
-            generateReport(currentReportPeriod.income, 'income', document.querySelector(`#incomeReportControls button.active`));
-          }
-        }, (error) => {
-          console.error('Income listener error:', error);
-          showError('Failed to sync income: ' + error.message);
-          updateStatus('offline', 'Sync error');
-        });
+      // FIXED: Income real-time listener - preserve original date
+	let lastIncomeUpdate = null;
+incomeListener = db.collection('income')
+  .where('userId', '==', currentUser.uid)
+  .onSnapshot((snapshot) => {
+    const newIncome = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.date && data.date.toDate) {
+        data.date = data.date.toDate().toISOString().split('T')[0];
+      }
+      newIncome.push({ id: doc.id, ...data });
+    });
+    
+    // Only update if data actually changed (not just timestamp)
+    const incomeChanged = JSON.stringify(newIncome) !== JSON.stringify(allIncome);
+    
+    if (incomeChanged) {
+      console.log('Income updated:', newIncome.length, 'items');
+      allIncome = newIncome;
+      updateDashboardFromRealtimeData();
+      
+      // Use the fixed display function
+      displayIncome(allIncome);
+      populateIncomeFilters();
+      
+      if (currentReportPeriod.income) {
+        generateReport(currentReportPeriod.income, 'income', document.querySelector('#incomeReportControls button.active'));
+      }
+    }
+  }, (error) => {
+    console.error('Income listener error:', error);
+    showError('Failed to sync income: ' + error.message);
+    updateStatus('offline', 'Sync error');
+  });
 
       // Setup real-time listener for budgets
       budgetsListener = db.collection('budgets')
@@ -7153,221 +7760,6 @@ function searchIncome() {
     
     // Display filtered results
     displayIncome(filtered);
-}
-
-function displayIncome(incomeArray) {
-  const incomeListContainer = document.getElementById('incomeList');
-  if (!incomeListContainer) return;
-  
-  if (incomeArray.length === 0) {
-    incomeListContainer.innerHTML = '<div class="empty-state">No income records found</div>';
-    return;
-  }
-  
-  let html = '';
-  incomeArray.forEach(income => {
-    const displaySource = getSourceDisplayName(income.source);
-    const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
-    const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-    
-    html += `
-      <div class="income-item" data-id="${income.id}">
-        <div class="item-content">
-          <div>
-            <span class="category-badge source-${income.source.toLowerCase().replace(/\s+/g, '-')}">
-              <i class="fas fa-money-bill-wave"></i> ${displaySource}
-            </span>
-            <strong>${formattedDate}</strong>
-          </div>
-          <div>${income.notes || ''}</div>
-        </div>
-        <div class="income-amount">UGX ${formattedAmount}</div>
-        <div class="item-actions">
-          <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    `;
-  });
-  
-  incomeListContainer.innerHTML = html;
-}
-
-
-// Helper function to get source badge class
-function getSourceBadgeClass(source) {
-    const sourceMap = {
-        'Salary': 'source-salary',
-        'Freelance': 'source-freelance',
-        'Investment': 'source-investment',
-        'Business': 'source-business',
-        'Gift': 'source-gift',
-        'Rental Income': 'source-rental-income',
-        'Bonus': 'source-bonus',
-        'Commission': 'source-commission',
-        'Allowances': 'source-allowances',
-        'Dividends': 'source-dividends',
-        'Interest': 'source-interest',
-        'Royalties': 'source-royalties',
-        'Pension': 'source-pension',
-        'Social Security': 'source-social-security',
-        'Child Support': 'source-child-support',
-        'Alimony': 'source-alimony',
-        'Scholarship': 'source-scholarship',
-        'Grant': 'source-grant',
-        'Rebate': 'source-rebate',
-        'Refund': 'source-refund',
-        'Lottery': 'source-lottery',
-        'Inheritance': 'source-inheritance',
-        'Sale': 'source-sale'
-    };
-    return sourceMap[source] || 'source-other';
-}
-
-// Helper function to get source icon
-function getSourceIcon(source) {
-    const iconMap = {
-        'Salary': 'money-check',
-        'Freelance': 'laptop-code',
-        'Investment': 'chart-line',
-        'Business': 'briefcase',
-        'Gift': 'gift',
-        'Rental Income': 'home',
-        'Bonus': 'money-bill-wave',
-        'Commission': 'percentage',
-        'Allowances': 'hand-holding-usd',
-        'Dividends': 'chart-pie',
-        'Interest': 'percentage',
-        'Royalties': 'book',
-        'Pension': 'user-tie',
-        'Social Security': 'university',
-        'Child Support': 'child',
-        'Alimony': 'heart-broken',
-        'Scholarship': 'graduation-cap',
-        'Grant': 'handshake',
-        'Rebate': 'reply',
-        'Refund': 'undo',
-        'Lottery': 'dice',
-        'Inheritance': 'scroll',
-        'Sale': 'tag'
-    };
-    return iconMap[source] || 'money-bill';
-}
-
-// Helper function to format currency
-function formatCurrency(amount) {
-    return amount.toLocaleString();
-}
-
-// Helper function to format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-
-// Helper function for income source display names
-function getSourceDisplayName(source) {
-    const sourceNames = {
-        'Salary': '💼 Salary',
-        'Freelance': '💻 Freelance',
-        'Investment': '📈 Investment',
-        'Business': '🏢 Business',
-        'Gift': '🎁 Gift',
-        'Rental Income': '🏠 Rental',
-        'Bonus': '💰 Bonus',
-        'Commission': '📊 Commission',
-        'Allowances': '🤑 Allowances',
-        'Dividends': '📈 Dividends',
-        'Interest': '💰 Interest',
-        'Royalties': '📚 Royalties',
-        'Pension': '👴 Pension',
-        'Social Security': '🏛️ Social Security',
-        'Child Support': '👶 Child Support',
-        'Alimony': '💔 Alimony',
-        'Scholarship': '🎓 Scholarship',
-        'Grant': '🏫 Grant',
-        'Rebate': '🔄 Rebate',
-        'Refund': '💸 Refund',
-        'Lottery': '🎰 Lottery',
-        'Inheritance': '📜 Inheritance',
-        'Sale': '🏷️ Sale',
-        'Other': '📦 Other'
-    };
-    
-    return sourceNames[source] || source;
-}
-
-// Helper function for income source CSS class
-function getSourceClass(source) {
-    const sourceMap = {
-        'Salary': 'source-salary',
-        'Freelance': 'source-freelance',
-        'Investment': 'source-investment',
-        'Business': 'source-business',
-        'Gift': 'source-gift',
-        'Rental Income': 'source-rental-income',
-        'Bonus': 'source-bonus',
-        'Commission': 'source-commission',
-        'Allowances': 'source-allowances',
-        'Dividends': 'source-dividends',
-        'Interest': 'source-interest',
-        'Royalties': 'source-royalties',
-        'Pension': 'source-pension',
-        'Social Security': 'source-social-security',
-        'Child Support': 'source-child-support',
-        'Alimony': 'source-alimony',
-        'Scholarship': 'source-scholarship',
-        'Grant': 'source-grant',
-        'Rebate': 'source-rebate',
-        'Refund': 'source-refund',
-        'Lottery': 'source-lottery',
-        'Inheritance': 'source-inheritance',
-        'Sale': 'source-sale',
-        'Other': 'source-other'
-    };
-    
-    return sourceMap[source] || 'source-other';
-}
-
-// Helper function for income source icon
-function getSourceIcon(source) {
-    const iconMap = {
-        'Salary': 'fas fa-money-check-alt',
-        'Freelance': 'fas fa-laptop-code',
-        'Investment': 'fas fa-chart-line',
-        'Business': 'fas fa-building',
-        'Gift': 'fas fa-gift',
-        'Rental Income': 'fas fa-home',
-        'Bonus': 'fas fa-star',
-        'Commission': 'fas fa-percentage',
-        'Allowances': 'fas fa-wallet',
-        'Dividends': 'fas fa-chart-pie',
-        'Interest': 'fas fa-coins',
-        'Royalties': 'fas fa-book',
-        'Pension': 'fas fa-user-tie',
-        'Social Security': 'fas fa-landmark',
-        'Child Support': 'fas fa-child',
-        'Alimony': 'fas fa-heart-broken',
-        'Scholarship': 'fas fa-graduation-cap',
-        'Grant': 'fas fa-award',
-        'Rebate': 'fas fa-redo',
-        'Refund': 'fas fa-undo',
-        'Lottery': 'fas fa-dice',
-        'Inheritance': 'fas fa-scroll',
-        'Sale': 'fas fa-tag',
-        'Other': 'fas fa-ellipsis-h'
-    };
-    
-    return iconMap[source] || 'fas fa-money-bill-wave';
 }
 
 
