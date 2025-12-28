@@ -3628,236 +3628,486 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 .source-inheritance { background: linear-gradient(135deg, #cd9cf2, #f6f3ff); color: var(--dark); }
 .source-sale { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
 .source-other { background: var(--gray); color: white; }
-
-
-/* Income source badges */
-.source-salary { background: linear-gradient(135deg, #ffcc80, #ffb74d); color: var(--dark); }
-.source-freelance { background: linear-gradient(135deg, #a8edea, #fed6e3); color: var(--dark); }
-/* ... all other source styles ... */
-.source-other { background: var(--gray); color: white; }
-
-/* ADD THIS NEW CSS RIGHT HERE: */
-/* Ensure income source badges are properly styled */
-.income-item .category-badge {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    padding: 3px 6px !important;
-    border-radius: 12px !important;
-    font-size: 0.7rem !important;
-    font-weight: 600 !important;
-    margin-right: 4px !important;
-    margin-bottom: 2px !important;
-    transition: all 0.3s !important;
-}
-
-/* Ensure emojis are visible in income badges */
-.income-item .category-badge i {
-    font-size: 0.7rem !important;
-    margin-right: 2px !important;
-}
-
-/* Make sure the text content (including emojis) is visible */
-.income-item .category-badge {
-    color: inherit !important;
-}
-
-/* ===== LOCK INCOME LIST STYLING - PREVENT CHANGES ===== */
+/* Fix for income item structure - make it match expense items */
 .income-item {
   display: flex !important;
   flex-direction: row !important;
-  padding: 8px 12px !important;
-  margin-bottom: 4px !important;
-  border-bottom: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-  background: var(--light) !important;
-  gap: 16px !important;
-  transition: none !important; /* No transitions */
-  animation: none !important; /* No animations */
-  min-height: 56px !important;
-  position: relative !important;
   align-items: center !important;
+  padding: 8px 10px !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  margin-bottom: 4px !important; /* Increased spacing */
+  background: var(--light) !important;
+  gap: 10px !important; /* More space between elements */
+  min-height: 48px !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
 }
 
-/* Lock the item content - now takes available space */
+.income-item:hover {
+  background: var(--card-bg) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 10px var(--shadow) !important;
+}
+
 .income-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  flex-grow: 1 !important;
-  gap: 5px !important;
-  justify-content: center !important;
-  min-height: 48px !important;
-  min-width: 0 !important; /* Important for text truncation on mobile */
+  gap: 4px !important; /* Slightly more gap between content lines */
 }
 
-/* Lock the category badge styling - more comfortable */
-.income-item .category-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  padding: 3px 8px !important;
-  border-radius: 12px !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  margin-right: 6px !important;
-  margin-bottom: 0px !important;
-  white-space: nowrap !important;
-  line-height: 1.2 !important;
-  height: 22px !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  flex-shrink: 0 !important; /* Prevent badge from shrinking */
-}
-
-/* Lock the amount display - ADJUSTED FOR MOBILE */
 .income-item .income-amount {
   font-weight: 700 !important;
-  font-size: 0.95rem !important; /* Base size */
+  font-size: 0.95rem !important;
   font-family: 'SF Mono', 'Courier New', monospace !important;
   background: var(--gradient-income) !important;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   text-align: right !important;
   margin: 0 !important;
+  padding: 0 5px !important; /* Added padding */
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
   order: 2 !important;
   width: auto !important;
-  padding: 0 8px 0 4px !important; /* Reduced horizontal padding */
-  min-width: 0 !important; /* Allow shrinking on mobile */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  letter-spacing: 0.3px !important;
-  flex-shrink: 0 !important; /* Prevent too much shrinking */
+  min-width: 80px !important; /* Minimum width for amount */
 }
 
-/* Lock action buttons - now inline with amount */
 .income-item .item-actions {
   display: flex !important;
-  gap: 6px !important;
-  justify-content: flex-end !important;
+  gap: 5px !important; /* More space between buttons */
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
   width: auto !important;
-  margin: 0 !important;
+  flex-shrink: 0 !important;
   order: 3 !important;
-  flex-shrink: 0 !important; /* Don't shrink */
 }
 
-/* Style the action buttons themselves for better spacing */
-.income-item .item-actions button {
-  margin-bottom: 0 !important;
-  padding: 5px 6px !important; /* Reduced padding */
-  min-width: 28px !important; /* Reduced from 32px */
-  min-height: 28px !important; /* Reduced from 32px */
-  display: flex !important;
+/* Ensure income category badges work properly */
+.income-item .category-badge {
+  padding: 3px 8px !important; /* More padding for better touch targets */
+  font-size: 0.7rem !important;
+  margin-right: 6px !important;
+  margin-bottom: 2px !important; /* Space below badge */
+  display: inline-flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  font-size: 0.8rem !important; /* Reduced button font */
+  gap: 4px !important;
+  border-radius: 10px !important; /* More rounded */
+  line-height: 1.2 !important;
 }
 
-/* Prevent any hover effects from changing layout */
-.income-item:hover {
-  transform: none !important;
-  box-shadow: none !important;
-  background: var(--light) !important;
+/* Make sure the emojis in income badges are visible */
+.income-item .category-badge i {
+  font-size: 0.75rem !important;
+  margin-right: 3px !important;
 }
 
-/* Lock the date styling - more readable */
-.income-item strong {
-  font-size: 0.85rem !important;
-  display: block !important;
-  margin: 0 !important;
-  color: var(--text-color) !important;
-  line-height: 1.3 !important;
-  font-weight: 600 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-/* Lock notes styling - more readable */
-.income-item .item-content div:nth-child(2) {
-  font-size: 0.8rem !important;
-  color: var(--text-secondary) !important;
-  line-height: 1.3 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 100% !important;
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-  padding-right: 4px !important; /* Reduced padding */
-}
-
-/* Ensure proper vertical spacing for all content */
-.income-item > * {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
+/* Mobile adjustments for income items */
 @media (max-width: 768px) {
   .income-item {
-    padding: 6px 8px !important; /* Reduced padding on mobile */
-    gap: 10px !important; /* Reduced gap on mobile */
-    min-height: 52px !important; /* Slightly reduced height */
+    padding: 6px 8px !important;
+    gap: 8px !important;
+    min-height: 44px !important;
+    margin-bottom: 3px !important; /* Slightly less space on mobile */
   }
   
   .income-item .income-amount {
-    font-size: 0.9rem !important; /* Smaller font on mobile */
-    padding: 0 6px 0 2px !important; /* Less padding on mobile */
-    letter-spacing: 0.2px !important; /* Less letter spacing */
+    font-size: 0.9rem !important;
+    min-width: 70px !important; /* Smaller minimum width on mobile */
   }
   
   .income-item .item-actions {
-    gap: 4px !important; /* Smaller gap between buttons */
+    gap: 4px !important;
   }
   
   .income-item .item-actions button {
-    padding: 4px 5px !important; /* Smaller buttons */
-    min-width: 26px !important;
-    min-height: 26px !important;
-    font-size: 0.75rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.8rem !important;
   }
   
-  .income-item strong {
-    font-size: 0.8rem !important; /* Slightly smaller date */
-  }
-  
-  .income-item .item-content div:nth-child(2) {
-    font-size: 0.75rem !important; /* Slightly smaller notes */
-    -webkit-line-clamp: 1 !important; /* Only 1 line on mobile */
-  }
-  
-  .income-item .category-badge {
-    font-size: 0.7rem !important; /* Smaller badge text */
-    padding: 2px 6px !important; /* Smaller badge */
-    height: 20px !important; /* Smaller badge height */
+  /* Add stacking for very small screens */
+  @media (max-width: 480px) {
+    .income-item {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px !important;
+      padding: 8px !important;
+      margin-bottom: 5px !important; /* More space when stacked */
+    }
+    
+    .income-item .item-content {
+      width: 100% !important;
+      margin-bottom: 4px !important;
+    }
+    
+    .income-item .income-amount {
+      width: 100% !important;
+      text-align: left !important;
+      order: 2 !important;
+      padding-left: 0 !important;
+      font-size: 0.95rem !important;
+      margin-top: 3px !important;
+    }
+    
+    .income-item .item-actions {
+      width: 100% !important;
+      justify-content: flex-end !important;
+      order: 3 !important;
+      margin-top: 5px !important;
+    }
+    
+    .income-item .category-badge {
+      font-size: 0.65rem !important;
+      padding: 2px 6px !important;
+      margin-bottom: 3px !important;
+    }
   }
 }
 
-/* Extra small devices (phones, less than 480px) */
-@media (max-width: 480px) {
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
   .income-item {
-    padding: 5px 6px !important; /* Even more compact */
+    padding: 7px 9px !important;
     gap: 8px !important;
   }
   
   .income-item .income-amount {
-    font-size: 0.85rem !important; /* Even smaller on very small screens */
-    padding: 0 4px !important;
-    min-width: 0 !important; /* Allow maximum shrinking */
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Add subtle background alternation for better readability */
+.income-item:nth-child(even) {
+  background: linear-gradient(135deg, var(--light) 0%, var(--card-bg) 100%) !important;
+}
+
+/* Touch feedback for mobile */
+.income-item:active {
+  transform: scale(0.99) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* Improve text overflow handling */
+.income-item .item-content > div:nth-child(2) {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important; /* Limit to 2 lines */
+  -webkit-box-orient: vertical !important;
+  line-height: 1.3 !important;
+}
+
+/* Make date more prominent */
+.income-item strong {
+  font-size: 0.85rem !important;
+  color: var(--primary-dark) !important;
+  margin-bottom: 2px !important;
+  display: block !important;
+}
+
+
+
+
+
+/* ===== UPDATED EXPENSE ITEM LAYOUT ===== */
+.expense-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important; /* Reduced from 2px */
+  background: var(--light);
+  gap: 6px !important; /* Reduced from gap */
+  min-height: 40px !important;
+  position: relative;
+}
+
+/* Content takes available space */
+.expense-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0; /* Allows text truncation */
+}
+
+/* Amount on the right */
+.expense-item .expense-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Buttons next to amount */
+.expense-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* Compact action buttons */
+.expense-item .action-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+  font-size: 0.8rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make category badges more compact */
+.expense-item .category-badge {
+  padding: 2px 5px !important;
+  font-size: 0.65rem !important;
+  margin-right: 4px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Compact date display */
+.expense-item strong {
+  font-size: 0.8rem !important;
+  display: block;
+  margin-top: 1px !important;
+}
+
+/* Compact description */
+.expense-item .item-content div {
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+  margin-top: 1px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== INCOME ITEM LAYOUT (for consistency) ===== */
+.income-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important;
+  background: var(--light);
+  gap: 6px !important;
+  min-height: 40px !important;
+}
+
+.income-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.income-item .income-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-income);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.income-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* ===== REMINDER ITEM LAYOUT (for consistency) ===== */
+.reminder-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s;
+  border-radius: 4px;
+  margin-bottom: 1px !important;
+  background: var(--light);
+  gap: 6px !important;
+  min-height: 40px !important;
+}
+
+.reminder-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.reminder-item .reminder-amount {
+  font-weight: 700;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.reminder-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0;
+}
+
+/* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .expense-item,
+  .income-item,
+  .reminder-item {
+    padding: 3px 5px !important;
+    margin-bottom: 1px !important;
+    gap: 4px !important;
+    min-height: 36px !important;
   }
   
-  .income-item .item-actions {
+  .expense-item .expense-amount,
+  .income-item .income-amount,
+  .reminder-item .reminder-amount {
+    font-size: 0.85rem !important;
+  }
+  
+  .expense-item .action-btn,
+  .income-item .action-btn,
+  .reminder-item .action-btn {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .expense-item .category-badge {
+    padding: 1px 4px !important;
+    font-size: 0.6rem !important;
+  }
+  
+  .expense-item strong {
+    font-size: 0.75rem !important;
+  }
+  
+  .expense-item .item-content div {
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stack on very small screens */
+  .expense-item,
+  .income-item,
+  .reminder-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 4px !important;
     gap: 3px !important;
   }
   
-  .income-item .item-actions button {
-    padding: 3px 4px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+  .expense-item .expense-amount,
+  .income-item .income-amount,
+  .reminder-item .reminder-amount {
+    width: 100%;
+    text-align: left !important;
+    order: 2;
+  }
+  
+  .expense-item .item-actions,
+  .income-item .item-actions,
+  .reminder-item .item-actions {
+    width: 100%;
+    justify-content: flex-end !important;
+    order: 3;
   }
 }
+
+
+
+
+/* Blur effect for hidden balances */
+.balance-value.blurred {
+    filter: blur(8px) !important;
+    color: transparent !important;
+    text-shadow: 0 0 12px rgba(0,0,0,0.5) !important;
+    opacity: 0.8 !important;
+    user-select: none !important;
+    pointer-events: none !important;
+}
+
+/* Normal state for revealed balances */
+.balance-value.revealed {
+    filter: none !important;
+    color: inherit !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+    user-select: auto !important;
+    pointer-events: auto !important;
+}
+
+/* Optional: Add a shimmer effect to blurred text */
+.balance-value.blurred::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.2), 
+        transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4109,9 +4359,7 @@ body.dark-mode .reminders-list .search-box input::placeholder {
             <div class="stat-tooltip">Click to reveal/hide</div>
           </div>
         </div>
-
-        <button class="btn reveal-all-btn" onclick="revealAllBalances()"><i class="fas fa-unlock"></i> Tap here to reveal all balances</button>
-
+<button class="btn reveal-all-btn" onclick="toggleAllBalances()"><i class="fas fa-unlock"></i> Tap here to reveal all balances</button>
         <div class="charts-section">
           <div class="chart-container"><h4><i class="fas fa-chart-pie"></i> Category Distribution</h4><canvas id="pieChart"></canvas></div>
           <div class="chart-container"><h4><i class="fas fa-chart-bar"></i> Weekly Trend</h4><canvas id="barChart"></canvas></div>
@@ -4960,7 +5208,6 @@ function displayIncome(incomeArray) {
   
   let html = '';
   incomeArray.forEach(income => {
-    const displaySource = getSourceDisplayNameWithEmoji(income.source); // Use emoji version
     const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
     const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
       year: 'numeric', 
@@ -4968,7 +5215,9 @@ function displayIncome(incomeArray) {
       day: 'numeric' 
     });
     
-    // Use emoji from displaySource for badge
+    // Get source display name with emoji
+    const sourceDisplay = getSourceDisplayNameWithEmoji(income.source);
+    // Extract just the emoji for the badge
     const sourceEmoji = getSourceEmoji(income.source);
     
     html += `
@@ -4980,7 +5229,9 @@ function displayIncome(incomeArray) {
             </span>
             <strong>${formattedDate}</strong>
           </div>
-          <div>${income.notes || ''}</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">
+            ${income.notes || ''}
+          </div>
         </div>
         <div class="income-amount">UGX ${formattedAmount}</div>
         <div class="item-actions">
@@ -5061,8 +5312,6 @@ function getSourceEmoji(source) {
   
   return emojiMap[source] || '💰';
 }
-
-
 // ===== INCOME SOURCE HELPER FUNCTIONS =====
 
 // Helper function to get source CSS class
@@ -8445,29 +8694,163 @@ function populateFilterDropdowns() {
       saveRevealedState();
     }
     
-    function revealAllBalances() {
-      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance', 'monthlyBudget', 'savingsGoal'].forEach(period => {
-        const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
-        if (element) { 
-          element.classList.remove('hidden'); 
-          revealedBalances[period] = true; 
+// Global variable to track if all balances are revealed
+let allBalancesRevealed = false;
+
+function toggleAllBalances() {
+    if (!allBalancesRevealed) {
+        // Reveal all balances
+        Object.keys(revealedBalances).forEach(balanceId => {
+            revealedBalances[balanceId] = true;
+        });
+        
+        // Update UI
+        updateBalanceVisibility();
+        
+        // Update button text
+        const revealBtn = document.querySelector('.reveal-all-btn');
+        if (revealBtn) {
+            revealBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Tap to blur all balances';
+            revealBtn.style.background = 'linear-gradient(135deg, var(--primary-dark), var(--primary))';
+            revealBtn.style.color = 'white';
         }
-      });
-      saveRevealedState(); 
-      showMessage('🔓 All balances revealed!', 'success');
+        
+        allBalancesRevealed = true;
+        showMessage('All balances revealed', 'success');
+    } else {
+        // Blur all balances
+        Object.keys(revealedBalances).forEach(balanceId => {
+            revealedBalances[balanceId] = false;
+        });
+        
+        // Update UI
+        updateBalanceVisibility();
+        
+        // Update button text
+        const revealBtn = document.querySelector('.reveal-all-btn');
+        if (revealBtn) {
+            revealBtn.innerHTML = '<i class="fas fa-eye"></i> Tap to reveal all balances';
+            revealBtn.style.background = 'linear-gradient(135deg, #ff980022, #f57c0022)';
+            revealBtn.style.color = 'var(--primary)';
+        }
+        
+        allBalancesRevealed = false;
+        showMessage('All balances blurred', 'info');
     }
+}
+
+
+
+
+
+
+
+
+// Update the existing revealAllBalances function to use toggle
+function revealAllBalances() {
+  // For backward compatibility, call toggleAllBalances
+  if (!allBalancesRevealed) {
+    toggleAllBalances();
+  }
+}
+
+// Update the existing hideAllBalances function to use toggle
+function hideAllBalances() {
+  // For backward compatibility, call toggleAllBalances
+  if (allBalancesRevealed) {
+    toggleAllBalances();
+  }
+}
+
+
+
+
+
+
+
+function updateBalanceVisibility() {
+    const balanceCards = {
+        'today': document.getElementById('todayTotal'),
+        'week': document.getElementById('weekTotal'),
+        'month': document.getElementById('monthTotal'),
+        'year': document.getElementById('yearTotal'),
+        'totalIncome': document.getElementById('totalIncomeValue'),
+        'totalExpense': document.getElementById('totalExpenseValue'),
+        'availableBalance': document.getElementById('availableBalanceValue'),
+        'monthlyBudget': document.getElementById('monthlyBudgetValue'),
+        'savingsGoal': document.getElementById('savingsGoalValue')
+    };
     
-    function hideAllBalances() {
-      ['today', 'week', 'month', 'year', 'totalIncome', 'totalExpense', 'availableBalance', 'monthlyBudget', 'savingsGoal'].forEach(period => {
-        const element = document.getElementById(`${period}Total`) || document.getElementById(`${period}Value`);
-        if (element) { 
-          element.classList.add('hidden'); 
-          revealedBalances[period] = false; 
+    for (const [balanceId, element] of Object.entries(balanceCards)) {
+        if (element) {
+            // Store the original value if not already stored
+            if (!element.dataset.originalValue) {
+                element.dataset.originalValue = element.textContent;
+            }
+            
+            if (revealedBalances[balanceId]) {
+                // REVEAL: Show actual value
+                element.classList.remove('blurred');
+                element.classList.add('revealed');
+                element.style.filter = 'none';
+                element.style.color = '';
+                element.style.textShadow = '';
+                element.style.opacity = '1';
+                element.style.userSelect = 'auto';
+                element.style.pointerEvents = 'auto';
+                
+                // Restore original value
+                element.textContent = element.dataset.originalValue;
+                
+            } else {
+                // BLUR: Apply blur effect
+                element.classList.add('blurred');
+                element.classList.remove('revealed');
+                element.style.filter = 'blur(8px)';
+                element.style.color = 'transparent';
+                element.style.textShadow = '0 0 12px rgba(0,0,0,0.5)';
+                element.style.opacity = '0.8';
+                element.style.userSelect = 'none';
+                element.style.pointerEvents = 'none';
+                
+                // Optionally show placeholder text
+                // element.textContent = '•••••••';
+            }
         }
-      });
-      saveRevealedState(); 
-      showMessage('👁️ All balances hidden', 'info');
     }
+}
+
+
+
+function resetBalanceStyles() {
+    const selectors = [
+        '.balance-value',
+        '.stat-value',
+        '#todayTotal',
+        '#weekTotal',
+        '#monthTotal',
+        '#yearTotal',
+        '#totalIncomeValue',
+        '#totalExpenseValue',
+        '#availableBalanceValue',
+        '#monthlyBudgetValue',
+        '#savingsGoalValue'
+    ];
+    
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            el.style.maxWidth = '100%';
+            el.style.overflow = 'hidden';
+            el.style.textOverflow = 'ellipsis';
+            el.style.whiteSpace = 'nowrap';
+        });
+    });
+}
+
+// Call periodically or when issues occur
+setInterval(resetBalanceStyles, 30000); // Every 30 seconds
+
+
 
     function updateStatus(status, message) {
       const dot = document.getElementById('statusDot'), text = document.getElementById('statusText');
