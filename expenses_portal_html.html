@@ -5020,7 +5020,247 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 
 
 
+/* ===== FIX FOR INCOME LIST ITEMS - FINAL CLEANUP ===== */
+.income-list .income-item {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 10px 12px !important;
+    margin-bottom: 6px !important;
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.02) 100%
+    ) !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border) !important;
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 48px !important;
+    gap: 12px !important;
+}
 
+.income-list .income-item:hover {
+    transform: translateX(2px) !important;
+    background: linear-gradient(135deg, 
+        var(--light) 0%, 
+        rgba(66, 153, 225, 0.05) 100%
+    ) !important;
+    border-color: rgba(66, 153, 225, 0.2) !important;
+    box-shadow: 0 3px 10px rgba(66, 153, 225, 0.1) !important;
+}
+
+.income-list .income-item .item-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    order: 1 !important;
+}
+
+.income-list .income-item strong {
+    color: var(--text-color) !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    display: block !important;
+    margin-bottom: 2px !important;
+    opacity: 0.9 !important;
+}
+
+.income-list .income-item .category-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 3px 8px !important;
+    background: rgba(66, 153, 225, 0.1) !important;
+    color: #2c5282 !important;
+    border-radius: 12px !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 4px !important;
+    border: 1px solid rgba(66, 153, 225, 0.15) !important;
+    transition: all 0.15s ease !important;
+}
+
+.income-list .income-item .category-badge:hover {
+    background: rgba(66, 153, 225, 0.15) !important;
+    transform: scale(1.03) !important;
+}
+
+.income-list .income-item .income-amount {
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #2c5282 !important;
+    min-width: 90px !important;
+    text-align: right !important;
+    font-family: 'SF Mono', 'Courier New', monospace !important;
+    padding-right: 8px !important;
+    transition: all 0.15s ease !important;
+    flex-shrink: 0 !important;
+    order: 2 !important;
+    white-space: nowrap !important;
+}
+
+.income-list .income-item:hover .income-amount {
+    color: #1a56db !important;
+}
+
+.income-list .income-item .item-actions {
+    display: flex !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+    order: 3 !important;
+}
+
+.income-list .income-item .action-btn {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    background: var(--light) !important;
+    color: var(--gray) !important;
+    border: 1px solid var(--border) !important;
+    transition: all 0.15s cubic-bezier(0.32, 0.94, 0.6, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.income-list .income-item .action-btn:hover {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+    transform: scale(1.05) !important;
+}
+
+.income-list .income-item .action-btn.delete:hover {
+    background: var(--danger) !important;
+    border-color: var(--danger) !important;
+    transform: scale(1.05) !important;
+}
+
+.income-list .income-item .item-content div {
+    font-size: 0.75rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.4 !important;
+    max-width: 250px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Dark mode adjustments for income list */
+body.dark-mode .income-list .income-item {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.03) 100%
+    ) !important;
+}
+
+body.dark-mode .income-list .income-item:hover {
+    background: linear-gradient(135deg, 
+        var(--light) 0%, 
+        rgba(66, 153, 225, 0.08) 100%
+    ) !important;
+}
+
+body.dark-mode .income-list .income-item .category-badge {
+    background: rgba(66, 153, 225, 0.15) !important;
+    color: #90cdf4 !important;
+    border-color: rgba(66, 153, 225, 0.25) !important;
+}
+
+body.dark-mode .income-list .income-item .income-amount {
+    color: #90caf9 !important;
+}
+
+body.dark-mode .income-list .income-item:hover .income-amount {
+    color: #63b3ed !important;
+}
+
+/* Mobile optimizations for income list */
+@media (max-width: 768px) {
+    .income-list .income-item {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+        min-height: 44px !important;
+    }
+    
+    .income-list .income-item .income-amount {
+        font-size: 0.85rem !important;
+        min-width: 80px !important;
+    }
+    
+    .income-list .income-item .item-actions {
+        gap: 4px !important;
+    }
+    
+    .income-list .income-item .action-btn {
+        width: 26px !important;
+        height: 26px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .income-list .income-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        padding: 8px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .income-list .income-item .item-content {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .income-list .income-item .income-amount {
+        width: 100% !important;
+        text-align: left !important;
+        min-width: auto !important;
+        font-size: 0.95rem !important;
+        margin-top: 3px !important;
+        padding-left: 0 !important;
+    }
+    
+    .income-list .income-item .item-actions {
+        width: 100% !important;
+        justify-content: flex-end !important;
+        margin-top: 5px !important;
+    }
+    
+    .income-list .income-item .category-badge {
+        font-size: 0.65rem !important;
+        padding: 2px 6px !important;
+        margin-bottom: 3px !important;
+    }
+}
+
+/* Ensure proper spacing in income list section */
+.income-list {
+    padding: 15px !important;
+    margin-top: 20px !important;
+    background: var(--card-bg) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 25px var(--shadow) !important;
+    transition: background 0.3s ease !important;
+}
+
+/* Fix for alternating background */
+.income-list .income-item:nth-child(even) {
+    background: linear-gradient(135deg, 
+        var(--light) 0%, 
+        rgba(66, 153, 225, 0.04) 100%
+    ) !important;
+}
+
+body.dark-mode .income-list .income-item:nth-child(even) {
+    background: linear-gradient(135deg, 
+        var(--card-bg) 0%, 
+        rgba(66, 153, 225, 0.06) 100%
+    ) !important;
+}
 
 
 
