@@ -3017,16 +3017,7 @@
     font-size: 0.8rem !important; /* Smaller icon */
 }
 
-/* ENHANCED HOVER EFFECTS FOR ULTRA-COMPACT ITEMS */
-.expenses-list .expense-item:hover,
-.income-list .income-item:hover,
-.reminders-list .reminder-item:hover {
-    transform: translateY(-2px) translateX(2px) !important; /* Subtle lift */
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15) !important; /* Subtle shadow */
-    margin-bottom: 3px !important; /* Slight separation on hover */
-    margin-top: -1px !important;
-    padding: 5px 7px !important; /* Slightly expanded on hover */
-}
+
 
 /* Shimmer effect for all items */
 .expenses-list .expense-item::before,
@@ -3944,7 +3935,24 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 }
 
 .balance-value.blurred::before {
-  display: none;
+    content: '👁️ Tap to reveal';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 600;
+    background: linear-gradient(135deg, 
+        rgba(255, 152, 0, 0.1), 
+        rgba(245, 124, 0, 0.1));
+    border-radius: 4px;
+    z-index: 1;
+    animation: gentle-pulse 2s ease-in-out infinite;
 }
 
 
@@ -3964,9 +3972,6 @@ body.dark-mode .reminders-list .search-box input::placeholder {
             rgba(245, 124, 0, 0.15));
     }
 }
-
-
-
 
 
 
@@ -4395,14 +4400,7 @@ body.dark-mode .income-item {
         var(--card-bg) 0%, 
         rgba(66, 153, 225, 0.03) 100%
     );
-}
 
-body.dark-mode .income-item:hover {
-    background: linear-gradient(135deg, 
-        var(--light) 0%, 
-        rgba(66, 153, 225, 0.08) 100%
-    );
-}
 
 body.dark-mode .income-item .category-badge {
     background: rgba(66, 153, 225, 0.15);
@@ -4616,354 +4614,51 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 
 
 
-/* ===== INCOME LIST - ENHANCED & PROFESSIONAL STYLING ===== */
 
-/* Main Container */
-.income-list {
-    background: var(--card-bg) !important;
-    border-radius: 16px !important;
-    padding: 24px !important;
-    margin-top: 20px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
-    transition: all 0.3s ease !important;
+
+
+
+
+
+
+
+
+
+
+
+
+/* PERMANENT FIX: Force income items to stay borderless */
+.income-list .income-item,
+.income-list .income-item *,
+.income-list .income-item:hover,
+.income-list .income-item:focus,
+.income-list .income-item:active,
+.income-list .income-item.updated,
+.income-list .income-item.loading,
+.income-list .income-item.new-item,
+.income-list .income-item[class*="border"],
+.income-list .income-item[style*="border"] {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-.income-list:hover {
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12) !important;
-}
-
-/* List Header */
-.income-list .list-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 20px !important;
-    padding-bottom: 12px !important;
-    border-bottom: 2px solid rgba(var(--success-rgb), 0.1) !important;
-    cursor: pointer !important;
-    user-select: none !important;
-}
-
-.income-list h3 {
-    color: var(--success) !important;
-    font-size: 1.3rem !important;
-    font-weight: 600 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.income-list h3 i {
-    font-size: 1.2rem !important;
-}
-
-/* Search/Filter Container */
-.income-list .search-filter-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    margin-bottom: 20px !important;
-    padding: 16px !important;
-    background: rgba(var(--light-rgb), 0.5) !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(0, 0, 0, 0.04) !important;
-}
-
-@media (min-width: 769px) {
-    .income-list .search-filter-container {
-        flex-direction: row !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-    }
-}
-
-/* Income Items */
+/* Disable any transitions that might add borders */
 .income-list .income-item {
-    display: flex !important;
-    align-items: center !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid var(--border) !important;
-    margin-bottom: 0 !important;
-    background: var(--card-bg) !important;
-    gap: 12px !important;
-    min-height: 56px !important;
-    position: relative !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    border-radius: 8px !important;
-    margin-bottom: 4px !important;
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  transition-property: background-color, transform !important;
 }
 
-.income-list .income-item:last-child {
-    border-bottom: none !important;
-}
-
-.income-list .income-item:hover {
-    background: rgba(var(--light-rgb), 0.8) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-    border-left: 3px solid var(--success) !important;
-}
-
-/* Item Content */
-.income-list .income-item .item-content {
-    flex: 1 !important;
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
-    padding-right: 8px !important;
-}
-
-.income-list .income-item strong {
-    font-size: 0.95rem !important;
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-    margin: 0 !important;
-    line-height: 1.3 !important;
-}
-
-.income-list .income-item .item-content div {
-    font-size: 0.85rem !important;
-    color: var(--text-secondary) !important;
-    line-height: 1.4 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-}
-
-/* Income Amount - Improved Gradient */
-.income-list .income-item .income-amount {
-    font-weight: 700 !important;
-    font-size: 1.05rem !important;
-    font-family: 'SF Mono', 'Courier New', monospace !important;
-    color: var(--success) !important;
-    text-align: right !important;
-    margin: 0 !important;
-    padding: 4px 12px !important;
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-    background: linear-gradient(135deg, rgba(var(--success-rgb), 0.1) 0%, transparent 100%) !important;
-    border-radius: 8px !important;
-    border: 1px solid rgba(var(--success-rgb), 0.15) !important;
-    min-width: 90px !important;
-    text-align: center !important;
-}
-
-/* Item Actions */
-.income-list .income-item .item-actions {
-    display: flex !important;
-    gap: 6px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    justify-content: flex-end !important;
-    flex-shrink: 0 !important;
-}
-
-.income-list .income-item .action-btn {
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 8px !important;
-    font-size: 0.85rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(var(--light-rgb), 0.8) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    color: var(--text-secondary) !important;
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-}
-
-.income-list .income-item .action-btn:hover {
-    background: var(--light) !important;
-    color: var(--primary) !important;
-    transform: scale(1.05) !important;
-}
-
-/* Category Badge */
-.income-list .income-item .category-badge {
-    padding: 4px 10px !important;
-    font-size: 0.75rem !important;
-    margin-right: 8px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    border-radius: 20px !important;
-    font-weight: 600 !important;
-    background: rgba(var(--primary-rgb), 0.1) !important;
-    color: var(--primary) !important;
-    border: 1px solid rgba(var(--primary-rgb), 0.2) !important;
-}
-
-/* Quick Stats - Fixed Gradient */
-.income-quick-stats {
-    background: linear-gradient(135deg, var(--light) 0%, var(--card-bg) 100%) !important;
-    border: 1px solid rgba(var(--success-rgb), 0.1) !important;
-    padding: 16px !important;
-    border-radius: 12px !important;
-    margin-bottom: 20px !important;
-}
-
-/* Time Frame Selector - Fixed Gradient */
-.time-frame-selector {
-    background: var(--card-bg) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    padding: 8px !important;
-    display: flex !important;
-    gap: 4px !important;
-}
-
-.time-frame-selector button {
-    flex: 1 !important;
-    padding: 8px 12px !important;
-    border-radius: 6px !important;
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-secondary) !important;
-    transition: all 0.2s ease !important;
-}
-
-.time-frame-selector button.active {
-    background: rgba(var(--primary-rgb), 0.1) !important;
-    color: var(--primary) !important;
-    font-weight: 600 !important;
-}
-
-/* Dark Mode Adjustments */
-body.dark-mode .income-list {
-    background: var(--card-bg) !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-body.dark-mode .income-list .income-item {
-    background: rgba(255, 255, 255, 0.02) !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-body.dark-mode .income-list .income-item:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-left-color: var(--success) !important;
-}
-
-body.dark-mode .income-list .income-item .income-amount {
-    background: rgba(var(--success-rgb), 0.15) !important;
-    border-color: rgba(var(--success-rgb), 0.2) !important;
-}
-
-body.dark-mode .income-list .search-filter-container {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-body.dark-mode .income-list .action-btn {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .income-list {
-        padding: 18px !important;
-        border-radius: 12px !important;
-    }
-    
-    .income-list .income-item {
-        padding: 10px 12px !important;
-        gap: 8px !important;
-        min-height: 52px !important;
-    }
-    
-    .income-list .income-item .income-amount {
-        font-size: 0.95rem !important;
-        padding: 3px 8px !important;
-        min-width: 80px !important;
-    }
-    
-    .income-list .income-item .action-btn {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 0.8rem !important;
-    }
-    
-    .income-list .income-item strong {
-        font-size: 0.9rem !important;
-    }
-    
-    .income-list .income-item .item-content div {
-        font-size: 0.8rem !important;
-    }
-    
-    .income-list h3 {
-        font-size: 1.2rem !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .income-list .income-item {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        padding: 12px !important;
-        gap: 10px !important;
-    }
-    
-    .income-list .income-item .income-amount {
-        width: 100% !important;
-        text-align: left !important;
-        order: 2 !important;
-        min-width: auto !important;
-        justify-content: flex-start !important;
-        padding: 8px 12px !important;
-    }
-    
-    .income-list .income-item .item-actions {
-        width: 100% !important;
-        justify-content: flex-start !important;
-        order: 3 !important;
-        margin-top: 8px !important;
-    }
-    
-    .income-list .search-filter-container {
-        padding: 12px !important;
-    }
-}
-
-/* Animation for new items */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.income-list .income-item.new-item {
-    animation: fadeInUp 0.3s ease-out forwards;
-}
-
-/* Empty State */
-.income-list .empty-state {
-    text-align: center !important;
-    padding: 40px 20px !important;
-    color: var(--text-secondary) !important;
-}
-
-.income-list .empty-state i {
-    font-size: 3rem !important;
-    margin-bottom: 16px !important;
-    opacity: 0.3 !important;
-}
-
-.income-list .empty-state p {
-    font-size: 1rem !important;
-    margin: 0 !important;
+/* Remove any pseudo-elements that might add borders */
+.income-list .income-item::before,
+.income-list .income-item::after,
+.income-list .income-item:hover::before,
+.income-list .income-item:hover::after {
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
 
@@ -4975,63 +4670,58 @@ body.dark-mode .income-list .action-btn {
 
 
 
+/* PERMANENT FIX: Force income items to stay borderless */
+.income-list .income-item,
+.income-list .income-item *,
+.income-list .income-item:hover,
+.income-list .income-item:focus,
+.income-list .income-item:active,
+.income-list .income-item.updated,
+.income-list .income-item.loading,
+.income-list .income-item.new-item,
+.income-list .income-item[class*="border"],
+.income-list .income-item[style*="border"] {
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Disable any transitions that might add borders */
+.income-list .income-item {
+  transition: background-color 0.2s ease, transform 0.2s ease !important;
+  transition-property: background-color, transform !important;
+}
+
+/* Remove any pseudo-elements that might add borders */
+.income-list .income-item::before,
+.income-list .income-item::after,
+.income-list .income-item:hover::before,
+.income-list .income-item:hover::after {
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Disable all animations and transitions for income items */
+.income-list .income-item,
+.income-list .income-item * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+  clip-path: none !important;
+}
 
 
 
@@ -6541,6 +6231,60 @@ function initFirebase() {
     }
   }
 }
+
+
+
+
+
+// Add this to your main.js or script section
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'attributes' && 
+        (mutation.attributeName === 'style' || 
+         mutation.attributeName === 'class')) {
+      const target = mutation.target;
+      if (target.closest('.income-list')) {
+        fixIncomeItemStyles();
+      }
+    }
+    
+    if (mutation.addedNodes.length) {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1 && node.closest('.income-list')) {
+          setTimeout(fixIncomeItemStyles, 100);
+        }
+      });
+    }
+  });
+});
+
+// Start observing when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const incomeList = document.querySelector('.income-list');
+  if (incomeList) {
+    observer.observe(incomeList, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      attributeFilter: ['style', 'class']
+    });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Add this function to dynamically load Firebase if needed
 function loadFirebaseSDK() {
