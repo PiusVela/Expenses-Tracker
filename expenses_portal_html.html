@@ -2842,17 +2842,6 @@
     border-radius: 10px !important; /* Slightly smaller radius */
 }
 
-/* DRAMATICALLY REDUCE ITEM SIZE - ULTRA COMPACT */
-.expenses-list .expense-item,
-.income-list .income-item,
-.reminders-list .reminder-item {
-    padding: 4px 6px !important; /* Further reduced */
-    margin-bottom: 1px !important; /* Minimal margin */
-    gap: 3px !important; /* Extremely tight spacing */
-    border-radius: 6px !important; /* Smaller radius */
-    min-height: 45px !important; /* Set minimum height */
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
 
 
 /* DISTINCT LINES BETWEEN ITEMS IN REMINDERS SECTION */
@@ -4612,6 +4601,105 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 
 
 
+.income-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 6px;
+  margin-bottom: 1px;
+  background: var(--light);
+  border-radius: 4px;
+  gap: 6px;
+  min-height: 40px;
+  position: relative;
+  transition: all 0.4s ease;
+  border: 1px solid var(--border);
+}
+
+.income-item .item-content {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+  
+  .income-item .income-amount {
+  font-weight: 700;
+  font-size: 0.95rem;
+  font-family: 'SF Mono', 'Courier New', monospace;
+  background: var(--gradient-income);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.income-item .item-actions {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  justify-content: flex-start;
+  width: auto;
+  flex-shrink: 0;
+}
+  
+  
+  .income-item .category-badge {
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  margin-right: 4px;
+  margin-bottom: 0;
+}
+
+.income-item strong {
+  font-size: 0.85rem;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+  display: block;
+}
+
+.income-item .item-content div {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
@@ -4627,100 +4715,133 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 
 
 
-/* PERMANENT FIX: Force income items to stay borderless */
-.income-list .income-item,
-.income-list .income-item *,
-.income-list .income-item:hover,
-.income-list .income-item:focus,
-.income-list .income-item:active,
-.income-list .income-item.updated,
-.income-list .income-item.loading,
-.income-list .income-item.new-item,
-.income-list .income-item[class*="border"],
-.income-list .income-item[style*="border"] {
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  box-shadow: none !important;
+
+  
+  
+  
+  
+
+  
+  .income-item .category-badge {
+  max-width: 80%; /* Limit badge width to prevent overflow */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ... for long text */
+  display: inline-flex; /* Ensure it's flexible */
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px; /* Slightly smaller padding */
+  font-size: 0.65rem;
+  margin-right: 4px;
+  margin-bottom: 0;
+}
+  
+
+  
+  
+  
+  
+
+/* ===== FIX PAYMENT REMINDERS FILTER ===== */
+#filterReminderStatus {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--input-bg) !important;
+  color: var(--text-color) !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  min-height: 44px !important;
+  box-sizing: border-box !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ff9800' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 12px !important;
+  padding-right: 35px !important;
+}
+
+#filterReminderStatus:focus {
   outline: none !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1) !important;
 }
 
-/* Disable any transitions that might add borders */
-.income-list .income-item {
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
-  transition-property: background-color, transform !important;
+#filterReminderStatus option {
+  padding: 10px !important;
+  background: var(--input-bg) !important;
+  color: var(--text-color) !important;
 }
 
-/* Remove any pseudo-elements that might add borders */
-.income-list .income-item::before,
-.income-list .income-item::after,
-.income-list .income-item:hover::before,
-.income-list .income-item:hover::after {
-  border: none !important;
-  box-shadow: none !important;
-  background: none !important;
+/* ===== REDUCE HEADER BANNER SIZE ===== */
+.header {
+  padding: 12px 16px !important;
+  min-height: auto !important;
 }
 
-
-
-
-
-
-
-
-
-
-/* PERMANENT FIX: Force income items to stay borderless */
-.income-list .income-item,
-.income-list .income-item *,
-.income-list .income-item:hover,
-.income-list .income-item:focus,
-.income-list .income-item:active,
-.income-list .income-item.updated,
-.income-list .income-item.loading,
-.income-list .income-item.new-item,
-.income-list .income-item[class*="border"],
-.income-list .income-item[style*="border"] {
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  box-shadow: none !important;
-  outline: none !important;
+.header-top {
+  margin-bottom: 6px !important;
+  gap: 8px !important;
 }
 
-/* Disable any transitions that might add borders */
-.income-list .income-item {
-  transition: background-color 0.2s ease, transform 0.2s ease !important;
-  transition-property: background-color, transform !important;
+.header h1 {
+  font-size: 1.4rem !important;
+  gap: 8px !important;
+  margin: 0 !important;
 }
 
-/* Remove any pseudo-elements that might add borders */
-.income-list .income-item::before,
-.income-list .income-item::after,
-.income-list .income-item:hover::before,
-.income-list .income-item:hover::after {
-  border: none !important;
-  box-shadow: none !important;
-  background: none !important;
+.header h1 i {
+  padding: 6px !important;
+  font-size: 1rem !important;
+  border-radius: 8px !important;
 }
 
+.header p {
+  font-size: 0.8rem !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  opacity: 0.9 !important;
+}
+
+.status-indicator {
+  padding: 4px 8px !important;
+  font-size: 0.7rem !important;
+}
+
+.user-profile {
+  padding: 4px 8px !important;
+  font-size: 0.8rem !important;
+}
+
+.user-avatar {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 0.8rem !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .header {
+    padding: 10px 12px !important;
+  }
+  
+  .header h1 {
+    font-size: 1.2rem !important;
+  }
+  
+  .header h1 i {
+    padding: 4px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .header p {
+    font-size: 0.75rem !important;
+  }
 
 
-
-
-
-/* Disable all animations and transitions for income items */
-.income-list .income-item,
-.income-list .income-item * {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  mask: none !important;
-  -webkit-mask: none !important;
-  clip-path: none !important;
+ 
 }
 
 
@@ -4729,69 +4850,234 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 
 
 
+ /* ===== FORCE CONSISTENT INCOME ITEM STYLE ===== */
+.income-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border) !important;
+  transition: all 0.4s !important;
+  border-radius: 4px !important;
+  margin-bottom: 1px !important;
+  background: var(--light) !important;
+  gap: 6px !important;
+  min-height: 40px !important;
+  position: relative !important;
+  overflow: hidden;
+}
+.income-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  overflow: hidden;
+}
+.income-item .income-amount {
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace !important;
+  background: var(--gradient-income) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-align: right !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+}
+.income-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+}
+.income-item .category-badge {
+  padding: 2px 5px !important;
+  font-size: 0.65rem !important;
+  margin-right: 4px !important;
+  margin-bottom: 0 !important;
+  overflow: hidden;
+}
+.income-item strong {
+  font-size: 0.8rem !important;
+  display: block !important;
+  margin-top: 1px !important;
+  overflow: hidden;
+}
+.income-item .item-content div {
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+  margin-top: 1px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden;
+}
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .income-item {
+    padding: 3px 5px !important;
+    gap: 4px !important;
+    min-height: 36px !important;
+  }
+  .income-item .income-amount {
+    font-size: 0.85rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .income-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 4px !important;
+    gap: 3px !important;
+  }
+  .income-item .income-amount {
+    width: 100% !important;
+    text-align: left !important;
+    order: 2 !important;
+    overflow: hidden;
+  }
+  .income-item .item-actions {
+    width: 100% !important;
+    justify-content: flex-end !important;
+    order: 3 !important;
+    margin-top: 5px !important;
+    overflow: hidden;
+    
+  }
+}
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+* ===== FORCE CONSISTENT INCOME ITEM STYLE ===== */
+.income-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-bottom: 1px solid var(--border) !important;
+  transition: all 0.4s !important;
+  border-radius: 4px !important;
+  margin-bottom: 1px !important;
+  background: var(--light) !important;
+  gap: 6px !important;
+  min-height: 40px !important;
+  position: relative !important;
+  overflow: hidden;
+}
+
+.income-item .item-content {
+  flex: 1 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  overflow: hidden;
+}  
+  
+  
+  
+  .income-item .income-amount {
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  font-family: 'SF Mono', 'Courier New', monospace !important;
+  background: var(--gradient-income) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-align: right !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+}
+
+.income-item .item-actions {
+  display: flex !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  flex-shrink: 0 !important;
+  overflow: hidden;
+}
 
 
 
+  .income-item .category-badge {
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  margin-right: 4px;
+  margin-bottom: 0;
+}
 
+.income-item strong {
+  font-size: 0.85rem !important;
+  color: var(--primary-dark) !important;
+  margin-bottom: 2px !important;
+  display: block !important;
+}
 
+.income-item .item-content div {
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+  margin-top: 1px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 
 
@@ -5773,6 +6059,19 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
       monthlyBudget: false, savingsGoal: false 
     };
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
 
 function searchIncome() {
   const searchTerm = document.getElementById('searchIncome').value.toLowerCase();
@@ -5880,58 +6179,80 @@ function populateIncomeFilters() {
 }
 
 
-// ===== INCOME LIST FUNCTIONS - FIXED FOR EMOJIS =====
+// ===== FIXED: CONSISTENT INCOME RENDERING (USE THIS ONLY) =====
 function displayIncome(incomeArray) {
-  const incomeListContainer = document.getElementById('incomeList');
-  if (!incomeListContainer) return;
-  
-  if (incomeArray.length === 0) {
-    incomeListContainer.innerHTML = '<div class="empty-state">No income records found</div>';
+  const container = document.getElementById('incomeList');
+  if (!container) return;
+
+  if (!incomeArray || incomeArray.length === 0) {
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-money-bill-alt"></i><p>No income records found</p></div>';
     return;
   }
-  
+
+  // Sort by date (newest first)
+  const sortedIncome = [...incomeArray].sort((a, b) => {
+    const dateA = new Date(a.date || a.timestamp?.toDate?.() || 0);
+    const dateB = new Date(b.date || b.timestamp?.toDate?.() || 0);
+    return dateB - dateA;
+  });
+
   let html = '';
-  incomeArray.forEach(income => {
-    const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount);
-    const formattedDate = new Date(income.date).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-    
-    // Get source display name with emoji
-    const sourceDisplay = getSourceDisplayNameWithEmoji(income.source);
-    // Extract just the emoji for the badge
-    const sourceEmoji = getSourceEmoji(income.source);
-    
+  sortedIncome.forEach(income => {
+    const date = getFormattedDate(income);
+    const amount = parseFloat(income.amount) || 0;
+    const source = income.source || 'Other';
+    const notes = income.notes || '';
+    const sourceClass = 'source-' + source.toLowerCase().replace(/\s+/g, '-').replace('/', '-');
+
     html += `
-      <div class="income-item" data-id="${income.id}">
-        <div class="item-content">
-          <div>
-            <span class="category-badge ${getSourceClass(income.source)}">
-              ${sourceEmoji} ${income.source}
-            </span>
-            <strong>${formattedDate}</strong>
-          </div>
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">
-            ${income.notes || ''}
-          </div>
-        </div>
-        <div class="income-amount">UGX ${formattedAmount}</div>
-        <div class="item-actions">
-          <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
+    <div class="income-item" data-id="${income.id}">
+      <div class="item-content">
+        <strong>${date}</strong>
+        <div>${notes}</div>
+        <span class="category-badge ${sourceClass}">
+          <i class="fas fa-briefcase"></i> ${source}
+        </span>
       </div>
+      <div class="income-amount">UGX ${amount.toLocaleString('en-US')}</div>
+      <div class="item-actions">
+        <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
     `;
   });
-  
-  incomeListContainer.innerHTML = html;
+
+  container.innerHTML = html;
 }
+
+function getFormattedDate(item) {
+  if (!item) return 'Invalid Date';
+  let date;
+  if (item.date) {
+    if (item.date.toDate) date = item.date.toDate();
+    else if (item.date instanceof Date) date = item.date;
+    else date = new Date(item.date);
+  } else if (item.timestamp?.toDate) {
+    date = item.timestamp.toDate();
+  } else {
+    date = new Date(0);
+  }
+  if (isNaN(date.getTime())) return 'Invalid Date';
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+
+
+
 
 // Helper function to get source display name with emoji
 function getSourceDisplayNameWithEmoji(source) {
@@ -6270,16 +6591,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7070,6 +7381,20 @@ incomeListener = db.collection('income')
   }
 }
 
+function fixIncomeListDOM() {
+  // Remove any element with "income-item-clean" OR any .income-item with background gradient
+  const badItems = document.querySelectorAll('.income-item-clean, .income-item[style*="gradient"], .income-item[style*="background"]');
+  badItems.forEach(el => {
+    if (!el.classList.contains('income-item') || el.classList.contains('income-item-clean')) {
+      el.remove();
+    }
+  });
+}
+setInterval(fixIncomeListDOM, 1000); // Run every 1 second
+
+
+
+
     // FIXED: Improved date extraction function
     function getDateFromExpense(item) {
       if (!item) return new Date(0);
@@ -7661,6 +7986,63 @@ function getSourceDisplayName(sourceValue) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Helper function to get category class
 function getCategoryClass(category) {
     const categoryMap = {
@@ -8158,7 +8540,6 @@ function loadIncomeList(incomeData = allIncome) {
             <i class="fas fa-briefcase"></i> ${source}
           </span>
         </div>
-        <div class="expense-amount income-amount">UGX ${amount.toLocaleString('en-US')}</div>
         <div class="item-actions">
           <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
             <i class="fas fa-edit"></i>
@@ -8472,77 +8853,10 @@ function getIncomeDate(item) {
   return dateValue;
 }
 
-// Function to display income list
-function displayIncomeList(incomeArray) {
-    const incomeListContainer = document.getElementById('incomeList');
-    
-    if (!incomeArray || incomeArray.length === 0) {
-        incomeListContainer.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-money-bill-alt"></i>
-                <p>No income records found</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Sort by date descending (most recent first)
-    incomeArray.sort((a, b) => {
-        const dateA = new Date(a.date || a.timestamp?.toDate?.() || 0);
-        const dateB = new Date(b.date || b.timestamp?.toDate?.() || 0);
-        return dateB - dateA;
-    });
-    
-    let html = '';
-    incomeArray.forEach(income => {
-        const date = income.date ? new Date(income.date) : 
-                     income.timestamp?.toDate?.() || new Date();
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            weekday: 'short', 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        });
-        
-        // Format amount with commas
-        const formattedAmount = new Intl.NumberFormat('en-US').format(income.amount || 0);
-        
-        // Get category class for styling
-        const sourceClass = income.source ? 
-        'source-' + income.source.toLowerCase().replace(/[^a-z0-9]/g, '-') : 
-        'source-other';        
-        html += `
-            <div class="income-item">
-                <div class="item-content">
-                    <div>
-                        <strong>${formattedDate}</strong>
-                        <span class="category-badge ${sourceClass}">
-                            <i class="fas fa-money-bill-alt"></i>
-                             <span>${income.source || 'Unknown'}</span>
-                        </span>
-                    </div>
-                    <div>${income.notes || 'No description'}</div>
-                </div>
-                <div class="income-amount">UGX ${formattedAmount}</div>
-                <div class="item-actions">
-                    <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `;
-    });
-    
-    incomeListContainer.innerHTML = html;
-}
 
 // Function to load income list initially
 function loadIncomeList(incomeArray = allIncome) {
-    displayIncomeList(incomeArray);
-	updateIncomeList(incomeArray);
+    displayIncome(incomeArray);
     
     // Populate source filter dropdown
     const sourceFilter = document.getElementById('filterIncomeSource');
