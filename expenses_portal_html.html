@@ -3240,23 +3240,7 @@
 
 /* ===== MOBILE SPECIFIC ADJUSTMENTS ===== */
 
-/* iPhone/Android portrait mode */
-@media (max-width: 768px) {
-    /* HALF-SCREEN SEARCH CONTAINERS STARTING FROM MIDDLE */
-    .expenses-list .search-filter-container,
-    .income-list .search-filter-container,
-    .reminders-list .search-filter-container {
-        display: flex !important;
-        flex-direction: row !important; /* Side by side on mobile */
-        justify-content: center !important; /* Center the items */
-        align-items: center !important;
-        width: 50% !important; /* Half of the screen */
-        margin-left: auto !important; /* Push to the middle/right */
-        margin-right: 0 !important; /* Align to middle/right edge */
-        gap: 8px !important;
-        padding: 10px !important;
-    }
-    
+
     /* Each search/filter item takes half of the container */
     .expenses-list .search-box,
     .income-list .search-box,
@@ -4609,21 +4593,6 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
 }
 
 
-
-.income-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 4px 6px;
-  margin-bottom: 1px;
-  background: var(--light);
-  border-radius: 4px;
-  gap: 6px;
-  min-height: 40px;
-  position: relative;
-  transition: all 0.4s ease;
-  border: 1px solid var(--border);
-}
 
 .income-item .item-content {
   flex: 1;
