@@ -2634,6 +2634,7 @@
 /* Make all list items more compact */
 .expense-item,
 .reminder-item,
+.income-item , 
 .budget-item {
     padding: 6px 8px !important; /* Reduced from 8px 12px */
     margin-bottom: 3px !important; /* Reduced from 4px */
@@ -2644,6 +2645,7 @@
 
 /* Reduce inner spacing for list items */
 .expense-item .item-content,
+.income-item .income-item,
 .reminder-item .item-content,
 .budget-item .item-content {
     gap: 3px !important;
@@ -3629,13 +3631,6 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 
 
 
-
-
-/* Remove conflicting income-item-clean styles */
-.income-item-clean {
-  display: none !important;
-}
-
 /* Ensure proper display for income items */
 #incomeList .income-item,
 .income-list .income-item {
@@ -4377,26 +4372,6 @@ body.dark-mode .main-stats-grid .stat-card:hover::before {
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
-body.dark-mode .income-item {
-    background: linear-gradient(135deg, 
-        var(--card-bg) 0%, 
-        rgba(66, 153, 225, 0.03) 100%
-    );
-
-
-body.dark-mode .income-item .category-badge {
-    background: rgba(66, 153, 225, 0.15);
-    color: #90cdf4;
-    border-color: rgba(66, 153, 225, 0.25);
-}
-
-body.dark-mode .income-item .income-amount {
-    color: #90caf9;
-}
-
-body.dark-mode .income-item:hover .income-amount {
-    color: #63b3ed;
-}
 
 /* Dark mode text colors */
 body.dark-mode #totalIncomeValue {
@@ -5894,6 +5869,35 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
       </div>
     </div>
   </div>
+  
+  
+  
+  <div class="income-item">
+    <div class="item-content">
+        <strong>Date</strong>
+        <div>Description</div>
+        <span class="category-badge">Source</span>
+    </div>
+    <div class="income-amount">UGX 100,000</div>
+    <div class="item-actions">
+        <button class="action-btn edit">✏️</button>
+        <button class="action-btn delete">🗑️</button>
+    </div>
+</div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
@@ -8929,45 +8933,34 @@ function searchIncome() {
 
 /// FIXED: Search expenses function
 function searchExpenses() {
-    const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
-    const category = document.getElementById('filterExpenseCategory').value;
-    const month = document.getElementById('filterExpenseMonth').value;
-    
-    let filtered = allExpenses;
-    
-    // Apply category filter if set
-    if (category) {
-        filtered = filtered.filter(expense => {
-            const categoryValue = getCategoryValue(expense.category);
-            return categoryValue === category || expense.category === category;
-        });
-    }
-    
-    // Apply month filter if set
-    if (month) {
-        filtered = filtered.filter(expense => {
-            if (!expense.date) return false;
-            try {
-                const expenseDate = new Date(expense.date);
-                const expenseMonth = expenseDate.getFullYear() + '-' + 
-                                   String(expenseDate.getMonth() + 1).padStart(2, '0');
-                return expenseMonth === month;
-            } catch (e) {
-                return false;
-            }
-        });
-    }
-    
-    // Apply search term
-    if (searchTerm) {
-        filtered = filtered.filter(expense => 
-            expense.description?.toLowerCase().includes(searchTerm) ||
-            expense.category?.toLowerCase().includes(searchTerm) ||
-            expense.amount?.toString().includes(searchTerm)
-        );
-    }
-    
-    displayExpenses(filtered);
+  const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
+  let filteredExpenses = allExpenses; // You need to ensure 'allExpenses' is a global variable
+  
+  if (searchTerm) {
+    filteredExpenses = filteredExpenses.filter(expense => 
+      (expense.category && expense.category.toLowerCase().includes(searchTerm)) ||
+      (expense.description && expense.description.toLowerCase().includes(searchTerm)) ||
+      (expense.amount && expense.amount.toString().includes(searchTerm))
+    );
+  }
+  
+  // Apply the current filters on the search result
+  const selectedCategory = document.getElementById('filterExpenseCategory').value;
+  const selectedMonth = document.getElementById('filterExpenseMonth').value;
+  
+  if (selectedCategory) {
+    filteredExpenses = filteredExpenses.filter(expense => expense.category === selectedCategory);
+  }
+  
+  if (selectedMonth) {
+    filteredExpenses = filteredExpenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      const expenseMonth = expenseDate.getFullYear() + '-' + (expenseDate.getMonth() + 1).toString().padStart(2, '0');
+      return expenseMonth === selectedMonth;
+    });
+  }
+  
+  displayExpenses(filteredExpenses);
 }
 
 // FIXED: Search income function
@@ -10283,52 +10276,35 @@ function populateIncomeFilters() {
     });
 }
 
-// Updated searchExpenses function with proper filtering
 function searchExpenses() {
-    const searchText = document.getElementById('searchExpenses').value.toLowerCase();
-    const selectedCategory = document.getElementById('filterExpenseCategory').value;
-    const selectedMonth = document.getElementById('filterExpenseMonth').value;
-    
-    let filtered = allExpenses;
-    
-    // Apply search text filter
-    if (searchText) {
-        filtered = filtered.filter(expense => {
-            return expense.description?.toLowerCase().includes(searchText) ||
-                   expense.category?.toLowerCase().includes(searchText) ||
-                   expense.amount?.toString().includes(searchText);
-        });
-    }
-    
-    // Apply category filter
-    if (selectedCategory) {
-        filtered = filtered.filter(expense => expense.category === selectedCategory);
-    }
-    
-    // Apply month filter
-    if (selectedMonth) {
-        filtered = filtered.filter(expense => {
-            if (!expense.date) return false;
-            
-            const [year, month] = selectedMonth.split('-');
-            const expenseDate = new Date(expense.date);
-            
-            if (isNaN(expenseDate.getTime())) return false;
-            
-            return expenseDate.getFullYear() === parseInt(year) &&
-                   (expenseDate.getMonth() + 1) === parseInt(month);
-        });
-    }
-    
-    // Sort by date (most recent first)
-    filtered.sort((a, b) => {
-        const dateA = a.date ? new Date(a.date) : new Date(0);
-        const dateB = b.date ? new Date(b.date) : new Date(0);
-        return dateB - dateA;
+  const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
+  let filteredExpenses = allExpenses; // You need to ensure 'allExpenses' is a global variable
+  
+  if (searchTerm) {
+    filteredExpenses = filteredExpenses.filter(expense => 
+      (expense.category && expense.category.toLowerCase().includes(searchTerm)) ||
+      (expense.description && expense.description.toLowerCase().includes(searchTerm)) ||
+      (expense.amount && expense.amount.toString().includes(searchTerm))
+    );
+  }
+  
+  // Apply the current filters on the search result
+  const selectedCategory = document.getElementById('filterExpenseCategory').value;
+  const selectedMonth = document.getElementById('filterExpenseMonth').value;
+  
+  if (selectedCategory) {
+    filteredExpenses = filteredExpenses.filter(expense => expense.category === selectedCategory);
+  }
+  
+  if (selectedMonth) {
+    filteredExpenses = filteredExpenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      const expenseMonth = expenseDate.getFullYear() + '-' + (expenseDate.getMonth() + 1).toString().padStart(2, '0');
+      return expenseMonth === selectedMonth;
     });
-    
-    // Display filtered results
-    displayExpenses(filtered);
+  }
+  
+  displayExpenses(filteredExpenses);
 }
 
 // Update displayExpenses function to show message when no results
@@ -10839,50 +10815,35 @@ function displayExpenses(expenses) {
     }
     
     // ===== SEARCH AND FILTER FUNCTIONS - FIXED =====
-    function searchExpenses() {
-      const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
-      const expenseItems = document.querySelectorAll('#expensesList .expense-item');
-      
-      expenseItems.forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
-      });
-    }
-    
-  // FIXED: Expense filtering function
-function filterExpenses() {
-    const category = document.getElementById('filterExpenseCategory').value;
-    const month = document.getElementById('filterExpenseMonth').value;
-    let filtered = allExpenses;
-    
-    if (category) {
-        filtered = filtered.filter(expense => {
-            // Handle category filtering - compare both values and display names
-            const categoryValue = getCategoryValue(expense.category);
-            return categoryValue === category || expense.category === category;
-        });
-    }
-    
-    if (month) {
-        filtered = filtered.filter(expense => {
-            if (!expense.date) return false;
-            
-            try {
-                const expenseDate = new Date(expense.date);
-                if (isNaN(expenseDate.getTime())) return false;
-                
-                // Format date as YYYY-MM for comparison
-                const expenseMonth = expenseDate.getFullYear() + '-' + 
-                                    String(expenseDate.getMonth() + 1).padStart(2, '0');
-                return expenseMonth === month;
-            } catch (e) {
-                console.error('Date parsing error:', e, expense);
-                return false;
-            }
-        });
-    }
-    
-    displayExpenses(filtered);
+function searchExpenses() {
+  const searchTerm = document.getElementById('searchExpenses').value.toLowerCase();
+  let filteredExpenses = allExpenses; // You need to ensure 'allExpenses' is a global variable
+  
+  if (searchTerm) {
+    filteredExpenses = filteredExpenses.filter(expense => 
+      (expense.category && expense.category.toLowerCase().includes(searchTerm)) ||
+      (expense.description && expense.description.toLowerCase().includes(searchTerm)) ||
+      (expense.amount && expense.amount.toString().includes(searchTerm))
+    );
+  }
+  
+  // Apply the current filters on the search result
+  const selectedCategory = document.getElementById('filterExpenseCategory').value;
+  const selectedMonth = document.getElementById('filterExpenseMonth').value;
+  
+  if (selectedCategory) {
+    filteredExpenses = filteredExpenses.filter(expense => expense.category === selectedCategory);
+  }
+  
+  if (selectedMonth) {
+    filteredExpenses = filteredExpenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      const expenseMonth = expenseDate.getFullYear() + '-' + (expenseDate.getMonth() + 1).toString().padStart(2, '0');
+      return expenseMonth === selectedMonth;
+    });
+  }
+  
+  displayExpenses(filteredExpenses);
 }
 // FIXED: Income filtering function
 function filterIncome() {
