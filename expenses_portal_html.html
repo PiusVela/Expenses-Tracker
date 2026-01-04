@@ -5473,7 +5473,7 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-primary" id="addBtn" onclick="handleExpenseSubmit()" disabled><i class="fas fa-plus"></i> Add Expense</button>
+              <button class="btn btn-primary" id="addBtn" type="button" disabled><i class="fas fa-plus"></i> Add Expense</button>
               <button class="btn btn-cancel" id="cancelExpenseBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -5530,7 +5530,7 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-success" id="addIncomeBtn" onclick="handleIncomeSubmit()" disabled><i class="fas fa-arrow-alt-circle-up"></i> Record Income</button>
+              <button class="btn btn-success" id="addIncomeBtn" type="button" disabled><i class="fas fa-arrow-alt-circle-up"></i> Record Income</button>
               <button class="btn btn-cancel" id="cancelIncomeBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -5617,7 +5617,7 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-budget" id="addBudgetBtn" onclick="handleBudgetSubmit()" disabled><i class="fas fa-plus"></i> Set Budget</button>
+              <button class="btn btn-budget" id="addBudgetBtn" type="button" disabled><i class="fas fa-plus"></i> Set Budget</button>
               <button class="btn btn-cancel" id="cancelBudgetBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -5656,7 +5656,7 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
               </div>
             </div>
             <div class="btn-actions-container">
-              <button class="btn btn-primary" id="addReminderBtn" onclick="handleReminderSubmit()" disabled><i class="fas fa-bell"></i> Add Reminder</button>
+              <button class="btn btn-primary" id="addReminderBtn" type="button" disabled><i class="fas fa-bell"></i> Add Reminder</button>
               <button class="btn btn-cancel" id="cancelReminderBtn" style="display: none;"><i class="fas fa-times"></i> Cancel Edit</button>
             </div>
           </div>
@@ -6336,6 +6336,910 @@ function formatCurrency(amount) {
 	
 	
 	
+
+function clearExpenseForm() {
+    document.getElementById('amount').value = '';
+    document.getElementById('category').value = 'Groceries';
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('description').value = '';
+    document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Expense';
+    document.getElementById('addBtn').innerHTML = '<i class="fas fa-plus"></i> Add Expense';
+    document.getElementById('cancelExpenseBtn').style.display = 'none';
+    isEditingExpense = false;
+    editingExpenseId = null;
+}
+
+function clearIncomeForm() {
+    document.getElementById('incomeAmount').value = '';
+    document.getElementById('incomeSource').value = 'Salary';
+    document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('incomeNotes').value = '';
+    document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
+    document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
+    document.getElementById('cancelIncomeBtn').style.display = 'none';
+    isEditingIncome = false;
+    editingIncomeId = null;
+}
+
+function clearBudgetForm() {
+    document.getElementById('budgetAmount').value = '';
+    
+    // Set default budget month to current month
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    document.getElementById('budgetMonth').value = currentMonth;
+    
+    document.getElementById('budgetCategory').value = '';
+    document.getElementById('budgetNotes').value = '';
+    document.getElementById('budgetFormTitle').innerHTML = '<i class="fas fa-chart-pie"></i> Set Monthly Budget';
+    document.getElementById('addBudgetBtn').innerHTML = '<i class="fas fa-plus"></i> Set Budget';
+    document.getElementById('cancelBudgetBtn').style.display = 'none';
+    isEditingBudget = false;
+    editingBudgetId = null;
+}
+
+function clearReminderForm() {
+    document.getElementById('reminderTitle').value = '';
+    document.getElementById('reminderAmount').value = '';
+    
+    // Set reminder date to today
+    document.getElementById('reminderDueDate').value = new Date().toISOString().split('T')[0];
+    
+    document.getElementById('reminderCategory').value = 'Rent';
+    document.getElementById('reminderFormTitle').innerHTML = '<i class="fas fa-bell"></i> Add Payment Reminder';
+    document.getElementById('addReminderBtn').innerHTML = '<i class="fas fa-bell"></i> Add Reminder';
+    document.getElementById('cancelReminderBtn').style.display = 'none';
+    isEditingReminder = false;
+    editingReminderId = null;
+}
+
+
+
+// ========== EXPENSE HANDLERS ==========
+
+
+// ========== INCOME HANDLERS ==========
+
+async function handleIncomeSubmit() {
+    if (!isFirestoreReady || !currentUser) {
+        showMessage('⏳ Please wait, app is still initializing...', 'warning');
+        return;
+    }
+    
+    const amount = parseFloat(document.getElementById('incomeAmount').value);
+    const sourceSelect = document.getElementById('incomeSource');
+    const sourceDisplay = sourceSelect.options[sourceSelect.selectedIndex].text;
+    const source = getSourceValue(sourceDisplay);
+    const date = document.getElementById('incomeDate').value;
+    const notes = document.getElementById('incomeNotes').value.trim();
+    
+    // Validation
+ 
+    if (!source) {
+        showMessage('❌ Please select a source', 'error');
+        return;
+    }
+    if (!date) {
+        showMessage('❌ Please select a date', 'error');
+        return;
+    }
+    
+    // Disable button to prevent double submission
+    const addBtn = document.getElementById('addIncomeBtn');
+    addBtn.disabled = true;
+    addBtn.innerHTML = isEditingIncome ? 
+        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+        '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    try {
+        const incomeData = {
+            amount: amount,
+            source: source,
+            sourceDisplay: sourceDisplay,
+            date: date,
+            notes: notes || 'No notes',
+            userId: currentUser.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (isEditingIncome && editingIncomeId) {
+            await db.collection('income').doc(editingIncomeId).update(incomeData);
+            showMessage('✅ Income updated successfully!', 'success');
+        } else {
+            await db.collection('income').add(incomeData);
+            showMessage('✅ Income added successfully!', 'success');
+        }
+        
+        // Clear the form after successful submission
+        clearIncomeForm();
+        
+        // Refresh data
+        setTimeout(() => {
+            loadAllData();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error saving income:', error);
+        showMessage('❌ Failed to save income: ' + error.message, 'error');
+    } finally {
+        addBtn.disabled = false;
+        addBtn.innerHTML = isEditingIncome ? 
+            '<i class="fas fa-save"></i> Update Income' : 
+            '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
+    }
+}
+
+
+
+// Make sure you're setting the value correctly when editing
+function populateEditForm(item, type) {
+    if (type === 'expense') {
+        document.getElementById('amount').value = item.amount || '';
+        document.getElementById('category').value = item.category || '';
+        document.getElementById('date').value = item.date || '';
+        document.getElementById('description').value = item.description || '';
+    }
+    
+    if (type === 'income') {
+        document.getElementById('incomeAmount').value = item.amount || '';
+        document.getElementById('incomeSource').value = item.source || '';
+        document.getElementById('incomeDate').value = item.date || '';
+        document.getElementById('incomeNotes').value = item.notes || '';
+    }
+}
+
+
+
+// Add this to your form submission handlers
+function handleFormSubmit(type) {
+    // Get amount based on form type
+    let amount;
+    if (type === 'expense') {
+        amount = document.getElementById('amount').value;
+    } else if (type === 'income') {
+        amount = document.getElementById('incomeAmount').value;
+    } else if (type === 'budget') {
+        amount = document.getElementById('budgetAmount').value;
+    } else if (type === 'reminder') {
+        amount = document.getElementById('reminderAmount').value;
+    }
+    
+    // Convert to number and check
+    amount = parseFloat(amount);
+    
+    // More lenient validation
+    if (isNaN(amount)) {
+        showMessage('❌ Please enter a valid amount', 'error');
+        return false;
+    }
+    
+    // Allow zero values if needed
+    if (amount < 0) {
+        showMessage('❌ Amount cannot be negative', 'error');
+        return false;
+    }
+    
+    // Continue with form submission...
+    return true;
+}
+
+
+
+
+
+
+
+
+
+// ========== BUDGET HANDLERS ==========
+
+async function handleBudgetSubmit() {
+    if (!isFirestoreReady || !currentUser) {
+        showMessage('⏳ Please wait, app is still initializing...', 'warning');
+        return;
+    }
+    
+    const amount = parseFloat(document.getElementById('budgetAmount').value);
+    const month = document.getElementById('budgetMonth').value;
+    const category = document.getElementById('budgetCategory').value;
+    const notes = document.getElementById('budgetNotes').value.trim();
+    
+    // Validation
+    if (!amount || amount <= 0) {
+        showMessage('❌ Please enter a valid budget amount', 'error');
+        return;
+    }
+    if (!month) {
+        showMessage('❌ Please select a month', 'error');
+        return;
+    }
+    
+    // Disable button to prevent double submission
+    const addBtn = document.getElementById('addBudgetBtn');
+    addBtn.disabled = true;
+    addBtn.innerHTML = isEditingBudget ? 
+        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+        '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    try {
+        const budgetData = {
+            amount: amount,
+            month: month,
+            category: category || 'All Categories',
+            notes: notes || 'No notes',
+            userId: currentUser.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (isEditingBudget && editingBudgetId) {
+            await db.collection('budgets').doc(editingBudgetId).update(budgetData);
+            showMessage('✅ Budget updated successfully!', 'success');
+        } else {
+            await db.collection('budgets').add(budgetData);
+            showMessage('✅ Budget set successfully!', 'success');
+        }
+        
+        // Clear the form after successful submission
+        clearBudgetForm();
+        
+        // Refresh data
+        setTimeout(() => {
+            loadAllData();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error saving budget:', error);
+        showMessage('❌ Failed to save budget: ' + error.message, 'error');
+    } finally {
+        addBtn.disabled = false;
+        addBtn.innerHTML = isEditingBudget ? 
+            '<i class="fas fa-save"></i> Update Budget' : 
+            '<i class="fas fa-plus"></i> Set Budget';
+    }
+}
+
+// ========== REMINDER HANDLERS ==========
+
+async function handleReminderSubmit() {
+    if (!isFirestoreReady || !currentUser) {
+        showMessage('⏳ Please wait, app is still initializing...', 'warning');
+        return;
+    }
+    
+    const title = document.getElementById('reminderTitle').value.trim();
+    const amount = parseFloat(document.getElementById('reminderAmount').value);
+    const dueDate = document.getElementById('reminderDueDate').value;
+    const category = document.getElementById('reminderCategory').value;
+    
+    // Validation
+    if (!title) {
+        showMessage('❌ Please enter a reminder title', 'error');
+        return;
+    }
+    
+    if (!dueDate) {
+        showMessage('❌ Please select a due date', 'error');
+        return;
+    }
+    
+    // Calculate status based on due date
+    const today = new Date().toISOString().split('T')[0];
+    let status = 'upcoming';
+    if (dueDate === today) status = 'today';
+    else if (dueDate < today) status = 'overdue';
+    
+    // Disable button to prevent double submission
+    const addBtn = document.getElementById('addReminderBtn');
+    addBtn.disabled = true;
+    addBtn.innerHTML = isEditingReminder ? 
+        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
+        '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    try {
+        const reminderData = {
+            title: title,
+            amount: amount,
+            dueDate: dueDate,
+            category: category,
+            status: status,
+            completed: false,
+            userId: currentUser.uid,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        if (isEditingReminder && editingReminderId) {
+            await db.collection('reminders').doc(editingReminderId).update(reminderData);
+            showMessage('✅ Reminder updated successfully!', 'success');
+        } else {
+            await db.collection('reminders').add(reminderData);
+            showMessage('✅ Reminder added successfully!', 'success');
+        }
+        
+        // Clear the form after successful submission
+        clearReminderForm();
+        
+        // Refresh data
+        setTimeout(() => {
+            loadAllData();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error saving reminder:', error);
+        showMessage('❌ Failed to save reminder: ' + error.message, 'error');
+    } finally {
+        addBtn.disabled = false;
+        addBtn.innerHTML = isEditingReminder ? 
+            '<i class="fas fa-save"></i> Update Reminder' : 
+            '<i class="fas fa-bell"></i> Add Reminder';
+    }
+}
+
+
+
+
+// ========== EDIT FUNCTIONS ==========
+
+// Edit Expense
+async function editExpense(expenseId) {
+    try {
+        const expenseDoc = await db.collection('expenses').doc(expenseId).get();
+        if (!expenseDoc.exists) {
+            showMessage('❌ Expense not found', 'error');
+            return;
+        }
+
+        const expense = expenseDoc.data();
+        isEditingExpense = true;
+        editingExpenseId = expenseId;
+
+        // Set form values
+        document.getElementById('amount').value = expense.amount || '';
+        document.getElementById('date').value = expense.date || '';
+        document.getElementById('description').value = expense.description || '';
+        
+        // Handle category selection
+        const categoryValue = expense.categoryDisplay || expense.category;
+        const categorySelect = document.getElementById('category');
+        
+        // Find the option with matching text
+        let found = false;
+        for (let i = 0; i < categorySelect.options.length; i++) {
+            if (categorySelect.options[i].text === categoryValue || 
+                getCategoryValue(categorySelect.options[i].text) === categoryValue) {
+                categorySelect.selectedIndex = i;
+                found = true;
+                break;
+            }
+        }
+        
+        // If not found, default to Groceries
+        if (!found) {
+            categorySelect.value = 'Groceries';
+        }
+        
+        // Update UI
+        document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Expense';
+        document.getElementById('addBtn').innerHTML = '<i class="fas fa-save"></i> Update Expense';
+        document.getElementById('cancelExpenseBtn').style.display = 'inline-flex';
+        
+        // Expand the form if collapsed
+        const formSection = document.getElementById('expenseFormSection');
+        if (formSection.classList.contains('collapsed')) {
+            formSection.classList.remove('collapsed');
+        }
+        
+        // Scroll to form
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        showMessage('✏️ Editing expense...', 'info');
+    } catch (error) {
+        console.error('Error fetching expense:', error);
+        showMessage('❌ Failed to load expense for editing: ' + error.message, 'error');
+    }
+}
+
+// Edit Income
+async function editIncome(incomeId) {
+    try {
+        const incomeDoc = await db.collection('income').doc(incomeId).get();
+        if (!incomeDoc.exists) {
+            showMessage('❌ Income not found', 'error');
+            return;
+        }
+
+        const income = incomeDoc.data();
+        isEditingIncome = true;
+        editingIncomeId = incomeId;
+
+        // Set form values
+        document.getElementById('incomeAmount').value = income.amount || '';
+        document.getElementById('incomeDate').value = income.date || '';
+        document.getElementById('incomeNotes').value = income.notes || '';
+        
+        // Handle source selection
+        const sourceValue = income.sourceDisplay || income.source;
+        const sourceSelect = document.getElementById('incomeSource');
+        
+        // Find the option with matching text
+        let found = false;
+        for (let i = 0; i < sourceSelect.options.length; i++) {
+            if (sourceSelect.options[i].text === sourceValue) {
+                sourceSelect.selectedIndex = i;
+                found = true;
+                break;
+            }
+        }
+        
+        // If not found, default to Salary
+        if (!found) {
+            sourceSelect.value = 'Salary';
+        }
+        
+        // Update UI
+        document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Income';
+        document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-save"></i> Update Income';
+        document.getElementById('cancelIncomeBtn').style.display = 'inline-flex';
+        
+        // Expand the form if collapsed
+        const formSection = document.getElementById('incomeFormSection');
+        if (formSection.classList.contains('collapsed')) {
+            formSection.classList.remove('collapsed');
+        }
+        
+        // Scroll to form
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        showMessage('✏️ Editing income...', 'info');
+    } catch (error) {
+        console.error('Error fetching income:', error);
+        showMessage('❌ Failed to load income for editing: ' + error.message, 'error');
+    }
+}
+
+// Edit Budget
+async function editBudget(budgetId) {
+    try {
+        const budgetDoc = await db.collection('budgets').doc(budgetId).get();
+        if (!budgetDoc.exists) {
+            showMessage('❌ Budget not found', 'error');
+            return;
+        }
+
+        const budget = budgetDoc.data();
+        isEditingBudget = true;
+        editingBudgetId = budgetId;
+
+        // Set form values
+        document.getElementById('budgetAmount').value = budget.amount || '';
+        document.getElementById('budgetMonth').value = budget.month || '';
+        document.getElementById('budgetNotes').value = budget.notes || '';
+        
+        // Set category if exists
+        if (budget.category && budget.category !== 'All Categories') {
+            document.getElementById('budgetCategory').value = budget.category;
+        }
+        
+        // Update UI
+        document.getElementById('budgetFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Budget';
+        document.getElementById('addBudgetBtn').innerHTML = '<i class="fas fa-save"></i> Update Budget';
+        document.getElementById('cancelBudgetBtn').style.display = 'inline-flex';
+        
+        // Expand the form if collapsed
+        const formSection = document.getElementById('budgetFormSection');
+        if (formSection.classList.contains('collapsed')) {
+            formSection.classList.remove('collapsed');
+        }
+        
+        // Scroll to form
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        showMessage('✏️ Editing budget...', 'info');
+    } catch (error) {
+        console.error('Error fetching budget:', error);
+        showMessage('❌ Failed to load budget for editing: ' + error.message, 'error');
+    }
+}
+
+// Edit Reminder
+async function editReminder(reminderId) {
+    try {
+        const reminderDoc = await db.collection('reminders').doc(reminderId).get();
+        if (!reminderDoc.exists) {
+            showMessage('❌ Reminder not found', 'error');
+            return;
+        }
+
+        const reminder = reminderDoc.data();
+        isEditingReminder = true;
+        editingReminderId = reminderId;
+
+        // Set form values
+        document.getElementById('reminderTitle').value = reminder.title || '';
+        document.getElementById('reminderAmount').value = reminder.amount || '';
+        document.getElementById('reminderDueDate').value = reminder.dueDate || '';
+        
+        // Set category
+        if (reminder.category) {
+            document.getElementById('reminderCategory').value = reminder.category;
+        }
+        
+        // Update UI
+        document.getElementById('reminderFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Reminder';
+        document.getElementById('addReminderBtn').innerHTML = '<i class="fas fa-save"></i> Update Reminder';
+        document.getElementById('cancelReminderBtn').style.display = 'inline-flex';
+        
+        // Expand the form if collapsed
+        const formSection = document.getElementById('reminderFormSection');
+        if (formSection.classList.contains('collapsed')) {
+            formSection.classList.remove('collapsed');
+        }
+        
+        // Scroll to form
+        formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        showMessage('✏️ Editing reminder...', 'info');
+    } catch (error) {
+        console.error('Error fetching reminder:', error);
+        showMessage('❌ Failed to load reminder for editing: ' + error.message, 'error');
+    }
+}
+
+
+
+
+
+// ========== CANCEL EDIT FUNCTIONS ==========
+
+function cancelEditExpense() {
+    clearExpenseForm();
+    showMessage('✏️ Expense edit cancelled', 'info');
+}
+
+function cancelEditIncome() {
+    clearIncomeForm();
+    showMessage('✏️ Income edit cancelled', 'info');
+}
+
+function cancelEditBudget() {
+    clearBudgetForm();
+    showMessage('✏️ Budget edit cancelled', 'info');
+}
+
+function cancelEditReminder() {
+    clearReminderForm();
+    showMessage('✏️ Reminder edit cancelled', 'info');
+}
+
+// Connect cancel buttons to their functions
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('cancelExpenseBtn').addEventListener('click', cancelEditExpense);
+    document.getElementById('cancelIncomeBtn').addEventListener('click', cancelEditIncome);
+    document.getElementById('cancelBudgetBtn').addEventListener('click', cancelEditBudget);
+    document.getElementById('cancelReminderBtn').addEventListener('click', cancelEditReminder);
+});
+
+
+
+// ========== HELPER FUNCTIONS ==========
+
+// Convert display name to value (removes emoji)
+function getCategoryValue(displayName) {
+    return displayName.replace(/[^\w\s]/g, '').trim();
+}
+
+function getSourceValue(displayName) {
+    return displayName.replace(/[^\w\s]/g, '').trim();
+}
+
+// Initialize all forms with default values
+function initializeForms() {
+    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    
+    // Expense form
+    document.getElementById('date').value = today;
+    
+    // Income form
+    document.getElementById('incomeDate').value = today;
+    
+    // Budget form
+    document.getElementById('budgetMonth').value = currentMonth;
+    
+    // Reminder form
+    document.getElementById('reminderDueDate').value = today;
+}
+
+// Show error message
+function showError(message) {
+    showMessage(message, 'error');
+}
+
+// Show success message
+function showSuccess(message) {
+    showMessage(message, 'success');
+}
+
+// Generic message function (you should already have this)
+function showMessage(message, type = 'info') {
+    // Your existing showMessage implementation
+    console.log(`[${type.toUpperCase()}] ${message}`);
+}
+
+
+
+
+
+
+// ========== DELETE MODAL FUNCTIONS ==========
+
+// Function to show delete confirmation modal
+function showDeleteModal(itemId, collection, itemType = 'item') {
+    itemToDeleteId = itemId;
+    collectionToDelete = collection;
+    
+    // Get item details for display
+    let itemDetails = '';
+    
+    if (collection === 'expenses') {
+        const expense = allExpenses.find(exp => exp.id === itemId);
+        if (expense) {
+            itemDetails = `${expense.categoryDisplay || expense.category} - UGX ${expense.amount.toLocaleString()} on ${expense.date}`;
+        }
+    } else if (collection === 'income') {
+        const income = allIncome.find(inc => inc.id === itemId);
+        if (income) {
+            itemDetails = `${income.sourceDisplay || income.source} - UGX ${income.amount.toLocaleString()} on ${income.date}`;
+        }
+    } else if (collection === 'budgets') {
+        const budget = allBudgets.find(b => b.id === itemId);
+        if (budget) {
+            itemDetails = `Budget for ${budget.month} - UGX ${budget.amount.toLocaleString()}`;
+        }
+    } else if (collection === 'reminders') {
+        const reminder = allReminders.find(r => r.id === itemId);
+        if (reminder) {
+            itemDetails = `${reminder.title} - UGX ${reminder.amount.toLocaleString()} due on ${reminder.dueDate}`;
+        }
+    }
+    
+    document.getElementById('deleteExpenseDetails').textContent = itemDetails || `${itemType} details not available`;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Function to delete item (connected to modal confirm button)
+async function deleteItem() {
+    if (!itemToDeleteId || !collectionToDelete || !currentUser) {
+        showMessage('❌ Unable to delete: Missing information', 'error');
+        return;
+    }
+    
+    const confirmBtn = document.getElementById('confirmDelete');
+    const cancelBtn = document.getElementById('cancelDelete');
+    
+    // Disable buttons during deletion
+    confirmBtn.disabled = true;
+    cancelBtn.disabled = true;
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+    
+    try {
+        await db.collection(collectionToDelete).doc(itemToDeleteId).delete();
+        showMessage('✅ Item deleted successfully!', 'success');
+        
+        // Refresh data after deletion
+        setTimeout(() => {
+            loadAllData();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error deleting item:', error);
+        showMessage('❌ Failed to delete item: ' + error.message, 'error');
+    } finally {
+        // Reset modal and buttons
+        document.getElementById('deleteModal').style.display = 'none';
+        confirmBtn.disabled = false;
+        cancelBtn.disabled = false;
+        confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+        itemToDeleteId = null;
+        collectionToDelete = null;
+    }
+}
+
+// Connect delete modal buttons
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteModal').style.display = 'none';
+    });
+    
+    document.getElementById('confirmDelete').addEventListener('click', deleteItem);
+});
+
+
+
+
+
+// ========== DATA LOADING FUNCTION ==========
+
+async function loadAllData() {
+    if (!currentUser) return;
+    
+    try {
+        // Load all collections
+        await Promise.all([
+            loadExpenses(),
+            loadIncome(),
+            loadBudgets(),
+            loadReminders()
+        ]);
+        
+        // Update stats
+        updateDashboardStats();
+        
+        // Update charts
+        updateCharts();
+        
+        // Update lists
+        loadExpensesList(allExpenses);
+        loadIncomeList(allIncome);
+        loadBudgetsList(allBudgets);
+        loadRemindersList(allReminders);
+        
+    } catch (error) {
+        console.error('Error loading data:', error);
+        showMessage('❌ Failed to load data: ' + error.message, 'error');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+// ========== INITIALIZATION ==========
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize forms with default values
+    initializeForms();
+    
+    // Set up event listeners for submit buttons
+    document.getElementById('addBtn').addEventListener('click', handleExpenseSubmit);
+    document.getElementById('addIncomeBtn').addEventListener('click', handleIncomeSubmit);
+    document.getElementById('addBudgetBtn').addEventListener('click', handleBudgetSubmit);
+    document.getElementById('addReminderBtn').addEventListener('click', handleReminderSubmit);
+    
+    // Set up form inputs to enable/disable submit buttons
+    setupFormValidation();
+});
+
+
+// Add this at the end of your initialization
+function attachFormEventListeners() {
+    // Expense Form
+    document.getElementById('addBtn').addEventListener('click', handleExpenseSubmit);
+    
+    // Income Form
+    document.getElementById('addIncomeBtn').addEventListener('click', handleIncomeSubmit);
+    
+    // Budget Form
+    document.getElementById('addBudgetBtn').addEventListener('click', handleBudgetSubmit);
+    
+    // Reminder Form
+    document.getElementById('addReminderBtn').addEventListener('click', handleReminderSubmit);
+}
+
+// Call this after Firebase initialization
+attachFormEventListeners();
+
+
+
+
+
+
+// Debounce function to prevent multiple submissions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Then modify your handlers
+const debouncedExpenseSubmit = debounce(handleExpenseSubmit, 500);
+const debouncedIncomeSubmit = debounce(handleIncomeSubmit, 500);
+
+// Update event listeners
+document.getElementById('addBtn').addEventListener('click', debouncedExpenseSubmit);
+document.getElementById('addIncomeBtn').addEventListener('click', debouncedIncomeSubmit);
+
+
+
+
+
+function handleExpenseSubmit(event) {
+    if (event) event.preventDefault();
+    
+    const addBtn = document.getElementById('addBtn');
+    
+    // Disable button to prevent double click
+    addBtn.disabled = true;
+    addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    try {
+        // ... your existing code
+    } catch (error) {
+        console.error('Error:', error);
+    } finally {
+        // Re-enable button after 1 second
+        setTimeout(() => {
+            addBtn.disabled = false;
+            addBtn.innerHTML = '<i class="fas fa-plus"></i> Add Expense';
+        }, 1000);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 	
@@ -7870,165 +8774,7 @@ setInterval(fixIncomeListDOM, 1000); // Run every 1 second
       }
     }
     
-// Function to edit an expense (populate form with existing data)
-    function editExpense(expenseId) {
-      const expense = allExpenses.find(exp => exp.id === expenseId);
-      if (!expense) {
-        showMessage('❌ Expense not found', 'error');
-        return;
-      }
-      
-      // Populate the form with expense data
-      document.getElementById('amount').value = expense.amount;
-      document.getElementById('category').value = getCategoryValue(expense.category); // Convert display name back to value
-      document.getElementById('date').value = expense.date;
-      document.getElementById('description').value = expense.description || '';
-      
-      // Change form to edit mode
-      isEditingExpense = true;
-      editingExpenseId = expenseId;
-      
-      // Update UI for edit mode
-      document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Expense';
-      document.getElementById('addBtn').innerHTML = '<i class="fas fa-save"></i> Update Expense';
-      document.getElementById('addBtn').onclick = () => handleExpenseSubmit();
-      document.getElementById('cancelExpenseBtn').style.display = 'inline-flex';
-      
-      // Ensure form is expanded
-      const formSection = document.getElementById('expenseFormSection');
-      formSection.classList.remove('collapsed');
-      
-      // Scroll to form
-      formSection.scrollIntoView({ behavior: 'smooth' });
-      
-      showMessage('✏️ Editing expense...', 'info');
-    }
 
-  // Function to reset expense form
-    function resetExpenseForm() {
-      document.getElementById('amount').value = '';
-      document.getElementById('category').value = 'Groceries';
-      document.getElementById('date').value = new Date().toISOString().split('T')[0];
-      document.getElementById('description').value = '';
-      
-      // Reset to add mode
-      isEditingExpense = false;
-      editingExpenseId = null;
-      
-      // Reset UI to add mode
-      document.getElementById('expenseFormTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Expense';
-      document.getElementById('addBtn').innerHTML = '<i class="fas fa-plus"></i> Add Expense';
-      document.getElementById('addBtn').onclick = () => handleExpenseSubmit();
-      document.getElementById('cancelExpenseBtn').style.display = 'none';
-    }
-    
-    // Updated handleExpenseSubmit function
-    async function handleExpenseSubmit() {
-      if (!currentUser || !isFirestoreReady) {
-        showMessage('⏳ Please wait, app is still initializing...', 'warning');
-        return;
-      }
-      
-      const amount = parseFloat(document.getElementById('amount').value);
-      const category = document.getElementById('category').value;
-      const date = document.getElementById('date').value;
-      const description = document.getElementById('description').value.trim();
-      
-      if (!amount || amount <= 0) {
-        showMessage('❌ Please enter a valid amount', 'error');
-        return;
-      }
-      
-      if (!date) {
-        showMessage('❌ Please select a date', 'error');
-        return;
-      }
-      
-      // Prepare expense data
-      const expenseData = {
-        amount: amount,
-        category: category,
-        date: date,
-        description: description || 'No description',
-        userId: currentUser.uid
-      };
-      
-      // Disable button to prevent double submission
-      const addBtn = document.getElementById('addBtn');
-      addBtn.disabled = true;
-      addBtn.innerHTML = isEditingExpense ? 
-        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
-        '<i class="fas fa-spinner fa-spin"></i> Adding...';
-      
-      try {
-        if (isEditingExpense && editingExpenseId) {
-          await updateExpense(editingExpenseId, expenseData);
-        } else {
-          await addExpense(expenseData);
-        }
-      } finally {
-        addBtn.disabled = false;
-        addBtn.innerHTML = isEditingExpense ? 
-          '<i class="fas fa-save"></i> Update Expense' : 
-          '<i class="fas fa-plus"></i> Add Expense';
-      }
-    }
-    
-    // Function to show delete confirmation modal
-    function showDeleteModal(itemId, collection) {
-      itemToDeleteId = itemId;
-      collectionToDelete = collection;
-      
-      // Get item details for display
-      let itemDetails = '';
-      if (collection === 'expenses') {
-        const expense = allExpenses.find(exp => exp.id === itemId);
-        if (expense) {
-          itemDetails = `${getCategoryDisplayName(expense.category)} - UGX ${expense.amount.toLocaleString()} on ${expense.date}`;
-        }
-      } else if (collection === 'income') {
-        const income = allIncome.find(inc => inc.id === itemId);
-        if (income) {
-          itemDetails = `${income.source} - UGX ${income.amount.toLocaleString()} on ${income.date}`;
-        }
-      }
-      
-      document.getElementById('deleteExpenseDetails').textContent = itemDetails || 'Item details not available';
-      document.getElementById('deleteModal').style.display = 'flex';
-    }
-    
-    // Function to delete item (connected to modal confirm button)
-    async function deleteItem() {
-      if (!itemToDeleteId || !collectionToDelete || !currentUser) {
-        showMessage('❌ Unable to delete: Missing information', 'error');
-        return;
-      }
-      
-      const confirmBtn = document.getElementById('confirmDelete');
-      const cancelBtn = document.getElementById('cancelDelete');
-      
-      // Disable buttons during deletion
-      confirmBtn.disabled = true;
-      cancelBtn.disabled = true;
-      confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-      
-      try {
-        await db.collection(collectionToDelete).doc(itemToDeleteId).delete();
-        showMessage('✅ Item deleted successfully!', 'success');
-      } catch (error) {
-        console.error('Error deleting item:', error);
-        showMessage('❌ Failed to delete item: ' + error.message, 'error');
-      } finally {
-        // Reset modal and buttons
-        document.getElementById('deleteModal').style.display = 'none';
-        confirmBtn.disabled = false;
-        cancelBtn.disabled = false;
-        confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
-        itemToDeleteId = null;
-        collectionToDelete = null;
-      }
-    }
-    
     // ===== INCOME CRUD OPERATIONS =====
     
     // Function to add a new income
@@ -8132,10 +8878,7 @@ setInterval(fixIncomeListDOM, 1000); // Run every 1 second
       const date = document.getElementById('incomeDate').value;
       const notes = document.getElementById('incomeNotes').value.trim();
       
-      if (!amount || amount <= 0) {
-        showMessage('❌ Please enter a valid amount', 'error');
-        return;
-      }
+    
       
       if (!date) {
         showMessage('❌ Please select a date', 'error');
