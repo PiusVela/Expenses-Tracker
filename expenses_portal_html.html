@@ -6395,99 +6395,6 @@ function clearReminderForm() {
 
 
 
-// ========== EXPENSE HANDLERS ==========
-
-
-// ========== INCOME HANDLERS ==========
-
-async function handleIncomeSubmit() {
-    if (!isFirestoreReady || !currentUser) {
-        showMessage('⏳ Please wait, app is still initializing...', 'warning');
-        return;
-    }
-    
-    const amount = parseFloat(document.getElementById('incomeAmount').value);
-    const sourceSelect = document.getElementById('incomeSource');
-    const sourceDisplay = sourceSelect.options[sourceSelect.selectedIndex].text;
-    const source = getSourceValue(sourceDisplay);
-    const date = document.getElementById('incomeDate').value;
-    const notes = document.getElementById('incomeNotes').value.trim();
-    
-    // Validation
- 
-    if (!source) {
-        showMessage('❌ Please select a source', 'error');
-        return;
-    }
-    if (!date) {
-        showMessage('❌ Please select a date', 'error');
-        return;
-    }
-    
-    // Disable button to prevent double submission
-    const addBtn = document.getElementById('addIncomeBtn');
-    addBtn.disabled = true;
-    addBtn.innerHTML = isEditingIncome ? 
-        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
-        '<i class="fas fa-spinner fa-spin"></i> Adding...';
-    
-    try {
-        const incomeData = {
-            amount: amount,
-            source: source,
-            sourceDisplay: sourceDisplay,
-            date: date,
-            notes: notes || 'No notes',
-            userId: currentUser.uid,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        if (isEditingIncome && editingIncomeId) {
-            await db.collection('income').doc(editingIncomeId).update(incomeData);
-            showMessage('✅ Income updated successfully!', 'success');
-        } else {
-            await db.collection('income').add(incomeData);
-            showMessage('✅ Income added successfully!', 'success');
-        }
-        
-        // Clear the form after successful submission
-        clearIncomeForm();
-        
-        // Refresh data
-        setTimeout(() => {
-            loadAllData();
-        }, 500);
-        
-    } catch (error) {
-        console.error('Error saving income:', error);
-        showMessage('❌ Failed to save income: ' + error.message, 'error');
-    } finally {
-        addBtn.disabled = false;
-        addBtn.innerHTML = isEditingIncome ? 
-            '<i class="fas fa-save"></i> Update Income' : 
-            '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
-    }
-}
-
-
-
-// Make sure you're setting the value correctly when editing
-function populateEditForm(item, type) {
-    if (type === 'expense') {
-        document.getElementById('amount').value = item.amount || '';
-        document.getElementById('category').value = item.category || '';
-        document.getElementById('date').value = item.date || '';
-        document.getElementById('description').value = item.description || '';
-    }
-    
-    if (type === 'income') {
-        document.getElementById('incomeAmount').value = item.amount || '';
-        document.getElementById('incomeSource').value = item.source || '';
-        document.getElementById('incomeDate').value = item.date || '';
-        document.getElementById('incomeNotes').value = item.notes || '';
-    }
-}
-
 
 
 // Add this to your form submission handlers
@@ -7164,27 +7071,7 @@ document.getElementById('addIncomeBtn').addEventListener('click', debouncedIncom
 
 
 
-function handleExpenseSubmit(event) {
-    if (event) event.preventDefault();
-    
-    const addBtn = document.getElementById('addBtn');
-    
-    // Disable button to prevent double click
-    addBtn.disabled = true;
-    addBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-    
-    try {
-        // ... your existing code
-    } catch (error) {
-        console.error('Error:', error);
-    } finally {
-        // Re-enable button after 1 second
-        setTimeout(() => {
-            addBtn.disabled = false;
-            addBtn.innerHTML = '<i class="fas fa-plus"></i> Add Expense';
-        }, 1000);
-    }
-}
+
 
 
 
@@ -8866,55 +8753,7 @@ setInterval(fixIncomeListDOM, 1000); // Run every 1 second
       document.getElementById('cancelIncomeBtn').style.display = 'none';
     }
     
-    // Updated handleIncomeSubmit function
-    async function handleIncomeSubmit() {
-      if (!currentUser || !isFirestoreReady) {
-        showMessage('⏳ Please wait, app is still initializing...', 'warning');
-        return;
-      }
-      
-      const amount = parseFloat(document.getElementById('incomeAmount').value);
-      const source = document.getElementById('incomeSource').value;
-      const date = document.getElementById('incomeDate').value;
-      const notes = document.getElementById('incomeNotes').value.trim();
-      
-    
-      
-      if (!date) {
-        showMessage('❌ Please select a date', 'error');
-        return;
-      }
-      
-      // Prepare income data
-      const incomeData = {
-        amount: amount,
-        source: source,
-        date: date,
-        notes: notes || 'No notes',
-        userId: currentUser.uid
-      };
-      
-      // Disable button to prevent double submission
-      const addBtn = document.getElementById('addIncomeBtn');
-      addBtn.disabled = true;
-      addBtn.innerHTML = isEditingIncome ? 
-        '<i class="fas fa-spinner fa-spin"></i> Updating...' : 
-        '<i class="fas fa-spinner fa-spin"></i> Adding...';
-      
-      try {
-        if (isEditingIncome && editingIncomeId) {
-          await updateIncome(editingIncomeId, incomeData);
-        } else {
-          await addIncome(incomeData);
-        }
-      } finally {
-        addBtn.disabled = false;
-        addBtn.innerHTML = isEditingIncome ? 
-          '<i class="fas fa-save"></i> Update Income' : 
-          '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
-      }
-    }
-    
+
     // Also add these event listeners to your setupEventListeners function:
     function setupEventListeners() {
       // Existing event listeners...
@@ -11767,15 +11606,18 @@ setInterval(resetBalanceStyles, 30000); // Every 30 seconds
     return;
   }
 
-  const amount = parseFloat(document.getElementById('amount').value);
+  let amountInput = document.getElementById('amount').value.trim();
+  // Remove any commas from the amount (for UGX formatting like 100,000)
+  amountInput = amountInput.replace(/,/g, '');
+  const amount = parseFloat(amountInput);
   const categorySelect = document.getElementById('category');
   const categoryDisplay = categorySelect.options[categorySelect.selectedIndex].text;
-  const category = getCategoryValue(categoryDisplay); // Convert display name to value
+  const category = getCategoryValue(categoryDisplay);
   const date = document.getElementById('date').value;
   const description = document.getElementById('description').value.trim();
 
-  if (!amount || amount <= 0) {
-    showError('Please enter a valid amount');
+  if (!amountInput || isNaN(amount) || amount <= 0) {
+    showError('❌ Please enter a valid amount');
     return;
   }
   if (!category) {
@@ -12196,15 +12038,18 @@ function displayExpenses(expenses) {
         return; 
       }
       
-      const amount = document.getElementById('incomeAmount').value.trim();
-      const source = document.getElementById('incomeSource').value;
-      const date = document.getElementById('incomeDate').value;
-      const notes = document.getElementById('incomeNotes').value.trim();
+let amountInput = document.getElementById('incomeAmount').value.trim();
+// Remove any commas from the amount (for UGX formatting like 100,000)
+amountInput = amountInput.replace(/,/g, '');
+const amount = parseFloat(amountInput);
+const source = document.getElementById('incomeSource').value;
+const date = document.getElementById('incomeDate').value;
+const notes = document.getElementById('incomeNotes').value.trim();
 
-      if (!amount || parseFloat(amount) <= 0) { 
-        showError('Please enter a valid income amount'); 
-        return; 
-      }
+if (!amountInput || isNaN(amount) || amount <= 0) { 
+  showError('❌ Please enter a valid income amount'); 
+  return; 
+}
       if (!date) { 
         showError('Please select an income date'); 
         return; 
@@ -12222,23 +12067,30 @@ function displayExpenses(expenses) {
           notes: notes || ''
         });
 
-        if (isEditingIncome && editingIncomeId) {
-          // Update existing income
-          incomeData.updatedAt = new Date().toISOString();
-          await db.collection('income').doc(editingIncomeId).update(incomeData);
-          showMessage(`✅ Income updated successfully!`, 'success');
-          cancelEditIncome();
-        } else {
-          // Add new income
-          await db.collection('income').add(incomeData);
-          showMessage(`💰 Recorded ${formatCurrency(amount)} from ${source}`, 'success');
-          
-          // Clear form but keep the date for adding another entry
-          document.getElementById('incomeAmount').value = ''; 
-          document.getElementById('incomeNotes').value = '';
-          document.getElementById('incomeSource').value = 'Salary'; 
-          // Keep the selected date for next entry
-        }
+    if (isEditingIncome && editingIncomeId) {
+      // Update existing income
+      incomeData.updatedAt = new Date().toISOString();
+      await db.collection('income').doc(editingIncomeId).update(incomeData);
+      showMessage(`✅ Income updated successfully!`, 'success');
+      isEditingIncome = false;
+      editingIncomeId = null;
+      document.getElementById('incomeAmount').value = ''; 
+      document.getElementById('incomeNotes').value = '';
+      document.getElementById('incomeSource').value = 'Salary'; 
+      document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
+      document.getElementById('cancelIncomeBtn').style.display = 'none';
+    } else {
+      // Add new income
+      await db.collection('income').add(incomeData);
+      showMessage(`💰 Recorded ${formatCurrency(amount)} from ${source}`, 'success');
+      
+      // Clear form but keep the date for adding another entry
+      document.getElementById('incomeAmount').value = ''; 
+      document.getElementById('incomeNotes').value = '';
+      document.getElementById('incomeSource').value = 'Salary'; 
+      // Keep the selected date for next entry
+   }
         
         // Refresh reports
         if (currentReportPeriod.income) {
@@ -14254,7 +14106,7 @@ function showYearlyOverview() {
             </div>
             <div class="expense-amount">${formatCurrency(expense.amount)}</div>
             <div class="item-actions">
-              <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', ${expense.amount}, '${category}', '${expense.date || ''}', '${descSafe}')">
+              <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', '${expense.amount}', '${category}', '${expense.date || ''}', '${descSafe}')"
                 <i class="fas fa-edit"></i>
               </button>
               <button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${category} - ${formatCurrency(expense.amount)}')">
@@ -14352,7 +14204,7 @@ function showYearlyOverview() {
     </div>
     <div class="expense-amount income-amount">${formatCurrency(inc.amount)}</div>
     <div class="item-actions">
-      <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', ${inc.amount}, '${source}', '${inc.date || ''}', '${notesSafe}')">
+      <button class="action-btn edit" onclick="prepareEditIncome('${inc.id}', '${inc.amount}', '${source}', '${inc.date || ''}', '${notesSafe}')">
         <i class="fas fa-edit"></i>
       </button>
       <button class="action-btn delete" onclick="confirmDeleteModal('${inc.id}', 'income', '${source} - ${formatCurrency(inc.amount)}')">
