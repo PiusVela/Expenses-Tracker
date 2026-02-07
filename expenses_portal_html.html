@@ -7023,23 +7023,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// Add this at the end of your initialization
-function attachFormEventListeners() {
-    // Expense Form
-    document.getElementById('addBtn').addEventListener('click', handleExpenseSubmit);
-    
-    // Income Form
-    document.getElementById('addIncomeBtn').addEventListener('click', handleIncomeSubmit);
-    
-    // Budget Form
-    document.getElementById('addBudgetBtn').addEventListener('click', handleBudgetSubmit);
-    
-    // Reminder Form
-    document.getElementById('addReminderBtn').addEventListener('click', handleReminderSubmit);
-}
-
-// Call this after Firebase initialization
-attachFormEventListeners();
 
 
 
@@ -7058,20 +7041,6 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
-
-// Then modify your handlers
-const debouncedExpenseSubmit = debounce(handleExpenseSubmit, 500);
-const debouncedIncomeSubmit = debounce(handleIncomeSubmit, 500);
-
-// Update event listeners
-document.getElementById('addBtn').addEventListener('click', debouncedExpenseSubmit);
-document.getElementById('addIncomeBtn').addEventListener('click', debouncedIncomeSubmit);
-
-
-
-
-
-
 
 
 
@@ -8749,7 +8718,6 @@ setInterval(fixIncomeListDOM, 1000); // Run every 1 second
       // Reset UI to add mode
       document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
       document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
-      document.getElementById('addIncomeBtn').onclick = () => handleIncomeSubmit();
       document.getElementById('cancelIncomeBtn').style.display = 'none';
     }
     
@@ -9356,13 +9324,17 @@ function getCategoryValue(displayName) {
             stats.year += expenseAmount;
           }
           
-          // Category breakdown
-          const category = expense.category || 'Other';
-          categories[category] = (categories[category] || 0) + expenseAmount;
+         // Category breakdown - ONLY THIS MONTH
+          if (expenseDate >= monthStart && expenseDate <= monthEnd) {
+            const category = expense.category || 'Other';
+            categories[category] = (categories[category] || 0) + expenseAmount;
+          }
           
-          // Weekly data
-          const dayOfWeek = expenseDate.getDay();
-          weeklyData[dayOfWeek] += expenseAmount;
+          // Weekly data - ONLY THIS WEEK
+          if (expenseDate >= weekStart && expenseDate <= weekEnd) {
+            const dayOfWeek = expenseDate.getDay();
+            weeklyData[dayOfWeek] += expenseAmount;
+          }
         });
         
         // Process income
@@ -11600,21 +11572,29 @@ setInterval(resetBalanceStyles, 30000); // Every 30 seconds
     }
 
     // ===== EXPENSE FUNCTIONS =====
-    async function handleExpenseSubmit() {
+ async function handleExpenseSubmit() {
   if (!isFirestoreReady || !currentUser) {
     showError('Database not ready. Please wait...');
     return;
   }
-
-  let amountInput = document.getElementById('amount').value.trim();
-  // Remove any commas from the amount (for UGX formatting like 100,000)
-  amountInput = amountInput.replace(/,/g, '');
+  let amountInput = document.getElementById('amount').value || '';
+  // Remove any commas, spaces, or special characters from the amount
+  amountInput = amountInput.toString().trim().replace(/[^0-9.]/g, '');
   const amount = parseFloat(amountInput);
   const categorySelect = document.getElementById('category');
   const categoryDisplay = categorySelect.options[categorySelect.selectedIndex].text;
   const category = getCategoryValue(categoryDisplay);
   const date = document.getElementById('date').value;
   const description = document.getElementById('description').value.trim();
+
+ console.log('====== EXPENSE VALIDATION DETAILED ======');
+console.log('Step 1 - Raw field value:', document.getElementById('amount').value);
+console.log('Step 2 - After toString():', document.getElementById('amount').value.toString());
+console.log('Step 3 - After trim():', document.getElementById('amount').value.toString().trim());
+console.log('Step 4 - After replace():', amountInput);
+console.log('Step 5 - parseFloat(amountInput):', amount);
+console.log('Step 6 - !amountInput:', !amountInput, ', isNaN(amount):', isNaN(amount), ', amount <= 0:', amount <= 0);
+console.log('=======================================');
 
   if (!amountInput || isNaN(amount) || amount <= 0) {
     showError('❌ Please enter a valid amount');
@@ -11636,8 +11616,8 @@ setInterval(resetBalanceStyles, 30000); // Every 30 seconds
   try {
     const expenseData = addUserData({
       amount: amount,
-      category: category, // Store as value (e.g., "Gifts" not "🎁 Gifts")
-      categoryDisplay: categoryDisplay, // Also store the display version
+      category: category,
+      categoryDisplay: categoryDisplay,
       date: date,
       description: description,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -11672,7 +11652,7 @@ setInterval(resetBalanceStyles, 30000); // Every 30 seconds
     function prepareEditExpense(id, amount, category, date, description) {
       isEditingExpense = true; 
       editingExpenseId = id;
-      document.getElementById('amount').value = amount; 
+      document.getElementById('amount').value = String(amount); 
       document.getElementById('category').value = category;
       document.getElementById('date').value = date; 
       document.getElementById('description').value = description;
@@ -12037,14 +12017,22 @@ function displayExpenses(expenses) {
         showError('Please login first'); 
         return; 
       }
-      
-let amountInput = document.getElementById('incomeAmount').value.trim();
-// Remove any commas from the amount (for UGX formatting like 100,000)
-amountInput = amountInput.replace(/,/g, '');
+let amountInput = document.getElementById('incomeAmount').value || '';
+// Remove any commas, spaces, or special characters from the amount
+amountInput = amountInput.toString().trim().replace(/[^0-9.]/g, '');
 const amount = parseFloat(amountInput);
 const source = document.getElementById('incomeSource').value;
 const date = document.getElementById('incomeDate').value;
 const notes = document.getElementById('incomeNotes').value.trim();
+
+console.log('====== INCOME VALIDATION DETAILED ======');
+console.log('Step 1 - Raw field value:', document.getElementById('incomeAmount').value);
+console.log('Step 2 - After toString():', document.getElementById('incomeAmount').value.toString());
+console.log('Step 3 - After trim():', document.getElementById('incomeAmount').value.toString().trim());
+console.log('Step 4 - After replace():', amountInput);
+console.log('Step 5 - parseFloat(amountInput):', amount);
+console.log('Step 6 - !amountInput:', !amountInput, ', isNaN(amount):', isNaN(amount), ', amount <= 0:', amount <= 0);
+console.log('=======================================');
 
 if (!amountInput || isNaN(amount) || amount <= 0) { 
   showError('❌ Please enter a valid income amount'); 
@@ -12109,7 +12097,7 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
     function prepareEditIncome(id, amount, source, date, notes) {
       isEditingIncome = true; 
       editingIncomeId = id;
-      document.getElementById('incomeAmount').value = amount; 
+      document.getElementById('incomeAmount').value = String(amount); 
       document.getElementById('incomeSource').value = source;
       document.getElementById('incomeDate').value = date; 
       document.getElementById('incomeNotes').value = notes;
@@ -12847,13 +12835,13 @@ function populateIncomeFilters() {
       try { 
         const dateRange = getDateRange(period); 
         if (!dateRange) return; 
-        await fetchAndDisplayReport(dateRange.startDate, dateRange.endDate, dateRange.periodLabel, reportType); 
+       await fetchAndDisplayReport(dateRange.startDate, dateRange.endDate, dateRange.periodLabel, reportType, period);
       }
       catch (error) { showError(`Failed to generate ${reportType} report: ` + error.message); }
     }
 
     // FIXED: Improved date comparison logic for old data
-    async function fetchAndDisplayReport(startDate, endDate, periodLabel, reportType) {
+    async function fetchAndDisplayReport(startDate, endDate, periodLabel, reportType, period) {
       const resultsContainer = document.getElementById(`${reportType}ReportResults`);
       const actionsContainer = document.getElementById(`${reportType}ReportActions`);
       resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating report...</p></div>';
@@ -12949,7 +12937,62 @@ function populateIncomeFilters() {
             html += `<div class="empty-state"><h4>No ${reportType} transactions found for ${periodLabel}</h4></div>`;
         }
 
-        resultsContainer.innerHTML = html; 
+ resultsContainer.innerHTML = html;
+        
+        // Update charts when expense report changes
+// Update charts when expense report changes
+        if (reportType === 'expense') {
+          let barData, barLabels, barLabel;
+          
+          // Determine chart type based on period
+          if (period === 'today' || period === 'yesterday' || period === 'week') {
+            // Weekly bar chart (days of week)
+            barData = Array(7).fill(0);
+            barLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            barLabel = 'Daily Expenses';
+            items.forEach(expense => {
+              const expenseDate = getDateFromExpense(expense);
+              const dayOfWeek = expenseDate.getDay();
+              barData[dayOfWeek] += parseFloat(expense.amount) || 0;
+            });
+          } else if (period === 'month' || period === 'lastMonth') {
+            // Monthly bar chart (weeks)
+            barData = Array(5).fill(0); // Up to 5 weeks in a month
+            barLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'];
+            barLabel = 'Weekly Expenses';
+            items.forEach(expense => {
+              const expenseDate = getDateFromExpense(expense);
+              const weekOfMonth = Math.floor((expenseDate.getDate() - 1) / 7);
+              if (weekOfMonth < 5) {
+                barData[weekOfMonth] += parseFloat(expense.amount) || 0;
+              }
+            });
+          } else if (period === 'year') {
+            // Yearly bar chart (months)
+            barData = Array(12).fill(0);
+            barLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            barLabel = 'Monthly Expenses';
+            items.forEach(expense => {
+              const expenseDate = getDateFromExpense(expense);
+              const month = expenseDate.getMonth();
+              barData[month] += parseFloat(expense.amount) || 0;
+            });
+          } else {
+            // Default to weekly for custom ranges
+            barData = Array(7).fill(0);
+            barLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            barLabel = 'Daily Expenses';
+            items.forEach(expense => {
+              const expenseDate = getDateFromExpense(expense);
+              const dayOfWeek = expenseDate.getDay();
+              barData[dayOfWeek] += parseFloat(expense.amount) || 0;
+            });
+          }
+          
+          // Update both charts with the filtered data
+          updateCharts(breakdown, barData, barLabels, barLabel);
+        }
+        
         if (count > 0) actionsContainer.style.display = 'flex';
         showMessage(`📊 ${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report generated for ${periodLabel}`, 'success');
       } catch (error) { 
@@ -12991,7 +13034,7 @@ function populateIncomeFilters() {
       
       currentReportPeriod[reportType] = 'custom';
       
-      await fetchAndDisplayReport(startDate, endDate, `Custom Range (${startDate.toLocaleDateString('en-UG')} - ${endDate.toLocaleDateString('en-UG')})`, reportType);
+      await fetchAndDisplayReport(startDate, endDate, `Custom Range (${startDate.toLocaleDateString('en-UG')} - ${endDate.toLocaleDateString('en-UG')})`, reportType, 'custom');
     }
 
     // ===== EXPORT FUNCTIONS =====
@@ -14012,7 +14055,7 @@ function showYearlyOverview() {
       previousStats = stats;
     }
 
-    function updateCharts(categories, weeklyData) {
+    function updateCharts(categories, barData, barLabels, barLabel) {
       const pieCtx = document.getElementById('pieChart')?.getContext('2d');
       const barCtx = document.getElementById('barChart')?.getContext('2d');
       
@@ -14044,14 +14087,14 @@ function showYearlyOverview() {
         });
       }
       
-      if (barChart) barChart.destroy();
+if (barChart) barChart.destroy();
       barChart = new Chart(barCtx, { 
         type: 'bar', 
         data: { 
-          labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], 
+          labels: barLabels || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], 
           datasets: [{ 
-            label: 'Expenses', 
-            data: weeklyData, 
+            label: barLabel || 'Expenses', 
+            data: barData, 
             backgroundColor: 'rgba(255, 152, 0, 0.7)',
             borderColor: 'rgba(255, 152, 0, 1)',
             borderWidth: 1
