@@ -2645,7 +2645,7 @@
 
 /* Reduce inner spacing for list items */
 .expense-item .item-content,
-.income-item .income-item,
+.income-item .item-content,
 .reminder-item .item-content,
 .budget-item .item-content {
     gap: 3px !important;
@@ -3495,17 +3495,19 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 .income-item {
   display: flex !important;
   flex-direction: row !important;
-  align-items: center !important;
-  padding: 4px 6px !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  padding: 8px 10px !important;
   border-bottom: 1px solid var(--border);
   transition: all 0.4s;
-  border-radius: 4px;
-  margin-bottom: 1px !important;
+  border-radius: 6px !important;
+  margin-bottom: 3px !important;
   background: var(--light);
-  gap: 6px !important;
-  min-height: 40px !important;
+  gap: 10px !important;
+  min-height: auto !important;
   position: relative;
 }
+
 
 .income-item:hover {
   transform: translateX(5px);
@@ -3514,10 +3516,10 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 
 .income-item .item-content {
   flex: 1 !important;
-  width: auto !important;
-  min-width: 0;
+  width: 100% !important;
+  min-width: auto !important;
 }
-
+    
 .income-item .income-amount {
   font-weight: 700;
   font-size: 0.95rem !important;
@@ -3661,23 +3663,25 @@ body.dark-mode .reminders-list .search-box input::placeholder {
 .expense-item {
   display: flex !important;
   flex-direction: row !important;
-  align-items: center !important;
-  padding: 4px 6px !important;
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  padding: 8px 10px !important;
   border-bottom: 1px solid var(--border);
   transition: all 0.4s;
-  border-radius: 4px;
-  margin-bottom: 1px !important; /* Reduced from 2px */
+  border-radius: 6px !important;
+  margin-bottom: 3px !important;
   background: var(--light);
-  gap: 6px !important; /* Reduced from gap */
-  min-height: 40px !important;
+  gap: 10px !important;
+  min-height: auto !important;
   position: relative;
 }
+
 
 /* Content takes available space */
 .expense-item .item-content {
   flex: 1 !important;
-  width: auto !important;
-  min-width: 0; /* Allows text truncation */
+  width: 100% !important;
+  min-width: auto !important;
 }
 
 /* Amount on the right */
@@ -5492,7 +5496,7 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
               </div>
               <div class="form-group">
                 <label><i class="fas fa-briefcase"></i> Source</label>
-                <select id="incomeSource" required>
+                 <select id="incomeSource" required onchange="handleIncomeSourceChange()">
                   <!-- RESTORED FULL INCOME SOURCES -->
                   <option value="Salary" selected>💼 Salary</option>
                   <option value="Freelance">💻 Freelance/Side-Hustle</option>
@@ -5519,14 +5523,51 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
                   <option value="Sale">🏷️ Sale of Items</option>
                   <option value="Other">📦 Other</option>
                 </select>
+
               </div>
               <div class="form-group">
                 <label><i class="fas fa-calendar"></i> Date Received</label>
-                <input type="date" id="incomeDate" required>
+                <input type="date" id="incomeDate" required onchange="updateRentEndDate()">
               </div>
               <div class="form-group">
                 <label><i class="fas fa-sticky-note"></i> Notes</label>
                 <input type="text" id="incomeNotes" placeholder="Source details or month">
+                              <!-- RENTAL INCOME SPECIFIC FIELDS -->
+              <div id="rentalIncomeFields" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--primary); grid-column: 1 / -1;">
+                <h4 style="color: var(--primary); margin-bottom: 15px; font-size: 0.95rem;"><i class="fas fa-home"></i> Rental Income Details</h4>
+                
+                <div class="form-group" style="grid-column: 1 / 2;">
+                  <label> Rent End Date (Auto +30 days)</label>
+
+<input 
+  type="date" 
+  id="rentEndDate" 
+  style="
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 2px solid var(--success);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  "
+>
+<small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+  Auto-calculated as 30 days after Date Received. Click to edit.
+</small>
+                </div>
+                
+                <div class="form-group" style="grid-column: 1 / 2;">
+                  <label><i class="fas fa-money-bill-wave"></i> Rent Balance</label>
+                  <select id="rentBalanceType" onchange="handleRentBalanceChange()" style="margin-bottom: 10px;">
+                    <option value="nil" selected>NIL</option>
+                    <option value="custom">Custom Amount</option>
+                  </select>
+                  <input type="number" id="rentBalanceAmount" placeholder="Balance amount (UGX)" min="0" style="display: none;">
+                </div>
+              </div>
+
               </div>
             </div>
             <div class="btn-actions-container">
@@ -6092,14 +6133,14 @@ body.dark-mode .main-stats-grid .stat-value.hidden::after {
   <script>
     // ===== JAVASCRIPT =====
     // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCNPXQvIPRVsJ5QTT5uBqAl9Jq8VuSW_yc",
-      authDomain: "expense-tracker-1f7e2.firebaseapp.com",
-      projectId: "expense-tracker-1f7e2",
-      storageBucket: "expense-tracker-1f7e2.firebasestorage.app",
-      messagingSenderId: "102435814972",
-      appId: "1:102435814972:web:82dbaf733a411e549bcd39"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyCNPXQvIPRVsJ5QTT5uBqAl9Jq8VuSW_yc",
+  authDomain: "expense-tracker-1f7e2.firebaseapp.com",
+  projectId: "expense-tracker-1f7e2",
+  storageBucket: "expense-tracker-1f7e2.firebasestorage.app",
+  messagingSenderId: "102435814972",
+  appId: "1:102435814972:web:82dbaf733a411e549bcd39"
+};
 
     // Global variables
     let db = null;
@@ -6998,7 +7039,58 @@ async function loadAllData() {
 }
 
 
+  // ===== RENTAL INCOME HANDLERS =====
+    function handleIncomeSourceChange() {
+      const source = document.getElementById('incomeSource').value;
+      const rentalFields = document.getElementById('rentalIncomeFields');
+      
+      if (source === 'Rental Income') {
+        rentalFields.style.display = 'block';
+        updateRentEndDate();
+      } else {
+        rentalFields.style.display = 'none';
+        document.getElementById('rentBalanceType').value = 'nil';
+        document.getElementById('rentBalanceAmount').value = '';
+        document.getElementById('rentBalanceAmount').style.display = 'none';
+      }
+    }
 
+  function updateRentEndDate() {
+  const dateInput = document.getElementById('incomeDate').value;
+  const rentEndDateField = document.getElementById('rentEndDate');
+  
+  if (dateInput) {
+    const startDate = new Date(dateInput);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 30);
+    const year = endDate.getFullYear();
+    const month = String(endDate.getMonth() + 1).padStart(2, '0');
+    const day = String(endDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    rentEndDateField.value = formattedDate;
+    
+    rentEndDateField.style.boxShadow = 'inset 0 0 8px rgba(78, 205, 196, 0.2)';
+    setTimeout(() => {
+      rentEndDateField.style.boxShadow = 'none';
+    }, 500);
+  }
+}
+
+
+    function handleRentBalanceChange() {
+      const type = document.getElementById('rentBalanceType').value;
+      const amountInput = document.getElementById('rentBalanceAmount');
+      
+      if (type === 'custom') {
+        amountInput.style.display = 'block';
+        amountInput.required = true;
+      } else {
+        amountInput.style.display = 'none';
+        amountInput.value = '';
+        amountInput.required = false;
+      }
+    }
 
 
 
@@ -7044,6 +7136,34 @@ function debounce(func, wait) {
 
 
 
+document.addEventListener('DOMContentLoaded', function() {
+  const rentEndDateField = document.getElementById('rentEndDate');
+  
+  if (rentEndDateField) {
+    rentEndDateField.addEventListener('focus', function() {
+      this.style.borderColor = 'var(--primary)';
+      this.style.boxShadow = '0 0 8px rgba(255, 152, 0, 0.3)';
+    });
+    
+    rentEndDateField.addEventListener('blur', function() {
+      this.style.borderColor = 'var(--success)';
+      this.style.boxShadow = 'none';
+    });
+
+    rentEndDateField.addEventListener('change', function() {
+      if (this.value) {
+        const date = new Date(this.value);
+        const dateStr = date.toLocaleDateString('en-US', { 
+          weekday: 'short', 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+        console.log('Rent End Date set to: ' + dateStr);
+      }
+    });
+  }
+});
 
 
 
@@ -7311,7 +7431,6 @@ function populateIncomeFilters() {
   });
 }
 
-// ===== FIXED: CONSISTENT INCOME RENDERING (USE THIS ONLY) =====
 function displayIncome(incomeArray) {
   const container = document.getElementById('incomeList');
   if (!container) return;
@@ -7336,6 +7455,14 @@ function displayIncome(incomeArray) {
     const notes = income.notes || '';
     const sourceClass = 'source-' + source.toLowerCase().replace(/\s+/g, '-').replace('/', '-');
 
+    // Build rental info ONLY for Rental Income
+    let rentalHTML = '';
+    if (source === 'Rental Income') {
+      const rd = income.rentEndDate || 'Not set';
+      const rb = income.rentBalanceType === 'custom' ? 'UGX ' + (income.rentBalance || 0).toLocaleString() : 'NIL';
+      rentalHTML = '<div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;font-size:0.8rem"><span style="padding:5px 10px;border-radius:16px;color:#ff9800;border-left:2px solid #ff9800;font-weight:600">📅 ' + rd + '</span><span style="padding:5px 10px;border-radius:16px;color:#4caf50;border-left:2px solid #4caf50;font-weight:600">💰 ' + rb + '</span></div>';
+    }
+
     html += `
     <div class="income-item" data-id="${income.id}">
       <div class="item-content">
@@ -7344,6 +7471,7 @@ function displayIncome(incomeArray) {
         <span class="category-badge ${sourceClass}">
           <i class="fas fa-briefcase"></i> ${source}
         </span>
+        ${rentalHTML}
       </div>
       <div class="income-amount">UGX ${amount.toLocaleString('en-US')}</div>
       <div class="item-actions">
@@ -9456,7 +9584,19 @@ function loadIncomeList(incomeData = allIncome) {
     });
     
     // Determine source badge class
+   // Determine source badge class
     const sourceClass = 'source-' + source.toLowerCase().replace(/\s+/g, '-').replace('/', '-');
+    
+    // Build rental info ONLY for Rental Income
+    let rentalInfoHTML = '';
+    if (source === 'Rental Income') {
+      const rentEndDate = income.rentEndDate || 'Not set';
+      const rentBalance = income.rentBalanceType === 'custom' ? 'UGX ' + (income.rentBalance || 0).toLocaleString() : 'NIL';
+      rentalInfoHTML = '<div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; align-items: center; font-size: 0.8rem;">' +
+        '<span style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.2), rgba(255, 152, 0, 0.1)); color: #ff9800; padding: 5px 10px; border-radius: 16px; font-weight: 600; border-left: 2px solid #ff9800;">📅 End: ' + rentEndDate + '</span>' +
+        '<span style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(76, 175, 80, 0.1)); color: #4caf50; padding: 5px 10px; border-radius: 16px; font-weight: 600; border-left: 2px solid #4caf50;">💰 ' + rentBalance + '</span>' +
+        '</div>';
+    }
     
     html += `
       <div class="income-item" id="income-${income.id}">
@@ -9466,7 +9606,9 @@ function loadIncomeList(incomeData = allIncome) {
           <span class="category-badge ${sourceClass}">
             <i class="fas fa-briefcase"></i> ${source}
           </span>
+          ${rentalInfoHTML}
         </div>
+        <div class="income-amount">UGX ${amount.toLocaleString()}</div>
         <div class="item-actions">
           <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
             <i class="fas fa-edit"></i>
@@ -10334,6 +10476,25 @@ function updateIncomeList(incomeArray = allIncome) {
         });
         const sourceClass = 'source-' + income.source.toLowerCase().replace(/ /g, '-');
         
+        let rentalInfoHTML = '';
+        if (income.source === 'Rental Income') {
+          const rentEndDate = income.rentEndDate || 'Not set';
+          const rentBalance = income.rentBalanceType === 'custom' 
+            ? `UGX ${(income.rentBalance || 0).toLocaleString()}` 
+            : 'NIL';
+          
+          rentalInfoHTML = `
+            <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; align-items: center; font-size: 0.8rem;">
+              <span style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.2) 0%, rgba(255, 152, 0, 0.1) 100%); color: #ff9800; padding: 5px 10px; border-radius: 16px; font-weight: 600; border-left: 2px solid #ff9800;">
+                📅 End: ${rentEndDate}
+              </span>
+              <span style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.1) 100%); color: #4caf50; padding: 5px 10px; border-radius: 16px; font-weight: 600; border-left: 2px solid #4caf50;">
+                💰 ${rentBalance}
+              </span>
+            </div>
+          `;
+        }
+
         html += `
             <div class="income-item" id="income-${income.id}">
                 <div class="item-content">
@@ -10342,15 +10503,17 @@ function updateIncomeList(incomeArray = allIncome) {
                         <span class="category-badge ${sourceClass}"><i class="fas fa-${getSourceIcon(income.source)}"></i> ${income.source}</span>
                     </div>
                     <div>${income.notes || ''}</div>
+                    ${rentalInfoHTML}
                 </div>
                 <div class="income-amount">UGX ${income.amount.toLocaleString()}</div>
                 <div class="item-actions">
-                    <button class="action-btn edit" onclick="editIncome('${income.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn edit" onclick="editIncome('${income.id}', '${income.amount}', '${income.source}', '${income.date}', '${(income.notes || '').replace(/'/g, "\\'")}', '${income.rentEndDate || ''}', '${income.rentBalanceType || ''}', ${income.rentBalance || 0})"><i class="fas fa-edit"></i></button>
                     <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         `;
     });
+
 
     incomeListDiv.innerHTML = html;
 }
@@ -12054,6 +12217,18 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
           date, 
           notes: notes || ''
         });
+        
+         // Add rental-specific fields if source is Rental Income
+        if (source === 'Rental Income') {
+          const rentEndDateValue = document.getElementById('rentEndDate').value;
+          const rentBalanceType = document.getElementById('rentBalanceType').value;
+          
+          incomeData.rentEndDate = rentEndDateValue;
+          incomeData.rentBalanceType = rentBalanceType;
+          incomeData.rentBalance = (rentBalanceType === 'custom') 
+            ? (parseFloat(document.getElementById('rentBalanceAmount').value) || 0)
+            : 0;
+        }
 
     if (isEditingIncome && editingIncomeId) {
       // Update existing income
@@ -12094,7 +12269,8 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
       }
     }
 
-    function prepareEditIncome(id, amount, source, date, notes) {
+
+    function prepareEditIncome(id, amount, source, date, notes, rentEndDate = '', rentBalanceType = '', rentBalance = 0) {
       isEditingIncome = true; 
       editingIncomeId = id;
       document.getElementById('incomeAmount').value = String(amount); 
@@ -12105,23 +12281,33 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
       document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-save"></i> Update Income';
       document.getElementById('cancelIncomeBtn').style.display = 'inline-flex';
       
+      // Handle rental income fields
+      const rentalFields = document.getElementById('rentalIncomeFields');
+      if (source === 'Rental Income') {
+        rentalFields.style.display = 'block';
+        document.getElementById('rentEndDate').value = rentEndDate || '';
+        
+        const rentBalanceTypeSelect = document.getElementById('rentBalanceType');
+        const rentBalanceAmountInput = document.getElementById('rentBalanceAmount');
+        
+        rentBalanceTypeSelect.value = rentBalanceType || 'nil';
+        
+        if (rentBalanceType === 'custom') {
+          rentBalanceAmountInput.style.display = 'block';
+          rentBalanceAmountInput.value = rentBalance || 0;
+        } else {
+          rentBalanceAmountInput.style.display = 'none';
+          rentBalanceAmountInput.value = '';
+        }
+      } else {
+        rentalFields.style.display = 'none';
+      }
+      
       const formSection = document.getElementById('incomeFormSection');
       formSection.classList.remove('collapsed');
       formSection.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function cancelEditIncome() {
-      isEditingIncome = false; 
-      editingIncomeId = null;
-      document.getElementById('incomeAmount').value = ''; 
-      document.getElementById('incomeNotes').value = '';
-      document.getElementById('incomeSource').value = 'Salary'; 
-      // Reset to today's date when canceling edit
-      document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('incomeFormTitle').innerHTML = '<i class="fas fa-money-bill-alt"></i> Add New Income';
-      document.getElementById('addIncomeBtn').innerHTML = '<i class="fas fa-arrow-alt-circle-up"></i> Record Income';
-      document.getElementById('cancelIncomeBtn').style.display = 'none';
-    }
     
     // ===== BUDGET FUNCTIONS =====
     async function handleBudgetSubmit() {
@@ -12924,12 +13110,58 @@ function populateIncomeFilters() {
           html += `</div>`;
           
           html += `<div style="margin-top:20px;"><h5 style="color: var(--gray); font-size: 0.9rem; margin-bottom:10px;">${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Details</h5>`;
-          items.forEach(item => { 
+       items.forEach(item => { 
             const name = reportType === 'expense' ? (item.category || 'Other') : (item.source || 'Other');
             const description = reportType === 'expense' ? item.description : item.notes;
             const amountClass = reportType === 'expense' ? 'expense-amount' : 'income-amount';
             const displayDate = getFormattedDate(item);
-            html += `<div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;"><div class="item-content"><span style="font-weight:600; font-size:0.9rem;">${displayDate}</span><span style="margin-left:10px; color:var(--gray); font-size:0.85rem;">${name}</span></div><div class="expense-amount ${amountClass}" style="font-size:1rem; color:${breakdownColor}; -webkit-text-fill-color: initial;">${formatCurrency(item.amount)}</div></div>`; 
+            
+          let rentalInfo = '';
+            if (reportType === 'income' && name === 'Rental Income') {
+              const rentEndDate = item.rentEndDate || 'Not set';
+              const rentBalance = item.rentBalanceType === 'custom' 
+                ? formatCurrency(item.rentBalance || 0)
+                : 'NIL';
+              
+              rentalInfo = `
+                <div style="background: linear-gradient(135deg, rgba(78, 205, 196, 0.12) 0%, rgba(78, 205, 196, 0.05) 100%); padding: 12px 14px; border-radius: 8px; margin-top: 10px; border-left: 4px solid var(--success); border-top: 1px solid rgba(78, 205, 196, 0.2);">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">📅 Received</span>
+                      <span style="background: rgba(78, 205, 196, 0.2); color: var(--text-color); padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${displayDate}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">📍 End Date</span>
+                      <span style="background: rgba(78, 205, 196, 0.2); color: var(--text-color); padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${rentEndDate}</span>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">💰 Balance</span>
+                      <span style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.1) 100%); color: var(--success); padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">${rentBalance}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">📝 Property</span>
+                      <span style="background: rgba(100, 100, 100, 0.1); color: var(--text-color); padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.notes || '-'}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+
+            
+            html += `
+              <div class="expense-item" style="padding: 10px; border-bottom: 1px solid #eee;">
+                <div class="item-content">
+                  <span style="font-weight:600; font-size:0.9rem;">${displayDate}</span>
+                  <span style="margin-left:10px; color:var(--gray); font-size:0.85rem;">${name}</span>
+                </div>
+                <div class="expense-amount ${amountClass}" style="font-size:1rem; color:${breakdownColor}; -webkit-text-fill-color: initial;">
+                  ${formatCurrency(item.amount)}
+                </div>
+                ${rentalInfo}
+              </div>
+            `;
           });
           html += `</div>`;
 
@@ -14359,7 +14591,7 @@ if (barChart) barChart.destroy();
         const title = isExpense ? 'Expense Report' : 'Income Report';
         const totalLabel = isExpense ? 'Total Expenses' : 'Total Income';
         const breakdownTitle = isExpense ? 'Category Breakdown' : 'Source Breakdown';
-        const detailHeaders = isExpense ? ['Date', 'Category', 'Description', 'Amount'] : ['Date', 'Source', 'Notes', 'Amount'];
+        let detailHeaders = isExpense ? ['Date', 'Category', 'Description', 'Amount'] : ['Date', 'Source', 'Notes', 'Amount', 'Rent End Date', 'Balance'];
         const tableColor = isExpense ? [220, 53, 69] : [40, 167, 69];
 
         doc.setFontSize(18); 
@@ -14411,18 +14643,32 @@ if (barChart) barChart.destroy();
             doc.text('Detailed Transactions', 20, yPos); 
             yPos += 10;
             
-            const detailTable = reportData.items.map(item => {
+           const detailTable = reportData.items.map(item => {
                 const name = isExpense ? (item.category || 'Other') : (item.source || 'Other');
                 const description = isExpense ? (item.description || '-') : (item.notes || '-');
                 const displayDate = getFormattedDate(item);
-                return [
+                const row = [
                   displayDate, 
                   name, 
                   description, 
                   formatCurrency(item.amount || 0)
                 ];
+                
+                // Add rental details if rental income
+                if (!isExpense && name === 'Rental Income') {
+                  const rentEndDate = item.rentEndDate || 'Not set';
+                  const rentBalance = item.rentBalanceType === 'custom' 
+                    ? formatCurrency(item.rentBalance || 0)
+                    : 'NIL';
+                  row.push(rentEndDate);
+                  row.push(rentBalance);
+                } else if (!isExpense) {
+                  row.push('');
+                  row.push('');
+                }
+                
+                return row;
             });
-            
             doc.autoTable({ 
               startY: yPos, 
               head: [detailHeaders], 
