@@ -5751,8 +5751,8 @@ body.dark-mode .skeleton-loading {
             </div>
             
             <div class="auth-input-group">
-              <label for="signupPassword">Password (min. 6 characters)</label>
-              <input type="password" id="signupPassword" placeholder="Create a password" required minlength="6">
+              <label for="signupPassword">Password (min. 8 characters)</label>
+              <input type="password" id="signupPassword" placeholder="Create a password" required minlength="8">
             </div>
             
             <div class="auth-input-group">
@@ -7754,36 +7754,34 @@ function showMessage(message, type = 'info') {
 // ========== DELETE MODAL FUNCTIONS ==========
 
 // Function to show delete confirmation modal
-function showDeleteModal(itemId, collection, itemType = 'item') {
+function deleteModal(itemId, collection, customDescription = null) {
     itemToDeleteId = itemId;
     collectionToDelete = collection;
     
-    // Get item details for display
-    let itemDetails = '';
+    let itemDetails = customDescription; // Use custom description if provided
     
-    if (collection === 'expenses') {
-        const expense = allExpenses.find(exp => exp.id === itemId);
-        if (expense) {
-            itemDetails = `${expense.categoryDisplay || expense.category} - UGX ${expense.amount.toLocaleString()} on ${expense.date}`;
-        }
-    } else if (collection === 'income') {
-        const income = allIncome.find(inc => inc.id === itemId);
-        if (income) {
-            itemDetails = `${income.sourceDisplay || income.source} - UGX ${income.amount.toLocaleString()} on ${income.date}`;
-        }
-    } else if (collection === 'budgets') {
-        const budget = allBudgets.find(b => b.id === itemId);
-        if (budget) {
-            itemDetails = `Budget for ${budget.month} - UGX ${budget.amount.toLocaleString()}`;
-        }
-    } else if (collection === 'reminders') {
-        const reminder = allReminders.find(r => r.id === itemId);
-        if (reminder) {
-            itemDetails = `${reminder.title} - UGX ${reminder.amount.toLocaleString()} due on ${reminder.dueDate}`;
+    // Auto-generate description if not provided
+    if (!itemDetails) {
+        if (collection === 'expenses') {
+            const expense = allExpenses.find(exp => exp.id === itemId);
+            if (expense) {
+                itemDetails = `${expense.categoryDisplay || expense.category} - UGX ${expense.amount.toLocaleString()} on ${expense.date}`;
+            }
+        } else if (collection === 'income') {
+            const income = allIncome.find(inc => inc.id === itemId);
+            if (income) {
+                itemDetails = `${income.sourceDisplay || income.source} - UGX ${income.amount.toLocaleString()} on ${income.date}`;
+            }
+        } else if (collection === 'budgets') {
+            const budget = allBudgets.find(b => b.id === itemId);
+            if (budget) itemDetails = `Budget: ${formatCurrency(budget.amount)}`;
+        } else if (collection === 'reminders') {
+            const reminder = allReminders.find(r => r.id === itemId);
+            if (reminder) itemDetails = `Reminder: ${reminder.title}`;
         }
     }
     
-    document.getElementById('deleteExpenseDetails').textContent = itemDetails || `${itemType} details not available`;
+    document.getElementById('deleteExpenseDetails').textContent = itemDetails || 'Are you sure?';
     document.getElementById('deleteModal').style.display = 'flex';
 }
 
@@ -8327,7 +8325,7 @@ function displayIncome(incomeArray) {
         <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
           <i class="fas fa-edit"></i>
         </button>
-        <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+        <button class="action-btn delete" onclick="deleteModal('${income.id}', 'income')" title="Delete">
           <i class="fas fa-trash"></i>
         </button>
       </div>
@@ -9502,7 +9500,9 @@ function fixIncomeListDOM() {
     }
   });
 }
-setInterval(fixIncomeListDOM, 1000); // Run every 1 second
+    
+// fixIncomeListDOM() is called only when income list is updated
+
 
 
 
@@ -10388,7 +10388,7 @@ function loadExpensesList(expensesArray) {
         <div class="expense-amount">UGX ${amount.toLocaleString('en-US')}</div>
         <div class="item-actions">
           <button class="action-btn edit" onclick="editExpense('${expense.id}')" title="Edit"><i class="fas fa-edit"></i></button>
-          <button class="action-btn delete" onclick="showDeleteModal('${expense.id}', 'expenses')" title="Delete"><i class="fas fa-trash"></i></button>
+          <button class="action-btn delete" onclick="deleteModal('${expense.id}', 'expenses')" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
       </div>
     `;
@@ -10464,7 +10464,7 @@ function loadIncomeList(incomeData = allIncome) {
           <button class="action-btn edit" onclick="editIncome('${income.id}')" title="Edit">
             <i class="fas fa-edit"></i>
           </button>
-          <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')" title="Delete">
+         <button class="action-btn delete" onclick="deleteModal('${income.id}', 'income')" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -11417,7 +11417,7 @@ function updateIncomeList(incomeArray = allIncome) {
                 <div class="income-amount">UGX ${income.amount.toLocaleString()}</div>
                 <div class="item-actions">
                     <button class="action-btn edit" onclick="editIncome('${income.id}', '${income.amount}', '${income.source}', '${income.date}', '${(income.notes || '').replace(/'/g, "\\'")}', '${income.rentEndDate || ''}', '${income.rentBalanceType || ''}', ${income.rentBalance || 0})"><i class="fas fa-edit"></i></button>
-                    <button class="action-btn delete" onclick="showDeleteModal('${income.id}', 'income')"><i class="fas fa-trash"></i></button>
+                    <button class="action-btn delete" onclick="deleteModal('${income.id}', 'income')"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         `;
@@ -12558,7 +12558,7 @@ function resetBalanceStyles() {
 }
 
 // Call periodically or when issues occur
-setInterval(resetBalanceStyles, 30000); // Every 30 seconds
+// resetBalanceStyles() is called only when balance updates
 
 
 
@@ -13064,7 +13064,7 @@ function displayExpenses(expenses) {
                     <button class="action-btn edit" onclick="editExpense('${expense.id}')" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="action-btn delete" onclick="showDeleteModal('${expense.id}', 'expenses')" title="Delete">
+                    <button class="action-btn delete" onclick="deleteModal('${expense.id}', 'expenses')" title="Delete">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -13334,7 +13334,7 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
               <button class="action-btn edit" onclick="prepareEditBudget('${budget.id}', ${budget.amount}, '${budget.month}', '${budget.category}', '${budget.notes ? budget.notes.replace(/'/g, "\\'") : ''}')">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${budget.id}', 'budgets', 'Budget for ${monthName} - ${formatCurrency(budget.amount)}')">
+              <button class="action-btn delete" onclick="deleteModal('${budget.id}', 'budgets', 'Budget for ${monthName} - ${formatCurrency(budget.amount)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -13473,7 +13473,7 @@ if (!amountInput || isNaN(amount) || amount <= 0) {
               <button class="action-btn edit" onclick="prepareEditReminder('${reminder.id}', '${reminder.title.replace(/'/g, "\\'")}', ${reminder.amount}, '${reminder.dueDate}', '${reminder.category || 'Other'}')">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${reminder.id}', 'reminders', 'Reminder: ${reminder.title} - ${formatCurrency(reminder.amount)}')">
+              <button class="action-btn delete" onclick="deleteModal('${reminder.id}', 'reminders', 'Reminder: ${reminder.title} - ${formatCurrency(reminder.amount)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -15418,7 +15418,7 @@ if (barChart) barChart.destroy();
               <button class="action-btn edit" onclick="prepareEditExpense('${expense.id}', '${expense.amount}', '${category}', '${expense.date || ''}', '${descSafe}')"
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="action-btn delete" onclick="confirmDeleteModal('${expense.id}', 'expenses', '${category} - ${formatCurrency(expense.amount)}')">
+              <button class="action-btn delete" onclick="deleteModal('${expense.id}', 'expenses', '${category} - ${formatCurrency(expense.amount)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -15476,7 +15476,7 @@ if (barChart) barChart.destroy();
         <div class="expense-amount">UGX ${amount.toLocaleString('en-US')}</div>
         <div class="item-actions">
           <button class="action-btn edit" onclick="editExpense('${expense.id}')" title="Edit"><i class="fas fa-edit"></i></button>
-          <button class="action-btn delete" onclick="showDeleteModal('${expense.id}', 'expenses')" title="Delete"><i class="fas fa-trash"></i></button>
+         <button class="action-btn delete" onclick="deleteModal('${expense.id}', 'expenses')" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
       </div>
     `;
@@ -15536,11 +15536,6 @@ if (barChart) barChart.destroy();
     }
 
     // ===== DELETE FUNCTIONS =====
-    function confirmDeleteModal(id, collection, description) {
-      itemToDeleteId = id; collectionToDelete = collection;
-      document.getElementById('deleteExpenseDetails').textContent = description;
-      document.getElementById('deleteModal').style.display = 'flex';
-    }
 
     function hideDeleteModal() { 
       document.getElementById('deleteModal').style.display = 'none'; 
@@ -15557,6 +15552,8 @@ if (barChart) barChart.destroy();
       try {
         await db.collection(collectionToDelete).doc(itemToDeleteId).delete();
         showMessage('✅ Item deleted successfully', 'success');
+        resetBalanceStyles();
+if (collectionToDelete === 'income') fixIncomeListDOM();
         
         if (collectionToDelete === 'expenses' && itemToDeleteId === editingExpenseId) cancelEditExpense();
         if (collectionToDelete === 'income' && itemToDeleteId === editingIncomeId) cancelEditIncome();
@@ -15674,14 +15671,6 @@ if (barChart) barChart.destroy();
         showError('PDF Error: ' + error.message); 
       }
     }
-
-    // Auto-refresh dashboard every 60 seconds
-    setInterval(() => { 
-      if (isFirestoreReady && !isEditingExpense && !isEditingIncome && currentUser) {
-        updateDashboardFromRealtimeData();
-        loadReminders();
-      } 
-    }, 60000);
     
     // Handle window resize for better mobile experience
     let resizeTimer;
